@@ -19,10 +19,10 @@ statement   : assignment ';'
 	    | transfer ';' // trasferisce l'asset all' utente (chi esegue il codice)
 	    | ret ';'
 	    | ite
-	    | call ';'
+	    | call ';' ;
 
 type        : 'int'
-            | 'bool'
+            | 'bool';
 
 assignment  : ID '=' exp ;
 
