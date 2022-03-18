@@ -1,0 +1,2 @@
+ - questo errore lo fa solo mia moglie: extraneous input ';' expecting {'(', '-', '!', BOOL, ID, NUMBER}
+ - questo errore lo fa solo mia moglie: mismatched input ']' expecting {';', '-', '*', '/', '+', '<', '<=', '>', '>=', '==', '!=', '&&', '||'}
