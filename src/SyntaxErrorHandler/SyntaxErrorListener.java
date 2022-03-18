@@ -31,7 +31,7 @@ public class SyntaxErrorListener extends BaseErrorListener {
             PrintWriter out = new PrintWriter("errors.txt");
 
             for (SyntaxError i: getSyntaxErrors()) {
-                out.println(" - questo errore lo fa solo mia moglie: " + i.getMessage());
+                out.println(" - error: " + i.getMessage() + " charPosition: " + i.getCharPositionInLine());
             }
             out.close();
             

@@ -1,8 +1,16 @@
+import SymbolTable.*;
+
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
+import SymbolTable.SymbolTable;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import SyntaxErrorHandler.*;
+
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
 public class main {
     public static void main(String[] args){
@@ -21,8 +29,14 @@ public class main {
             }
             */
 
-            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("int f = ; f] "));
-            //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName("Test/test.plan"));
+
+            SymbolTable st = new SymbolTable();
+
+            st.insert("x","5");
+            st.insert("x","Integer");
+            st.printAttributes(); //stampa tutti gli elementi della hash
+            //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("int f = ; f] "));
+            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName("Test/test2"));
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
             AssetLanParser parser = new AssetLanParser(commonTokenStream);
             SyntaxErrorListener listener = new SyntaxErrorListener();
