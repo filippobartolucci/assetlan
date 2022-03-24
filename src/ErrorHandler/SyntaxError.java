@@ -1,4 +1,4 @@
-package SyntaxErrorHandler;
+package ErrorHandler;
 
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;

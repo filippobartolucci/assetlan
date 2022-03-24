@@ -1,2 +1,2 @@
- - questo errore lo fa solo mia moglie: extraneous input ';' expecting {'(', '-', '!', BOOL, ID, NUMBER}
- - questo errore lo fa solo mia moglie: mismatched input ']' expecting {';', '-', '*', '/', '+', '<', '<=', '>', '>=', '==', '!=', '&&', '||'}
+ - questo errore lo fa solo mia moglie: missing '(' at 'f'
+ - questo errore lo fa solo mia moglie: mismatched input '=' expecting {',', ')'}

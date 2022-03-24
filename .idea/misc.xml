@@ -9,7 +9,7 @@
           <option name="outputDir" value="$PROJECT_DIR$/src" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
-          <option name="pkg" value="com.progetto.parser" />
+          <option name="pkg" value="Parser" />
           <option name="language" value="Java" />
         </PerGrammarGenerationSettings>
       </list>

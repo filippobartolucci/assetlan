@@ -73,6 +73,8 @@ WS              : (' '|'\t'|'\n'|'\r')-> skip;
 LINECOMMENTS 	: '//' (~('\n'|'\r'))* -> skip;
 BLOCKCOMMENTS   : '/*'( ~('/'|'*')|'/'~'*'|'*'~'/'|BLOCKCOMMENTS)* '*/' -> skip;
 
+//ERR :. { System.out.println("Invalid char: "+ getText()); lexicalErrors++; } -> channel(HIDDEN);
+
 /*
 SEMANTICA DI ASSETLAN
 

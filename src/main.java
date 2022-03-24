@@ -2,11 +2,15 @@ import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import SyntaxErrorHandler.*;
+import ErrorHandler.*;
+
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class main {
     public static void main(String[] args){
         try{
+
             /*
             System.out.println(" - AssetLan Compiler ");
 
@@ -21,14 +25,32 @@ public class main {
             }
             */
 
-            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("int f = ; f] "));
+            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("if..@à# = ; f] "));
             //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName("Test/test.plan"));
+
+            LexerErrorListener lexerListener = new LexerErrorListener();
+            lexer.removeErrorListeners();
+            lexer.addErrorListener(lexerListener);
+
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
             AssetLanParser parser = new AssetLanParser(commonTokenStream);
-            SyntaxErrorListener listener = new SyntaxErrorListener();
-            parser.removeErrorListeners();
-            parser.addErrorListener(listener);
+
+            // SyntaxErrorListener parserListener = new SyntaxErrorListener();
+            // parser.removeErrorListeners();
+            // parser.addErrorListener(parserListener);
             parser.program();
+
+            // Ex1
+            try {
+                PrintWriter out = new PrintWriter("lexer_errors.txt");
+                for (SyntaxError i: lexerListener.getLexerErrors()) {
+                    out.println(i.getMessage());
+                }
+                out.close();
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
+
 
         }catch (Exception exc) {
             System.err.println(exc.getMessage());
