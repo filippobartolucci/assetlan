@@ -29,6 +29,7 @@ public class SyntaxErrorListener extends BaseErrorListener {
 
             for (SyntaxError i: getSyntaxErrors()) {
                 out.println(i.getMessage());
+
             }
             out.close();
             
