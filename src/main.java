@@ -10,7 +10,6 @@ import java.io.PrintWriter;
 public class main {
     public static void main(String[] args){
         try{
-
             /*
             System.out.println(" - AssetLan Compiler ");
 
@@ -36,7 +35,7 @@ public class main {
             AssetLanParser parser = new AssetLanParser(commonTokenStream);
 
             // SyntaxErrorListener parserListener = new SyntaxErrorListener();
-            // parser.removeErrorListeners();
+            parser.removeErrorListeners();
             // parser.addErrorListener(parserListener);
             parser.program();
 
