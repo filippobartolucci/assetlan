@@ -3,14 +3,14 @@ import SymbolTable.*;
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
 import SymbolTable.SymbolTable;
+import org.antlr.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import ErrorHandler.*;
-
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-
-
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -18,7 +18,6 @@ import java.util.List;
 public class main {
     public static void main(String[] args){
         try{
-            /*
             System.out.println(" - AssetLan Compiler ");
 
             if(args.length == 0){
@@ -30,11 +29,9 @@ public class main {
             if(!Paths.get(file).toFile().exists()) {
                 throw new FileNotFoundException("File: " + file + " not found.");
             }
-            */
 
-
-            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("if..@à# = ; f] "));
-            //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName("Test/test.plan"));
+            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
+            //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("int x = . ; f()[] "));
 
             LexerErrorListener lexerListener = new LexerErrorListener();
             lexer.removeErrorListeners();
@@ -42,7 +39,6 @@ public class main {
 
 
             // SymbolTable st = new SymbolTable();
-
             // st.insert("x","5");
             // st.insert("x","Integer");
             // st.printAttributes(); //stampa tutti gli elementi della hash
@@ -53,9 +49,11 @@ public class main {
             AssetLanParser parser = new AssetLanParser(commonTokenStream);
 
             // SyntaxErrorListener parserListener = new SyntaxErrorListener();
-            parser.removeErrorListeners();
+
             // parser.addErrorListener(parserListener);
-            parser.program();
+            AssetLanParser.ProgramContext tree = parser.program();
+            ParseTreeWalker walker = new ParseTreeWalker();
+            System.out.println(tree);
 
             // Ex1
             try {

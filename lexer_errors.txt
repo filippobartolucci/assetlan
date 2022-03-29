@@ -1,5 +1,0 @@
-token recognition error at: '.'
-token recognition error at: '.'
-token recognition error at: '@'
-token recognition error at: 'à'
-token recognition error at: '#'
