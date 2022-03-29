@@ -3,7 +3,7 @@ package ErrorHandler;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
-public class SyntaxError {
+public class Error {
     private final Recognizer<?, ?> recognizer;
     private final Object offendingSymbol;
     private final int line;
@@ -11,7 +11,7 @@ public class SyntaxError {
     private final String message;
     private final RecognitionException e;
 
-    SyntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+    Error(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
         this.recognizer = recognizer;
         this.offendingSymbol = offendingSymbol;
         this.line = line;

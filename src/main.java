@@ -1,9 +1,7 @@
-import SymbolTable.*;
+import ErrorHandler.Error;
 
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
-import SymbolTable.SymbolTable;
-import org.antlr.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import ErrorHandler.*;
@@ -11,9 +9,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
 
 public class main {
     public static void main(String[] args){
@@ -58,7 +53,7 @@ public class main {
             // Ex1
             try {
                 PrintWriter out = new PrintWriter("lexer_errors.txt");
-                for (SyntaxError i: lexerListener.getLexerErrors()) {
+                for (Error i: lexerListener.getLexerErrors()) {
                     out.println(i.getMessage());
                 }
                 out.close();
