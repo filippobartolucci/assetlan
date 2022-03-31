@@ -2,6 +2,7 @@ import ErrorHandler.Error;
 
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
+import Parser.AssetLanBaseVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import ErrorHandler.*;
@@ -13,10 +14,10 @@ import java.nio.file.Paths;
 public class main {
     public static void main(String[] args){
         try{
-            System.out.println(" - AssetLan Compiler ");
+            System.out.println("AssetLan Compiler ");
 
             if(args.length == 0){
-                System.err.println("No file to compile & run provided.");
+                System.err.println("No file provided.");
                 System.exit(0);
             }
 
@@ -26,29 +27,24 @@ public class main {
             }
 
             AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
-            //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("int x = . ; f()[] "));
 
             LexerErrorListener lexerListener = new LexerErrorListener();
+            // Ex1
             lexer.removeErrorListeners();
             lexer.addErrorListener(lexerListener);
-
-
-            // SymbolTable st = new SymbolTable();
-            // st.insert("x","5");
-            // st.insert("x","Integer");
-            // st.printAttributes(); //stampa tutti gli elementi della hash
-            // //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromString("int f = ; f] "));
-            // AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName("Test/test2"));
 
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
             AssetLanParser parser = new AssetLanParser(commonTokenStream);
 
             // SyntaxErrorListener parserListener = new SyntaxErrorListener();
-
             // parser.addErrorListener(parserListener);
+
+
             AssetLanParser.ProgramContext tree = parser.program();
-            ParseTreeWalker walker = new ParseTreeWalker();
-            System.out.println(tree);
+
+            AssetLanBaseVisitor visitor = new AssetLanBaseVisitor();
+
+
 
             // Ex1
             try {

@@ -88,9 +88,11 @@ public class Environment implements Cloneable {
 	/**
 	 * SymTable addDecl(SymTable st, String id, Type t) if there is no clash of names, adds id ⟼ t to st
 	 */
-	public SemanticError addDecl(HashMap<String, STentry> st, String id, STentry entry){
-		// HashMap<String, STentry> st = (HashMap)symTable.get(nestingLevel);
-		if(st.put(id, entry)!=null) return new SemanticError( "Environment Error: entry " + id + " already declared");
+	public SemanticError addDecl(HashMap<String, STentry> st, String id, STentry entry) {
+		if (st.containsKey(id)) {
+			return new SemanticError("Redeclaration of " + id);
+		}
+		st.put(id, entry);
 		return null;
 	}
 

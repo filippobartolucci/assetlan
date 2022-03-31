@@ -138,6 +138,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitProgram(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitProgram(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -227,6 +232,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitField(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitField(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FieldContext field() throws RecognitionException {
@@ -280,6 +290,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitAsset(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitAsset(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -342,6 +357,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitFunction(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitFunction(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -495,6 +515,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitDec(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitDec(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DecContext dec() throws RecognitionException {
@@ -555,6 +580,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -652,6 +682,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TypeContext type() throws RecognitionException {
@@ -701,6 +736,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitAssignment(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitAssignment(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final AssignmentContext assignment() throws RecognitionException {
@@ -745,6 +785,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitMove(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitMove(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MoveContext move() throws RecognitionException {
@@ -788,6 +833,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitPrint(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitPrint(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PrintContext print() throws RecognitionException {
@@ -826,6 +876,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitTransfer(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitTransfer(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -867,6 +922,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitRet(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitRet(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -923,6 +983,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitIte(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitIte(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -989,6 +1054,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitCall(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitCall(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1093,6 +1163,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitInitcall(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitInitcall(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1202,6 +1277,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitBaseExp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitBaseExp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BinExpContext extends ExpContext {
 		public ExpContext left;
@@ -1222,6 +1302,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitBinExp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitBinExp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class DerExpContext extends ExpContext {
 		public TerminalNode ID() { return getToken(AssetLanParser.ID, 0); }
@@ -1234,6 +1319,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitDerExp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitDerExp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ValExpContext extends ExpContext {
 		public TerminalNode NUMBER() { return getToken(AssetLanParser.NUMBER, 0); }
@@ -1245,6 +1335,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitValExp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitValExp(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class NegExpContext extends ExpContext {
@@ -1260,6 +1355,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitNegExp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitNegExp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BoolExpContext extends ExpContext {
 		public TerminalNode BOOL() { return getToken(AssetLanParser.BOOL, 0); }
@@ -1271,6 +1371,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitBoolExp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitBoolExp(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class CallExpContext extends ExpContext {
@@ -1286,6 +1391,11 @@ public class AssetLanParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitCallExp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitCallExp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class NotExpContext extends ExpContext {
 		public ExpContext exp() {
@@ -1299,6 +1409,11 @@ public class AssetLanParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof AssetLanListener ) ((AssetLanListener)listener).exitNotExp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitNotExp(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
