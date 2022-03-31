@@ -43,7 +43,7 @@ public class main {
             AssetLanParser.ProgramContext tree = parser.program();
 
             AssetLanBaseVisitor visitor = new AssetLanBaseVisitor();
-
+            System.out.println(visitor.visit(parser.program()));
 
 
             // Ex1

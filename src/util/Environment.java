@@ -100,15 +100,11 @@ public class Environment implements Cloneable {
 	 * Type lookup(SymTable st, String id) looks for the type of id in st, if any
 	 */
 	public STentry lookup(HashMap<String, STentry> st, String id){
-		/*
 		int nl = this.getNestingLevel();
 		STentry tmp;
 		for(tmp = null; nl >= 0 && tmp == null; tmp = (STentry)((HashMap)this.symTable.get(nl--)).get(id)) {
 			// lookup
 		}
-		return tmp;
-		*/
-		STentry tmp = st.get(id);
 		return tmp;
 	}
 
