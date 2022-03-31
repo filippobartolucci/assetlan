@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import ast.Node;
 
 public class main {
     public static void main(String[] args){
@@ -28,23 +29,19 @@ public class main {
 
             AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
 
-            LexerErrorListener lexerListener = new LexerErrorListener();
             // Ex1
+            LexerErrorListener lexerListener = new LexerErrorListener();
             lexer.removeErrorListeners();
             lexer.addErrorListener(lexerListener);
 
-            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-            AssetLanParser parser = new AssetLanParser(commonTokenStream);
+            CommonTokenStream cts = new CommonTokenStream(lexer);
+            AssetLanParser parser = new AssetLanParser(cts);
+            parser.removeErrorListeners();
 
-            // SyntaxErrorListener parserListener = new SyntaxErrorListener();
-            // parser.addErrorListener(parserListener);
-
-
-            AssetLanParser.ProgramContext tree = parser.program();
-
+            // Ex2
             AssetLanBaseVisitor visitor = new AssetLanBaseVisitor();
-            System.out.println(visitor.visit(parser.program()));
 
+            visitor.visit(parser.init());
 
             // Ex1
             try {

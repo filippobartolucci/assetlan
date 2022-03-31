@@ -22,18 +22,19 @@ public class Environment implements Cloneable {
 	// CONSTRUCTORS
 
 	/**
+	 * Creates an empty environment
+	 */
+	public Environment() {
+		this(new ArrayList<HashMap<String,STentry>>(), -1, 0);
+	}
+
+	/**
 	 * Constructor for {@code Environment}
 	 */
 	public Environment(ArrayList<HashMap<String,STentry>> symTable, int nestingLevel, int offset) {
 		this.symTable = symTable;
 		this.nestingLevel = nestingLevel;
 		this.offset = offset;
-	}
-	/**
-	 * Creates an empty environment
-	 */
-	public Environment() {
-		this(new ArrayList<HashMap<String,STentry>>(), -1, 0);
 	}
 
 	/**
@@ -86,20 +87,29 @@ public class Environment implements Cloneable {
 	}
 
 	/**
+	 * void newEmptyScope(SymTable st) extends the st with a new empty scope
+	 */
+	public void newEmptyScope(){
+		HashMap<String,STentry> st = new HashMap<String,STentry>();
+		this.nestingLevel++;
+		this.symTable.add(st);
+	}
+
+	/**
 	 * SymTable addDecl(SymTable st, String id, Type t) if there is no clash of names, adds id ⟼ t to st
 	 */
-	public SemanticError addDecl(HashMap<String, STentry> st, String id, STentry entry) {
-		if (st.containsKey(id)) {
+	public SemanticError addDecl(String id, STentry entry) {
+		if (this.symTable.get(this.nestingLevel).containsKey(id)) {
 			return new SemanticError("Redeclaration of " + id);
 		}
-		st.put(id, entry);
+		this.symTable.get(this.nestingLevel).put(id, entry);
 		return null;
 	}
 
 	/**
 	 * Type lookup(SymTable st, String id) looks for the type of id in st, if any
 	 */
-	public STentry lookup(HashMap<String, STentry> st, String id){
+	public STentry lookup(String id){
 		int nl = this.getNestingLevel();
 		STentry tmp;
 		for(tmp = null; nl >= 0 && tmp == null; tmp = (STentry)((HashMap)this.symTable.get(nl--)).get(id)) {

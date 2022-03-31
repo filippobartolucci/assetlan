@@ -1,9 +1,15 @@
 package ast;
 
 public class STentry {
-	private int nestingLevel = -1;
-	private int offset = -1;
+	private int nestingLevel;
+	private int offset;
 	// private typeNode type;
+
+	public STentry(){
+		this.nestingLevel = -1;
+		this.offset = -1;
+		// this.type = null;
+	}
 
 	public STentry(int nestingLevel, int offset) {
 		this.nestingLevel = nestingLevel;
@@ -15,8 +21,6 @@ public class STentry {
 		this.offset = s.offset;
 		// this.type = s.type;
 	}
-
-
 
 	/*
 	public STentry(int nestingLevel, int offset, typeNode t) {

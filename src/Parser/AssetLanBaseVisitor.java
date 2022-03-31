@@ -17,8 +17,8 @@ public class AssetLanBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitProgram(AssetLanParser.ProgramContext ctx) {
-		System.out.println("sono nell'alberooo");
+	@Override public T visitInit(AssetLanParser.InitContext ctx) {
+		System.out.println(ctx.getText());
 		return visitChildren(ctx);
 	}
 	/**
@@ -27,7 +27,18 @@ public class AssetLanBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitField(AssetLanParser.FieldContext ctx) { return visitChildren(ctx); }
+	@Override public T visitProgram(AssetLanParser.ProgramContext ctx) {
+		return visitChildren(ctx);
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitField(AssetLanParser.FieldContext ctx) {
+		return visitChildren(ctx);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -48,7 +59,14 @@ public class AssetLanBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDec(AssetLanParser.DecContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParam(AssetLanParser.ParamContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitAparam(AssetLanParser.AparamContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -69,7 +87,10 @@ public class AssetLanBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssignment(AssetLanParser.AssignmentContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAssignment(AssetLanParser.AssignmentContext ctx) {
+		System.out.println(ctx.getText());
+		return visitChildren(ctx);
+	}
 	/**
 	 * {@inheritDoc}
 	 *

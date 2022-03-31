@@ -21,7 +21,7 @@ statement   : assignment ';'
             | print ';'
             | transfer ';' // trasferisce l'asset all' utente (chi esegue il codice)
             | ret ';'
-            | ite
+            | ite // if-then-else
             | call ';' ;
 
 type        : 'int'

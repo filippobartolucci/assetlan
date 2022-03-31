@@ -8,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface AssetLanListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link AssetLanParser#init}.
+	 * @param ctx the parse tree
+	 */
+	void enterInit(AssetLanParser.InitContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AssetLanParser#init}.
+	 * @param ctx the parse tree
+	 */
+	void exitInit(AssetLanParser.InitContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AssetLanParser#program}.
 	 * @param ctx the parse tree
 	 */
@@ -48,15 +58,25 @@ public interface AssetLanListener extends ParseTreeListener {
 	 */
 	void exitFunction(AssetLanParser.FunctionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link AssetLanParser#dec}.
+	 * Enter a parse tree produced by {@link AssetLanParser#param}.
 	 * @param ctx the parse tree
 	 */
-	void enterDec(AssetLanParser.DecContext ctx);
+	void enterParam(AssetLanParser.ParamContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link AssetLanParser#dec}.
+	 * Exit a parse tree produced by {@link AssetLanParser#param}.
 	 * @param ctx the parse tree
 	 */
-	void exitDec(AssetLanParser.DecContext ctx);
+	void exitParam(AssetLanParser.ParamContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AssetLanParser#aparam}.
+	 * @param ctx the parse tree
+	 */
+	void enterAparam(AssetLanParser.AparamContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AssetLanParser#aparam}.
+	 * @param ctx the parse tree
+	 */
+	void exitAparam(AssetLanParser.AparamContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AssetLanParser#statement}.
 	 * @param ctx the parse tree
