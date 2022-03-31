@@ -1,13 +1,11 @@
 // Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
 package Parser;
+import ast.AssetLanVisitor;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AssetLanParser extends Parser {
@@ -122,7 +120,7 @@ public class AssetLanParser extends Parser {
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof AssetLanVisitor ) return ((AssetLanVisitor<? extends T>)visitor).visitInit(this);
+			if ( visitor instanceof AssetLanVisitor) return ((AssetLanVisitor<? extends T>)visitor).visitInit(this);
 			else return visitor.visitChildren(this);
 		}
 	}

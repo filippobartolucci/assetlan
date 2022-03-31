@@ -2,15 +2,16 @@ import ErrorHandler.Error;
 
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
-import Parser.AssetLanBaseVisitor;
+import ast.AssetLanBaseVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import ErrorHandler.*;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-import ast.Node;
+
+import Semantic.Environment;
 
 public class main {
     public static void main(String[] args){
@@ -41,7 +42,17 @@ public class main {
             // Ex2
             AssetLanBaseVisitor visitor = new AssetLanBaseVisitor();
 
-            visitor.visit(parser.init());
+            //Node ast = visitor.visit(parser.init());
+
+            Environment env = new Environment();
+            //ArrayList<SemanticError> s_errors = ast.checkSemantics(env);
+
+            /*
+            if(s_errors.size() > 0){
+                for (SemanticError s_error : s_errors) {
+                    System.out.println(s_error.toString());
+                }
+            }*/
 
             // Ex1
             try {

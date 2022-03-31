@@ -1,3 +1,0 @@
- - error: missing '(' at 'i' charPosition: 4
- - error: mismatched input ';' expecting {',', ')'} charPosition: 5
-
