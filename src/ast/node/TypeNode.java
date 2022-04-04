@@ -1,4 +1,4 @@
 package ast.node;
 
-public class TypeNode {
+public class TypeNode implements Node{
 }

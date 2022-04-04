@@ -2,7 +2,9 @@ import ErrorHandler.Error;
 
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
-import ast.AssetLanBaseVisitor;
+import ast.AssetLanVisitorImpl;
+import ast.node.InitNode;
+import ast.node.Node;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import ErrorHandler.*;
@@ -40,9 +42,9 @@ public class main {
             parser.removeErrorListeners();
 
             // Ex2
-            AssetLanBaseVisitor visitor = new AssetLanBaseVisitor();
+            AssetLanVisitorImpl visitor = new AssetLanVisitorImpl();
 
-            //Node ast = visitor.visit(parser.init());
+            Node ast = visitor.visitInit(parser.init());
 
             Environment env = new Environment();
             //ArrayList<SemanticError> s_errors = ast.checkSemantics(env);

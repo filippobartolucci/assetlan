@@ -1,4 +1,4 @@
 package ast.node;
 
-public class StatementNode {
+public class StatementNode implements Node {
 }

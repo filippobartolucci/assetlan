@@ -1,4 +1,4 @@
 package ast.node;
 
-public class AparamNode {
+public class AparamNode implements Node{
 }

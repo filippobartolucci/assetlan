@@ -1,4 +1,4 @@
 package ast.node;
 
-public class MoveNode {
+public class MoveNode implements Node {
 }

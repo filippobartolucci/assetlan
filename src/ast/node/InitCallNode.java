@@ -1,4 +1,4 @@
 package ast.node;
 
-public class InitCallNode {
+public class InitCallNode implements Node{
 }

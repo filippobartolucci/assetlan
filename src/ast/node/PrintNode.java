@@ -1,4 +1,4 @@
 package ast.node;
 
-public class PrintNode {
+public class PrintNode implements Node {
 }
