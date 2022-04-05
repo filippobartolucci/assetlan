@@ -1,2 +1,4 @@
-package ast.node;public class IteNode {
+package ast.node;
+
+public class IteNode implements Node {
 }

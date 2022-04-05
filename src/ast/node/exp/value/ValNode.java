@@ -1,4 +1,4 @@
 package ast.node.exp.value;
 
-public class IntNode {
+public class ValNode {
 }

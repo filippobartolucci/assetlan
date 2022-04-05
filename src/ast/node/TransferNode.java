@@ -1,2 +1,5 @@
-package ast.node;public class TransferNode {
+package ast.node;
+
+public class TransferNode implements Node {
+
 }
