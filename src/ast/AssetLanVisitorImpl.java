@@ -2,6 +2,7 @@ package ast;
 
 import Parser.AssetLanParser;
 import ast.node.*;
+import ast.node.exp.ExpNode;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
@@ -19,12 +20,12 @@ public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {
 
 	@Override
 	public Node visitProgram(AssetLanParser.ProgramContext ctx) {
-		//System.out.println("visitProgram");
-
+		// program	    : field* asset* function* initcall ;
 
 		// Va implementata la visit() generica per tutti i nodi
 		// non ho ancora capito bene come funziona, ho messo gli screen di quello che mi ha detto Niccolò
 
+		// ERRATA CORRIGE, va bene quello che stiamo facendo, visitNomeNodo(ctx.nomeNodo()) è il modo migliore
 
 		// ctx contiene tutte le produzioni della regola program presente nella grammatica
 		// ctx.field() son tutti i nodi field presenti presenti nell'albero
@@ -70,9 +71,12 @@ public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {
 			// Farlo in una funzione visitFunction() e mettere i nodi che restitutisce in un arraylist
 			// tipo così for each f in function{functions.add(visitFunction(f));}
 
+			// function    : (type | 'void') ID
+			//              '(' (param (',' param)* )? ')'
+			//              '[' (aparam (',' aparam)* )? ']'
+			//	          '{' param* statement* '}' ;
 
-			// Link alle Balugani Industries https://github.com/LBindustries/SimpLanPlus-Interpreter/blob/main/src/ast/SimpLanPlusVisitorImpl.java
-			// non troppo utile, ha copiato abbastanza il codice di Cosimo.
+
 
 			// altro link per reference su come fare
 			// https://github.com/jjocram/SimpLanPlus/blob/main/src/main/java/it/azzalinferrati/ast/SimpLanPlusVisitorImpl.java
@@ -91,14 +95,17 @@ public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {
 
 	@Override
 	public Node visitField(AssetLanParser.FieldContext ctx) {
-		// Node fieldnode = new FieldNode(ctx.ID(), ctx.type(), ctx.exp());
-
-		return null;
+		// field       : type ID ('=' exp)? ';' ;
+		TypeNode typenode = (TypeNode) visitType(ctx.type());
+		String id = ctx.ID().getText();
+		ExpNode expnode = (ExpNode) visit(ctx.exp());
+		return new FieldNode(id, typenode, expnode);
 	}
 
 	@Override
 	public Node visitAsset(AssetLanParser.AssetContext ctx) {
-		return null;
+		// asset       : 'asset' ID ';' ;
+		return new AssetNode(ctx.ID().getText());
 	}
 
 	@Override
