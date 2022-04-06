@@ -21,74 +21,27 @@ public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {
 	@Override
 	public Node visitProgram(AssetLanParser.ProgramContext ctx) {
 		// program	    : field* asset* function* initcall ;
-
-		// Va implementata la visit() generica per tutti i nodi
-		// non ho ancora capito bene come funziona, ho messo gli screen di quello che mi ha detto Niccolò
-
-		// ERRATA CORRIGE, va bene quello che stiamo facendo, visitNomeNodo(ctx.nomeNodo()) è il modo migliore
-
-		// ctx contiene tutte le produzioni della regola program presente nella grammatica
-		// ctx.field() son tutti i nodi field presenti presenti nell'albero
-		// ctx.asset() son tutti i nodi asset presenti nell'albero
-		// ctx.function() son tutti i nodi function presenti nell'albero
-		// eccetera
-
-		// L'obbiettivo delle visita è avere tutti i nodi dell'albero salvati
-		// in oggetti nodi che hanno tutte le informazioni necessarie in base al tipo di nodo
-
-		// TODO
-		// - Implementare per ogni nodo le funzioni presenti nell'interfaccia Node.java (al momento è commentato per evitare errori di esecuzione)
-		// - Implementare la visita per ogni nodo dell'albero:
-		// 		- Per ogni nodo visitato dobbiamo salvare le informazioni dei nodi che contiene (seguendo la grammatica)
-		//      - es. program: field* asset* function* initcall ;
-		//				- array per nodi field (perché c'è field*)
-		//				- array per nodi asset (perché c'è asset*)
-		//				- array per nodi function (perché c'è function*)
-		//				- array per nodi initcall (perché c'è initcall)
-
-		// Liste per salvare i nodi
 		ArrayList<Node> fields = new ArrayList<Node>();
 		ArrayList<Node> assets = new ArrayList<Node>();
 		ArrayList<Node> functions = new ArrayList<Node>();
-
-		Node initcallnode = new InitCallNode();
+		Node initcall;
 
 		for(AssetLanParser.FieldContext f: ctx.field()){
-			// System.out.println(f.ID().getText());
-			// System.out.println(f.type().getText());
-
-			// La visitField deve restituire un nodo in cui sono salvate type, ID ed exp
 			fields.add(visitField(f));
 		}
 
 		for(AssetLanParser.AssetContext a: ctx.asset()){
-			// La visitAsset deve restituire un nodo in cui è salvato l'ID dell'asset
 			assets.add(visitAsset(a));
 		}
 
 		for(AssetLanParser.FunctionContext f: ctx.function()) {
-			// Da scrivere scrivere il codice per la creazione dei nodi Funzione
-			// Farlo in una funzione visitFunction() e mettere i nodi che restitutisce in un arraylist
-			// tipo così for each f in function{functions.add(visitFunction(f));}
-
-			// function    : (type | 'void') ID
-			//              '(' (param (',' param)* )? ')'
-			//              '[' (aparam (',' aparam)* )? ']'
-			//	          '{' param* statement* '}' ;
-
-
-
-			// altro link per reference su come fare
-			// https://github.com/jjocram/SimpLanPlus/blob/main/src/main/java/it/azzalinferrati/ast/SimpLanPlusVisitorImpl.java
-
-			// Ci tengo a dire che copilot mi ha aiutato a scrivere questi commenti.
-
+			functions.add(visitFunction(f));
 		}
 
-		initcallnode = this.visitInitcall(ctx.initcall());
+		initcall = this.visitInitcall(ctx.initcall());
 
 		// Creo il nodo ProgramNode
-		Node programnode = new ProgramNode(fields, assets, functions, initcallnode);
+		Node programnode = new ProgramNode(fields, assets, functions, initcall);
 
 		return null;
 	}
@@ -110,6 +63,38 @@ public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {
 
 	@Override
 	public Node visitFunction(AssetLanParser.FunctionContext ctx) {
+		// function    : (type | 'void') ID
+		//              '(' (param (',' param)* )? ')'
+		//              '[' (aparam (',' aparam)* )? ']'
+		//	          '{' param* statement* '}' ;
+		Node typenode = visitType(ctx.type());
+		String id = ctx.ID().getText();
+        ArrayList<Node> params = new ArrayList<Node>();
+		ArrayList<Node> aparams = new ArrayList<Node>();
+		ArrayList<Node> body_params = new ArrayList<Node>();
+        ArrayList<Node> statements = new ArrayList<Node>();
+
+        for(AssetLanParser.ParamContext p: ctx.param()){
+			System.out.println(p.getText());
+            //params.add(visitParam(p));
+        }
+
+
+
+		/*
+        for(AssetLanParser.AparamContext a: ctx.aparam()){
+			aparams.add(visitAparam(a));
+		}
+
+		for(AssetLanParser.ParamContext p: ctx.param()){
+            body_params.add(visitParam(p));
+        }
+
+        for(AssetLanParser.StatementContext s: ctx.statement()){
+			statements.add(visitStatement(s));
+		}
+
+		return new FunctionNode(id, typenode, params, aparams, body_params, statements);*/
 		return null;
 	}
 
@@ -169,7 +154,7 @@ public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {
 	}
 
 	@Override
-	public Node visitInitcall(AssetLanParser.InitcallContext ctx) {
+	public Node visitInitcall(AssetLanParser.InitcallContext ctx){
 		return null;
 	}
 

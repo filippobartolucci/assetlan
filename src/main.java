@@ -19,7 +19,7 @@ public class main {
     public static void main(String[] args){
         try{
             System.out.println("AssetLan Compiler ");
-
+            /*
             if(args.length == 0){
                 System.err.println("No file provided.");
                 System.exit(0);
@@ -28,9 +28,10 @@ public class main {
             String file = args[0];
             if(!Paths.get(file).toFile().exists()) {
                 throw new FileNotFoundException("File: " + file + " not found.");
-            }
+            }*/
 
-            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
+            //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
+            AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName("./Test/test1"));
 
             // Ex1
             LexerErrorListener lexerListener = new LexerErrorListener();

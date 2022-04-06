@@ -25,7 +25,7 @@ public class ProgramNode implements Node {
 		this.initcallnode = initcallnode;
 	}
 
-	ArrayList<SemanticError> checkSemantics(Environment env){
+	public ArrayList<SemanticError> checkSemantics(Environment env){
 		// SCRITTA DA COPILOT, c'è nelle slide come si dovrebbe fare
 		/*
 		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();

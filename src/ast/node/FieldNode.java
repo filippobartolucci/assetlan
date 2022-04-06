@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class FieldNode implements Node{
 	private String id;
-	private TypeNode type;
-	private ExpNode value;
+	private Node type;
+	private Node value;
 
 	/**
 	 * Empty Constructor
@@ -25,7 +25,7 @@ public class FieldNode implements Node{
 	 * @param type
 	 * @param value
 	 */
-	public FieldNode(String id, TypeNode type, ExpNode value) {
+	public FieldNode(String id, Node type, Node value) {
 		this.id = id;
 		this.type = type;
 		this.value = value;
