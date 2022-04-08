@@ -1,220 +1,1 @@
-package ast;
-
-import Parser.AssetLanParser;
-import ast.node.*;
-import ast.node.exp.ExpNode;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
-public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {
-
-	@Override
-	public Node visitInit(AssetLanParser.InitContext ctx) {
-		return visitProgram(ctx.program());
-	}
-
-	@Override
-	public Node visitProgram(AssetLanParser.ProgramContext ctx) {
-		// program	    : field* asset* function* initcall ;
-		ArrayList<Node> fields = new ArrayList<Node>();
-		ArrayList<Node> assets = new ArrayList<Node>();
-		ArrayList<Node> functions = new ArrayList<Node>();
-		Node initcall;
-
-		for(AssetLanParser.FieldContext f: ctx.field()){
-			fields.add(visitField(f));
-		}
-
-		for(AssetLanParser.AssetContext a: ctx.asset()){
-			assets.add(visitAsset(a));
-		}
-
-		for(AssetLanParser.FunctionContext f: ctx.function()) {
-			functions.add(visitFunction(f));
-		}
-
-		initcall = this.visitInitcall(ctx.initcall());
-
-		// Creo il nodo ProgramNode
-		Node programnode = new ProgramNode(fields, assets, functions, initcall);
-
-		return null;
-	}
-
-	@Override
-	public Node visitField(AssetLanParser.FieldContext ctx) {
-		// field       : type ID ('=' exp)? ';' ;
-		TypeNode typenode = (TypeNode) visitType(ctx.type());
-		String id = ctx.ID().getText();
-		ExpNode expnode = (ExpNode) visit(ctx.exp());
-		return new FieldNode(id, typenode, expnode);
-	}
-
-	@Override
-	public Node visitAsset(AssetLanParser.AssetContext ctx) {
-		// asset       : 'asset' ID ';' ;
-		return new AssetNode(ctx.ID().getText());
-	}
-
-	@Override
-	public Node visitFunction(AssetLanParser.FunctionContext ctx) {
-		// function    : (type | 'void') ID
-		//              '(' (param (',' param)* )? ')'
-		//              '[' (aparam (',' aparam)* )? ']'
-		//	          '{' param* statement* '}' ;
-		Node typenode = visitType(ctx.type());
-		String id = ctx.ID().getText();
-        ArrayList<Node> params = new ArrayList<Node>();
-		ArrayList<Node> aparams = new ArrayList<Node>();
-		ArrayList<Node> body_params = new ArrayList<Node>();
-        ArrayList<Node> statements = new ArrayList<Node>();
-
-        for(AssetLanParser.ParamContext p: ctx.param()){
-			System.out.println(p.getText());
-            //params.add(visitParam(p));
-        }
-
-
-
-		/*
-        for(AssetLanParser.AparamContext a: ctx.aparam()){
-			aparams.add(visitAparam(a));
-		}
-
-		for(AssetLanParser.ParamContext p: ctx.param()){
-            body_params.add(visitParam(p));
-        }
-
-        for(AssetLanParser.StatementContext s: ctx.statement()){
-			statements.add(visitStatement(s));
-		}
-
-		return new FunctionNode(id, typenode, params, aparams, body_params, statements);*/
-		return null;
-	}
-
-	@Override
-	public Node visitParam(AssetLanParser.ParamContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitAparam(AssetLanParser.AparamContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitStatement(AssetLanParser.StatementContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitType(AssetLanParser.TypeContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitAssignment(AssetLanParser.AssignmentContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitMove(AssetLanParser.MoveContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitPrint(AssetLanParser.PrintContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitTransfer(AssetLanParser.TransferContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitRet(AssetLanParser.RetContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitIte(AssetLanParser.IteContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitCall(AssetLanParser.CallContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitInitcall(AssetLanParser.InitcallContext ctx){
-		return null;
-	}
-
-	@Override
-	public Node visitBaseExp(AssetLanParser.BaseExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitBinExp(AssetLanParser.BinExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitDerExp(AssetLanParser.DerExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitValExp(AssetLanParser.ValExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitNegExp(AssetLanParser.NegExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitBoolExp(AssetLanParser.BoolExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitCallExp(AssetLanParser.CallExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visitNotExp(AssetLanParser.NotExpContext ctx) {
-		return null;
-	}
-
-	@Override
-	public Node visit(ParseTree parseTree) {
-		return null;
-	}
-
-	@Override
-	public Node visitChildren(RuleNode ruleNode) {
-		return null;
-	}
-
-	@Override
-	public Node visitTerminal(TerminalNode terminalNode) {
-		return null;
-	}
-
-	@Override
-	public Node visitErrorNode(ErrorNode errorNode) {
-		return null;
-	}
-}
+package ast;import Parser.AssetLanParser;import ast.node.*;import ast.node.exp.BaseExpNode;import ast.node.exp.ExpNode;import org.antlr.v4.runtime.tree.ErrorNode;import org.antlr.v4.runtime.tree.ParseTree;import org.antlr.v4.runtime.tree.RuleNode;import org.antlr.v4.runtime.tree.TerminalNode;import java.util.ArrayList;public class AssetLanVisitorImpl implements AssetLanVisitor<Node> {	@Override	public Node visitInit(AssetLanParser.InitContext ctx) {		return visitProgram(ctx.program());	}	@Override	public Node visitProgram(AssetLanParser.ProgramContext ctx) {		// program	    : field* asset* function* initcall ;		ArrayList<Node> fields = new ArrayList<Node>();		ArrayList<Node> assets = new ArrayList<Node>();		ArrayList<Node> functions = new ArrayList<Node>();		Node initcall;		for(AssetLanParser.FieldContext f: ctx.field()){			fields.add(visitField(f));		}		for(AssetLanParser.AssetContext a: ctx.asset()){			assets.add(visitAsset(a));		}		for(AssetLanParser.FunctionContext f: ctx.function()) {			functions.add(visitFunction(f));		}		initcall = this.visitInitcall(ctx.initcall());		// Creo il nodo ProgramNode		Node programnode = new ProgramNode(fields, assets, functions, initcall);		return null;	}	@Override	public Node visitField(AssetLanParser.FieldContext ctx) {		// field       : type ID ('=' exp)? ';' ;		TypeNode typenode = (TypeNode) visitType(ctx.type());		String id = ctx.ID().getText();		ExpNode expnode = (ExpNode) visit(ctx.exp());		return new FieldNode(id, typenode, expnode);	}	@Override	public Node visitAsset(AssetLanParser.AssetContext ctx) {		// asset       : 'asset' ID ';' ;		return new AssetNode(ctx.ID().getText());	}	@Override	public Node visitFunction(AssetLanParser.FunctionContext ctx) {		// function    : (type | 'void') ID		//              '(' (param (',' param)* )? ')'		//              '[' (aparam (',' aparam)* )? ']'		//	          '{' bparam* statement* '}' ;		// TODO		// controllo void sul tipo, rompe tutto se f è void		Node typenode = visitType(ctx.type());		String id = ctx.ID().getText();        ArrayList<Node> params = new ArrayList<Node>();		ArrayList<Node> aparams = new ArrayList<Node>();		ArrayList<Node> body_params = new ArrayList<Node>();        ArrayList<Node> statements = new ArrayList<Node>();        for(AssetLanParser.ParamContext p: ctx.param()){            params.add(visitParam(p));        }        for(AssetLanParser.AparamContext a: ctx.aparam()){			aparams.add(visitAparam(a));		}		for(AssetLanParser.BparamContext p: ctx.bparam()){			body_params.add(visitBparam(p));		}        for(AssetLanParser.StatementContext s: ctx.statement()){			statements.add(visitStatement(s));		}		return new FunctionNode(id, typenode, params, aparams, body_params, statements);	}	@Override	public ParamNode visitParam(AssetLanParser.ParamContext ctx) {		// param       : type ID;		ParamNode paramnode = new ParamNode(ctx.ID().getText(), visitType(ctx.type()));		return null;	}	@Override	public ParamNode visitBparam(AssetLanParser.BparamContext ctx) {		return visitParam(ctx.param());	}	@Override	public Node visitAparam(AssetLanParser.AparamContext ctx) {		return new AssetNode(ctx.ID().getText());	}	@Override	public StatementNode visitStatement(AssetLanParser.StatementContext ctx) {		return null;	}	@Override	public TypeNode visitType(AssetLanParser.TypeContext ctx) {		return new TypeNode(ctx.getText());	}	@Override	public AssignmentNode visitAssignment(AssetLanParser.AssignmentContext ctx) {		//assignment  : ID '=' exp ;		return new AssignmentNode(ctx.ID().getText(), visit(ctx.exp()));	}	@Override	public Node visitMove(AssetLanParser.MoveContext ctx) {		// move        : ID '-o' ID ;		return new MoveNode(ctx.ID(0).getText(), ctx.ID(1).getText());	}	@Override	public Node visitPrint(AssetLanParser.PrintContext ctx) {		// print	    : 'print' exp ;		return null;	}	@Override	public TransferNode visitTransfer(AssetLanParser.TransferContext ctx) {		// transfer    : 'transfer' ID ;		return new TransferNode(ctx.ID().getText());	}	@Override	public Node visitRet(AssetLanParser.RetContext ctx) {		//ret	        : 'return' (exp)? ;		if (ctx.exp() != null) {			//return new RetNode(visit(ctx.exp()));		}		return null;	}	@Override	public Node visitIte(AssetLanParser.IteContext ctx) {		// ite         : 'if' '(' exp ')' statement ('else' statement)? ;		ExpNode expnode = (ExpNode) visit(ctx.exp());		StatementNode ifnode = visitStatement(ctx.statement(0));		StatementNode elsenode =  visitStatement(ctx.statement(1));		return new IteNode(expnode, ifnode, elsenode);	}	@Override	public Node visitCall(AssetLanParser.CallContext ctx) {		// call        : ID '(' (exp (',' exp)* )? ')' '[' (ID (',' ID)* )? ']' ;		String id = ctx.ID(0).getText();		ArrayList<ExpNode> expnodes = new ArrayList<ExpNode>();		ArrayList<String> ids = new ArrayList<String>();		for(AssetLanParser.ExpContext e: ctx.exp()){			expnodes.add((ExpNode) visit(e));		}		for (int i = 1; i < ctx.ID().size(); i++) {			ids.add(ctx.ID(i).getText());		}		return (Node) new CallNode(id, expnodes, ids);	}	@Override	public Node visitInitcall(AssetLanParser.InitcallContext ctx){		// initcall    : ID '(' (exp (',' exp)* )? ')' '[' (aexp (',' aexp)* )? ']' ;		String id = ctx.ID().getText();		ArrayList<BaseExpNode> expnodes = new ArrayList<BaseExpNode>();		ArrayList<BaseExpNode> aexpnodes = new ArrayList<BaseExpNode>();		for(AssetLanParser.ExpContext e: ctx.exp()){			expnodes.add((BaseExpNode) visit(e));		}		for(AssetLanParser.AexpContext e: ctx.aexp()){			aexpnodes.add((BaseExpNode) visit(e));		}		return new InitCallNode(id, expnodes, aexpnodes);	}	@Override	public Node visitBaseExp(AssetLanParser.BaseExpContext ctx) {		return null;	}	@Override	public Node visitAexp(AssetLanParser.AexpContext ctx) {return null;}	@Override	public Node visitBinExp(AssetLanParser.BinExpContext ctx) {		return null;	}	@Override	public Node visitDerExp(AssetLanParser.DerExpContext ctx) {		return null;	}	@Override	public Node visitValExp(AssetLanParser.ValExpContext ctx) {		return null;	}	@Override	public Node visitNegExp(AssetLanParser.NegExpContext ctx) {		return null;	}	@Override	public Node visitBoolExp(AssetLanParser.BoolExpContext ctx) {		return null;	}	@Override	public Node visitCallExp(AssetLanParser.CallExpContext ctx) {		return null;	}	@Override	public Node visitNotExp(AssetLanParser.NotExpContext ctx) {		return null;	}	@Override	public Node visit(ParseTree parseTree) {		return null;	}	@Override	public Node visitChildren(RuleNode ruleNode) {		return null;	}	@Override	public Node visitTerminal(TerminalNode terminalNode) {		return null;	}	@Override	public Node visitErrorNode(ErrorNode errorNode) {		return null;	}}

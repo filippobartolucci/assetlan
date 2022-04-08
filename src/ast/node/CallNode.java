@@ -8,14 +8,16 @@ import java.util.ArrayList;
 
 public class CallNode {
     private String id;
-    private ArrayList<Node> expressions;
+    private ArrayList<ExpNode> expressions;
+    private ArrayList<String> ids;
 
     /**
      * Empty constructor
      */
     public CallNode(){
         this.id = "";
-        this.expressions = new ArrayList<Node>();
+        this.expressions = new ArrayList<ExpNode>();
+        this.ids = new ArrayList<String>();
     }
 
     /**
@@ -23,9 +25,10 @@ public class CallNode {
      * @param id
      * @param expressions
      */
-    public CallNode(String id, ArrayList<Node> expressions){
+    public CallNode(String id, ArrayList<ExpNode> expressions, ArrayList<String> ids){
         this.id = id;
-        this.expressions = new ArrayList<Node>();
+        this.expressions = expressions;
+        this.ids = ids;
     }
 
     /**

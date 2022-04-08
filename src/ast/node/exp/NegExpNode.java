@@ -6,7 +6,8 @@ import ast.node.Node;
 
 import java.util.ArrayList;
 
-public class NegExpNode {
+public class NegExpNode extends ExpNode {
+    // | '-' exp					                        #negExp
     public ExpNode exp;
 
     /*Empty Constructor*/
@@ -17,8 +18,8 @@ public class NegExpNode {
     /*Constructor
     @param exp
     */
-    public NegExpNode(ExpNode exp) {
-        this.exp = exp;
+    public NegExpNode(Node exp) {
+        super(exp);
     }
 
     /**

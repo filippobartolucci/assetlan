@@ -45,6 +45,8 @@ public class Error {
         return message;
     }
 
+    public String getErrorMessage() {return "Lexer Error! - " + message + ", Line: "+ line + " Char: " + charPositionInLine;}
+
     public RecognitionException getException()
     {
         return e;

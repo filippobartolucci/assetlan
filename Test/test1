@@ -1,1 +1,8 @@
-int x = 1;  void f(int x, int z)[asset y]{int y=4;} f()[]
+int x = 1;
+int f(int x, int z)[asset y]{
+    int w
+    int i
+}
+
+f()[]
+

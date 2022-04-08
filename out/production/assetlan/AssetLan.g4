@@ -11,9 +11,11 @@ asset       : 'asset' ID ';' ;
 function    : (type | 'void') ID
               '(' (param (',' param)* )? ')'
               '[' (aparam (',' aparam)* )? ']'
-	          '{' param* statement* '}' ;
+	          '{' bparam* statement* '}' ;
 
 param       : type ID;
+bparam      : param;
+
 aparam       : 'asset' ID;
 
 statement   : assignment ';'
@@ -41,7 +43,8 @@ ite         : 'if' '(' exp ')' statement ('else' statement)? ;
 
 call        : ID '(' (exp (',' exp)* )? ')' '[' (ID (',' ID)* )? ']' ;
 
-initcall    : ID '(' (exp (',' exp)* )? ')' '[' (exp (',' exp)* )? ']' ;
+initcall    : ID '(' (exp (',' exp)* )? ')' '[' (aexp (',' aexp)* )? ']' ;
+
 
 exp	        : '(' exp ')'				                        #baseExp
             | '-' exp					                        #negExp
@@ -57,6 +60,7 @@ exp	        : '(' exp ')'				                        #baseExp
             | BOOL                                              #boolExp
             | NUMBER					                        #valExp;
 
+aexp        : exp;
 
 // THIS IS THE LEXER INPUT
 
@@ -93,7 +97,7 @@ di y sono 0.
 
 Gli asset possono essere spostati SOLAMENTE 
 
-* mediante l'operazione move x -o y il cui significato e` 
+* mediante l'o perazione move x -o y il cui significato e`
 	(a) il valore di x viene sommato a quello di y e il totale memorizzato in y 
 	(b) il valore di x diventa 0
   (i 2 argomenti di move devono essere 2 asset)

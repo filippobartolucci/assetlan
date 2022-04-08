@@ -6,7 +6,8 @@ import ast.node.Node;
 
 import java.util.ArrayList;
 
-public class BoolExpNode {
+public class BoolExpNode extends ExpNode {
+    //| BOOL                    #boolExp
     public Boolean bool;
 
     /* Empty Constructor */
@@ -27,8 +28,7 @@ public class BoolExpNode {
      * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-        return errors;
+        return new ArrayList<SemanticError>();
     }
 
     /**
@@ -52,9 +52,6 @@ public class BoolExpNode {
      * @param indent
      * @returns
      */
-    public String toPrint(String indent){
-        return null;
-    }
-
+    public String toPrint(String indent) {return "\n"+indent + "Bool " + bool;}
 }
 

@@ -6,7 +6,8 @@ import ast.node.Node;
 
 import java.util.ArrayList;
 
-public class DerExpNode {
+public class DerExpNode extends ExpNode {
+    // | ID						                        #derExp
     private String id;
 
     /*Empty Constructor*/
@@ -26,10 +27,7 @@ public class DerExpNode {
      * @param env
      * @return errors
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-        return errors;
-    }
+    public ArrayList<SemanticError> checkSemantics(Environment env){return null;}
 
     /**
      * Generate code for this node

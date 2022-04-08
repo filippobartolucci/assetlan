@@ -1,5 +1,6 @@
 // Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
 package Parser;
+import Parser.AssetLanParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -67,6 +68,16 @@ public interface AssetLanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParam(AssetLanParser.ParamContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AssetLanParser#bparam}.
+	 * @param ctx the parse tree
+	 */
+	void enterBparam(AssetLanParser.BparamContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AssetLanParser#bparam}.
+	 * @param ctx the parse tree
+	 */
+	void exitBparam(AssetLanParser.BparamContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AssetLanParser#aparam}.
 	 * @param ctx the parse tree
@@ -273,4 +284,14 @@ public interface AssetLanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNotExp(AssetLanParser.NotExpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AssetLanParser#aexp}.
+	 * @param ctx the parse tree
+	 */
+	void enterAexp(AssetLanParser.AexpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AssetLanParser#aexp}.
+	 * @param ctx the parse tree
+	 */
+	void exitAexp(AssetLanParser.AexpContext ctx);
 }

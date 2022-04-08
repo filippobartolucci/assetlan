@@ -11,7 +11,6 @@ public class ExpNode implements Node {
     public ExpNode() {
         this.exp = null;
     }
-
     public ExpNode(Node exp) {
         this.exp = exp;
     }
@@ -19,15 +18,12 @@ public class ExpNode implements Node {
     public String toPrint(String indent) {
         return null;
     }
-
     public Node typeCheck() {
         return null;
     }
-
     public String codeGeneration() {
         return null;
     }
-
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> semanticErrors = new ArrayList<>();
         if (exp != null) {

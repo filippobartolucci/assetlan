@@ -7,7 +7,8 @@ import ast.node.Node;
 
 import java.util.ArrayList;
 
-public class CallExpNode {
+public class CallExpNode extends ExpNode {
+    // | call                                              #callExp
     private CallNode call;
 
     /*Empty Constructor
@@ -27,16 +28,15 @@ public class CallExpNode {
      * @param env
      * @return errors
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-        return errors;
-    }
+    @Override
+    public ArrayList<SemanticError> checkSemantics(Environment env){return null;}
 
     /**
      * Generate code for this node
      * @param
      * @return
      */
+    @Override
     public Node typeCheck(){
         return null;
     }
@@ -44,6 +44,7 @@ public class CallExpNode {
     /**
      * Generate code for this node
      */
+    @Override
     public String codeGeneration(){
         return "";
     }
@@ -53,6 +54,7 @@ public class CallExpNode {
      * @param indent
      * @returns
      */
+    @Override
     public String toPrint(String indent){
         return null;
     }

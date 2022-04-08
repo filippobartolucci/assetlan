@@ -25,32 +25,16 @@ public class ProgramNode implements Node {
 		this.initcallnode = initcallnode;
 	}
 
-	public ArrayList<SemanticError> checkSemantics(Environment env){
-		// SCRITTA DA COPILOT, c'è nelle slide come si dovrebbe fare
-		/*
-		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-		for(Node n : fields){
-			errors.addAll(n.checkSemantics(env));
-		}
-		for(Node n : assets){
-			errors.addAll(n.checkSemantics(env));
-		}
-		for(Node n : functions){
-			errors.addAll(n.checkSemantics(env));
-		}
-		if(initcallnode != null){
-			errors.addAll(initcallnode.checkSemantics(env));
-		}
-		return errors;*/
+	@Override
+	public String toPrint(String indent) {return null;}
 
-		return null;
-	}
+	@Override
+	public Node typeCheck() {return null;}
 
-	/*
-	DA IMPLEMENTARE
-	public String toPrint(String indent);
-	Node typeCheck();
-	String codeGeneration();
-	*/
+	@Override
+	public String codeGeneration() {return null;}
+
+	@Override
+	public ArrayList<SemanticError> checkSemantics(Environment env){return null;}
 }
 

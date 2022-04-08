@@ -1,6 +1,5 @@
 // Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
-package ast;
-import Parser.AssetLanParser;
+package Parser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**

@@ -7,9 +7,11 @@ import ast.node.exp.ExpNode;
 import java.util.ArrayList;
 
 public class IteNode implements Node {
-   private StatementNode statement2;
-   private StatementNode statement1;
-   private ExpNode exp;
+    private ExpNode exp;
+    private StatementNode statement1;
+    private StatementNode statement2;
+
+
 
     /**
      * Empty constructor
@@ -26,10 +28,10 @@ public class IteNode implements Node {
      * @param statement2
      * @param exp
      */
-    public IteNode(StatementNode statement1, StatementNode statement2, ExpNode exp){
+    public IteNode(ExpNode exp, StatementNode statement1, StatementNode statement2){
+        this.exp = exp;
         this.statement1 = statement1;
         this.statement2 = statement2;
-        this.exp = exp;
     }
 
     /**

@@ -2,12 +2,13 @@ package ast.node;
 
 import Semantic.Environment;
 import Semantic.SemanticError;
+import ast.node.exp.BaseExpNode;
 import ast.node.exp.ExpNode;
 
 import java.util.ArrayList;
 
 public class PrintNode implements Node {
-    private ExpNode exp;
+    private BaseExpNode exp;
 
     /*Empty Constructor*/
     public PrintNode() {
@@ -15,7 +16,7 @@ public class PrintNode implements Node {
     }
 
     /*Constructor*/
-    public PrintNode(ExpNode exp) {
+    public PrintNode(BaseExpNode exp) {
         this.exp = exp;
     }
 
