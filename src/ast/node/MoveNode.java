@@ -58,7 +58,7 @@ public class MoveNode implements Node {
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        return indent + "\tMOVE " + id1 + " -o " + id2 + "\n";
     }
 
 }

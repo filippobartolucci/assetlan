@@ -67,8 +67,8 @@ public class FieldNode implements Node{
 	public String toPrint(String indent){
 		String s = indent+"FieldNode\n";
 		s += indent+"\tid: "+id+"\n";
-		s += indent+"\ttype: "+type+"\n";
-		s += indent+"\tvalue: "+value+"\n";
+		s += indent+"\ttype: "+type.toPrint(indent)+"\n";
+		//s += indent+"\tvalue: "+value.toPrint(indent)+"\n";
 		return s;
 	}
 }

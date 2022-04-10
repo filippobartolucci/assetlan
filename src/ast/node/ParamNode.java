@@ -7,16 +7,7 @@ import java.util.ArrayList;
 
 public class ParamNode implements Node {
     private String id;
-    private TypeNode type;
-
-    /**
-     * Empty constructor
-     *
-     */
-    public ParamNode() {
-        this.id = "";
-        this.type = null;
-    }
+    private Node type;
 
     /**
      * Constructor
@@ -24,7 +15,7 @@ public class ParamNode implements Node {
      * @param id
      * @param type
      */
-    public ParamNode(String id, TypeNode type) {
+    public ParamNode(String id, Node type) {
         this.id = id;
         this.type = type;
     }
@@ -60,7 +51,11 @@ public class ParamNode implements Node {
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        String s = indent+"FieldNode\n";
+        s += indent+"\tid: "+id+"\n";
+        s += indent+"\ttype: "+type.toPrint(indent)+"\n";
+        //s += indent+"\tvalue: "+value.toPrint(indent)+"\n";
+        return s;
     }
 
 

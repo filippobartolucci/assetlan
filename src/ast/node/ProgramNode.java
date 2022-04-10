@@ -26,7 +26,27 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public String toPrint(String indent) {return null;}
+	public String toPrint(String indent) {
+		String s ="";
+
+		for (Node f : fields) {
+			s += f.toPrint(indent + "\t");
+		}
+
+		for (Node a : assets) {
+			s += a.toPrint(indent + "\t");
+		}
+
+		for (Node f : functions) {
+			s += f.toPrint(indent + "\t");
+		}
+
+		if (initcallnode != null) {
+			s += initcallnode.toPrint(indent + "\t");
+		}
+
+		return "\n---BEGINNING AST---\nProgram\n" + s +"---ENDING AST---";
+	}
 
 	@Override
 	public Node typeCheck() {return null;}

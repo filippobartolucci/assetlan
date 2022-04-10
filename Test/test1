@@ -1,5 +1,6 @@
 int x = 1;
-int f(int x, int z)[asset y]{
+asset w;
+int f(int x, int z,int o)[asset y]{
     int w
     int i
 }

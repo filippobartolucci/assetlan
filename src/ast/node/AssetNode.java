@@ -12,15 +12,6 @@ public class AssetNode implements Node{
 		this.id = id;
 	}
 
-	public String getId(){
-		return id;
-	}
-
-
-	public void setId(String id){
-		this.id = id;
-	}
-
 	public Node typeCheck(){
 		return null;
 	}
@@ -34,6 +25,8 @@ public class AssetNode implements Node{
 	}
 
 	public String toPrint(String indent) {
-		return null;
+		String s = indent + "AssetNode\n";
+		s += indent + "\tid: " + id + "\n";
+		return s;
 	}
 }

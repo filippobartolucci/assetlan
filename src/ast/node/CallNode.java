@@ -6,7 +6,7 @@ import ast.node.exp.ExpNode;
 
 import java.util.ArrayList;
 
-public class CallNode {
+public class CallNode implements Node{
     private String id;
     private ArrayList<ExpNode> expressions;
     private ArrayList<String> ids;
@@ -63,7 +63,11 @@ public class CallNode {
      * @returns
      */
     public String toPrint(String indent){
-       return null;
+        String s = indent + "CallNode: " + id + "\n";
+        for(ExpNode e : expressions){
+            s += e.toPrint(indent + "  ");
+        }
+        return s;
     }
 
 

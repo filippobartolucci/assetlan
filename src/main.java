@@ -4,6 +4,7 @@ import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
 import ast.AssetLanVisitorImpl;
 import ast.node.Node;
+import org.antlr.v4.parse.v4ParserException;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import ErrorHandler.*;
@@ -16,7 +17,7 @@ import Semantic.Environment;
 public class main {
     public static void main(String[] args){
         try{
-            System.out.println("AssetLan Compiler ");
+            System.out.println("AssetLan Compiler... ");
 
             if(args.length == 0){
                 System.err.println("No file provided.");
@@ -29,18 +30,24 @@ public class main {
             }
 
             AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
-            //AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName("./Test/test1"));
 
-            // Ex1
+            // Our LexerErrorListener, used to dump errors to txt
             LexerErrorListener lexerListener = new LexerErrorListener();
             lexer.addErrorListener(lexerListener);
 
             CommonTokenStream cts = new CommonTokenStream(lexer);
             AssetLanParser parser = new AssetLanParser(cts);
-            parser.removeErrorListeners();
 
             AssetLanVisitorImpl visitor = new AssetLanVisitorImpl();
             Node ast = visitor.visitInit(parser.init());
+
+            if (parser.getNumberOfSyntaxErrors()>0) {
+                System.err.println("Syntax errors found.");
+                return;
+            }
+            System.out.println("\nParsing successful!");
+
+            System.out.println(ast.toPrint(""));
 
             // Ex1
             PrintWriter out = null;

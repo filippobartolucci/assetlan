@@ -2,18 +2,10 @@ package ast.node;
 
 import Semantic.Environment;
 import Semantic.SemanticError;
-
 import java.util.ArrayList;
 
 public class AparamNode implements Node{
     private String id;
-
-    /**
-     * Empty Contructor
-     */
-    public AparamNode(){
-        this.id = "";
-    }
 
     /**
      * Constructor
@@ -22,8 +14,6 @@ public class AparamNode implements Node{
     public AparamNode(String id){
         this.id = id;
     }
-
-    // Node interface to implement
 
     /**
      * Check semantic errors for this node in a given environment
@@ -57,6 +47,6 @@ public class AparamNode implements Node{
      * @return
      */
     public String toPrint(String indent){
-       return null;
+        return "\n" + indent + "AparamNode"+ this.id +"\"n";
     }
 }

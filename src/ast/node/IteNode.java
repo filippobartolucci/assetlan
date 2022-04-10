@@ -66,7 +66,11 @@ public class IteNode implements Node {
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        String s = indent + "IteNode\n";
+        s += indent + "\tExp:\n" + exp.toPrint(indent + "\t");
+        s += indent + "\tStatement1:\n" + statement1.toPrint(indent + "\t");
+        s += indent + "\tStatement2:\n" + statement2.toPrint(indent + "\t");
+        return s;
     }
 
 

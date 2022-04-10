@@ -1,9 +1,9 @@
-package ast.node.exp;
+package ast.node.exp.value;
 
 import Semantic.Environment;
 import Semantic.SemanticError;
 import ast.node.Node;
-
+import ast.node.exp.ExpNode;
 import java.util.ArrayList;
 
 public class BoolExpNode extends ExpNode {

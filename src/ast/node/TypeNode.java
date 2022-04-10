@@ -55,7 +55,7 @@ public class TypeNode implements Node{
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        return type;
     }
 
 }

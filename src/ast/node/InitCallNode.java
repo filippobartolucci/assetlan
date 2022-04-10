@@ -12,22 +12,16 @@ public class InitCallNode implements Node{
     ArrayList<BaseExpNode> aexp;
 
     /**
-     * Empty constructor
-     */
-    public InitCallNode(){
-        this.id = "";
-        this.exp = new ArrayList<BaseExpNode>();
-        this.aexp = new ArrayList<BaseExpNode>();
-    }
-    /**
      * Contstructor
      * @param id
-     * @param exp
+     * @param expnodes
+     * @param aexpnodes
      */
-    public InitCallNode(String id, ArrayList<BaseExpNode> exp, ArrayList<BaseExpNode> aexp){
+    public InitCallNode(String id, ArrayList<Node> expnodes, ArrayList<Node> aexpnodes) {
         this.id = id;
         this.exp = exp;
         this.aexp = aexp;
+
     }
 
     /**
@@ -62,7 +56,11 @@ public class InitCallNode implements Node{
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        String s = indent + "InitCallNode\n";
+        s += indent + "\tid: " + id + "\n";
+        s += indent + "\texp: " + exp + "\n";
+        s += indent + "\taexp: " + aexp + "\n";
+        return s;
     }
 
 
