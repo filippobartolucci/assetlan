@@ -35,7 +35,6 @@ public class FieldNode implements Node{
 		SemanticError error=env.addDecl(id, entry);
 		if(error!=null) {
 			errors.add(error);
-			throw new RuntimeException("Error in FieldNode " + id);
 		}
 		return errors;
 	}

@@ -60,19 +60,14 @@ public class main {
             Environment env = new Environment();
 
             ArrayList<SemanticError> s_errors = new ArrayList<>();
-            try {
-                s_errors = ast.checkSemantics(env);
-            } catch (RuntimeException e) {
-                System.err.println(e.getMessage());
-            }
+            s_errors = ast.checkSemantics(env);
 
             if(s_errors.size() > 0){
                 for (SemanticError s_error : s_errors) {
-                    System.out.println(s_error.toString());
+                    System.err.println(s_error.toString());
                 }
+                return;
             }
-
-
         }catch (Exception exc) {
             System.err.println(exc.getMessage());
             System.exit(2);
