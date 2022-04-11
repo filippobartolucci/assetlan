@@ -10,13 +10,8 @@ public class BoolExpNode extends ExpNode {
     //| BOOL                    #boolExp
     public Boolean bool;
 
-    /* Empty Constructor */
-    public BoolExpNode() {
-        this.bool = false;
-    }
-
-    /* Constructor
-    * @param bool
+    /*
+     * Constructor
     */
     public BoolExpNode(Boolean bool) {
         this.bool = bool;
@@ -28,17 +23,13 @@ public class BoolExpNode extends ExpNode {
 
 	/**
      * Check semantic errors for this node in a given environment
-     * @param env
-     * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        return new ArrayList<SemanticError>();
+        return new ArrayList<>();
     }
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     public Node typeCheck(){
         return null;
@@ -52,9 +43,7 @@ public class BoolExpNode extends ExpNode {
     }
 
     /**
-     *
-     * @param indent
-     * @returns
+     * Print this node
      */
     public String toPrint(String indent) {return "\n"+indent + "Bool " + bool;}
 }

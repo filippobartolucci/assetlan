@@ -7,14 +7,10 @@ import ast.node.exp.ExpNode;
 import java.util.ArrayList;
 
 public class RetNode implements Node{
-    private ExpNode exp;
+    private final ExpNode exp;
 
-    /* Empty constructor */
-    public RetNode(){
-        exp = null;
-    }
-    /*Constructor
-    * @param exp
+    /*
+     *Constructor
     */
     public RetNode(ExpNode exp){
         this.exp = exp;
@@ -22,11 +18,9 @@ public class RetNode implements Node{
 
     /**
      * Check semantic errors for this node in a given environment
-     * @param env
-     * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
         if(exp != null){
             errors.addAll(exp.checkSemantics(env));
         }
@@ -35,8 +29,6 @@ public class RetNode implements Node{
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     public Node typeCheck(){
         return null;
@@ -50,9 +42,7 @@ public class RetNode implements Node{
     }
 
     /**
-     *
-     * @param indent
-     * @returns
+     * Print this node
      */
     public String toPrint(String indent){
         String res = indent + "Return\n";

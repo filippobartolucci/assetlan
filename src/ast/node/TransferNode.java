@@ -32,7 +32,7 @@ public class TransferNode implements Node {
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
         STentry entry = env.lookup(id);
         if(entry == null){
-            errors.add(new SemanticError("Undeclared variable: " + id));
+            errors.add(new SemanticError("Asset " + id + " not declared"));
         }
         return errors;
     }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class CallExpNode extends ExpNode {
     // | call                                              #callExp
-    private Node call;
+    private final Node call;
 
     /* Constructor */
     public CallExpNode(Node call) {
@@ -18,16 +18,13 @@ public class CallExpNode extends ExpNode {
 
     /**
      * Check semantic errors for this node in a given environment
-     * @param env
-     * @return errors
      */
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env){return null;}
+    public ArrayList<SemanticError> checkSemantics(Environment env){
+        return call.checkSemantics(env);}
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     @Override
     public Node typeCheck(){
@@ -43,9 +40,7 @@ public class CallExpNode extends ExpNode {
     }
 
     /**
-     *
-     * @param indent
-     * @returns
+     * Print this node
      */
     @Override
     public String toPrint(String indent){

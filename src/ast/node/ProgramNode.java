@@ -53,7 +53,7 @@ public class ProgramNode implements Node {
 		for (Node f : functions)
 			errors.addAll(f.checkSemantics(env));
 
-		//if (initcallnode != null) errors.addAll(initcallnode.checkSemantics(env));
+		if (initcallnode != null) errors.addAll(initcallnode.checkSemantics(env));
 
 		return errors;
 	}

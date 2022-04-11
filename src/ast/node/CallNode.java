@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.exp.ExpNode;
 
@@ -29,8 +30,20 @@ public class CallNode implements Node{
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+
+        STentry f_entry = env.lookup(id);
+        if (f_entry == null){
+            errors.add(new SemanticError("Function " + id + " is not defined"));
+        }
+
         for(Node e : expressions){
             errors.addAll(e.checkSemantics(env));
+        }
+        for (String id : ids){
+            STentry entry = env.lookup(id);
+            if (entry == null){
+                errors.add(new SemanticError("Asset " + id + " is not declared"));
+            }
         }
         return errors;
     }

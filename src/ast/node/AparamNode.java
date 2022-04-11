@@ -6,11 +6,10 @@ import Semantic.SemanticError;
 import java.util.ArrayList;
 
 public class AparamNode implements Node{
-    private String id;
+    private final String id;
 
     /**
      * Constructor
-     * @param id
      */
     public AparamNode(String id){
         this.id = id;
@@ -18,11 +17,10 @@ public class AparamNode implements Node{
 
     /**
      * Check semantic errors for this node in a given environment
-     * @param env
      * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
         STentry entry = new STentry(env.getNestingLevel(),-1,this);
 
         SemanticError error=env.addDecl(id, entry);
@@ -34,8 +32,6 @@ public class AparamNode implements Node{
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     public Node typeCheck(){
         return null;
@@ -49,9 +45,7 @@ public class AparamNode implements Node{
     }
 
     /**
-     *
-     * @param indent
-     * @return
+     * Print this node
      */
     public String toPrint(String indent){
         return "\n" + indent + "AparamNode"+ this.id +"\"n";

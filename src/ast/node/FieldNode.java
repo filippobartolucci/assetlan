@@ -6,15 +6,12 @@ import Semantic.SemanticError;
 import java.util.ArrayList;
 
 public class FieldNode implements Node{
-	private String id;
-	private Node type;
-	private Node value;
+	private final String id;
+	private final Node type;
+	private final Node value;
 
 	/**
 	 * Constructor
-	 * @param id
-	 * @param type
-	 * @param value
 	 */
 	public FieldNode(String id, Node type, Node value) {
 		this.id = id;
@@ -26,12 +23,10 @@ public class FieldNode implements Node{
 
 	/**
 	 * Check semantic errors for this node in a given environment
-	 * @param env
-	 * @return errors
 	 */
 	public ArrayList<SemanticError> checkSemantics(Environment env){
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
-		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+		ArrayList<SemanticError> errors = new ArrayList<>();
 		SemanticError error=env.addDecl(id, entry);
 		if(error!=null) {
 			errors.add(error);
@@ -41,8 +36,6 @@ public class FieldNode implements Node{
 
 	/**
 	 * Generate code for this node
-	 * @param
-	 * @return
 	 */
 	public Node typeCheck(){
 		return null;
@@ -56,8 +49,7 @@ public class FieldNode implements Node{
 	}
 
 	/**
-	 *
-	 * @param indent
+	 * Print this node
 	 */
 	public String toPrint(String indent){
 		String s = indent+"FieldNode\n";

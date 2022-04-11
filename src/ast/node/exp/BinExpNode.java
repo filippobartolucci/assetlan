@@ -16,9 +16,9 @@ public class BinExpNode extends ExpNode {
 	| left=exp op='||'                      right=exp   #binExp
 	*/
 
-	private Node left;
-	private String op;
-	private Node right;
+	private final Node left;
+	private final String op;
+	private final Node right;
 
 	public BinExpNode(Node left, String op, Node right) {
 		super();
@@ -27,6 +27,7 @@ public class BinExpNode extends ExpNode {
 		this.right = right;
 	}
 
+	@Override
 	public String toPrint(String indent){
 		String res = indent + "BinExpNode\t";
 		res += left.toPrint(indent+"\t\t");
@@ -34,6 +35,15 @@ public class BinExpNode extends ExpNode {
 		res += right.toPrint(indent+"\t\t");
 		return res;
 	}
+
+	@Override
+	public ArrayList<SemanticError> checkSemantics(Environment env) {
+		ArrayList<SemanticError> res = new ArrayList<>();
+		res.addAll(left.checkSemantics(env));
+		res.addAll(right.checkSemantics(env));
+		return res;
+	}
+
 }
 
 

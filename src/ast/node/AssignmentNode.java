@@ -3,18 +3,14 @@ package ast.node;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
-import ast.node.exp.ExpNode;
-
 import java.util.ArrayList;
 
 public class AssignmentNode implements Node {
-    private String id;
-    private Node exp;
+    private final String id;
+    private final Node exp;
 
     /**
      * Construtor
-     * @param id
-     * @param exp
      */
     public AssignmentNode(String id, Node exp) {
         this.id = id;
@@ -23,22 +19,18 @@ public class AssignmentNode implements Node {
 
     /**
      * Check semantic errors for this node in a given environment
-     * @param env
-     * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
         STentry entry = env.lookup(id);
         if(entry == null){
-            errors.add(new SemanticError("Undeclared variable: " + id));
+            errors.add(new SemanticError("Variable " + id + " not declared"));
         }
         return errors;
     }
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     public Node typeCheck(){
         return null;
@@ -52,9 +44,7 @@ public class AssignmentNode implements Node {
     }
 
     /**
-     *
-     * @param indent
-     * @return
+     * Print this node
      */
     public String toPrint(String indent){
         String res = indent + "AssignmentNode\n";

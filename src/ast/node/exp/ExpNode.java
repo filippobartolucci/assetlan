@@ -30,6 +30,7 @@ public class ExpNode implements Node {
     public String codeGeneration() {
         return null;
     }
+
     public ArrayList<SemanticError> checkSemantics(Environment env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
         if (exp != null) {

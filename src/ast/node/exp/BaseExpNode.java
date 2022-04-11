@@ -10,7 +10,6 @@ public class BaseExpNode extends ExpNode{
     private Node exp;
 
     /*Constructor
-    * @param exp
     */
 
     public BaseExpNode(ExpNode exp){super(exp);}

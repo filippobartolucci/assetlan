@@ -12,4 +12,6 @@ public class NotExpNode extends ExpNode {
 		return "\n"+indent+"NotExp !";
 	}
 
+
+
 }

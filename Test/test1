@@ -1,16 +1,12 @@
 int x = 1;
-int x = 2;
+int y = 2;
 
-asset w;
-asset w;
-int f(int x, int z,int o)[asset y, asset y]{
-    int z
-    int o
-    l=-1;
-    f(piero,cosimo)[paoletta,paola];
-    print giancarlo;
+asset f;
+
+int q(int x)[asset y]{
+    print r;
     return;
 }
-int f(int x, int z)[]{}
-f(-a1)[]
+q(x)[];
+
 

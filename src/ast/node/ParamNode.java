@@ -12,9 +12,6 @@ public class ParamNode implements Node {
 
     /**
      * Constructor
-     *
-     * @param id
-     * @param type
      */
     public ParamNode(String id, Node type) {
         this.id = id;
@@ -22,8 +19,6 @@ public class ParamNode implements Node {
     }
     /**
      * Check semantic errors for this node in a given environment
-     * @param env
-     * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
@@ -37,8 +32,6 @@ public class ParamNode implements Node {
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     public Node typeCheck(){
         return null;
@@ -52,9 +45,7 @@ public class ParamNode implements Node {
     }
 
     /**
-     *
-     * @param indent
-     * @returns
+     * Print this node
      */
     public String toPrint(String indent){
         String s = indent+"FieldNode\n";

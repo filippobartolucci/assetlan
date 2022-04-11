@@ -21,8 +21,7 @@ public class PrintNode implements Node {
 	 * @return errors
 	 */
 	public ArrayList<SemanticError> checkSemantics(Environment env){
-		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-		return errors;
+		return exp.checkSemantics(env);
 	}
 
 	/**

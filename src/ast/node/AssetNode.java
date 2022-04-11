@@ -7,7 +7,7 @@ import Semantic.SemanticError;
 import java.util.ArrayList;
 
 public class AssetNode implements Node{
-	private String id = null;
+	private final String id;
 
 	public AssetNode(String id){
 		this.id = id;
@@ -22,9 +22,9 @@ public class AssetNode implements Node{
 	}
 
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
-		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+		ArrayList<SemanticError> errors;
+		errors = new ArrayList<SemanticError>();
 
 		SemanticError err = env.addDecl(id, entry);
 		if (err != null) {

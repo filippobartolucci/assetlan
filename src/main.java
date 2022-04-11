@@ -42,7 +42,7 @@ public class main {
             Node ast = visitor.visitInit(parser.init());
 
             if (parser.getNumberOfSyntaxErrors()>0) {
-                System.err.println("Syntax errors found.");
+                System.err.println(parser.getNumberOfSyntaxErrors() + " Syntax errors found.");
                 return;
             }
             System.out.println("Parsing successful!");
@@ -59,13 +59,14 @@ public class main {
             // Ex2
             Environment env = new Environment();
 
-            ArrayList<SemanticError> s_errors = new ArrayList<>();
+            ArrayList<SemanticError> s_errors;
             s_errors = ast.checkSemantics(env);
 
             if(s_errors.size() > 0){
                 for (SemanticError s_error : s_errors) {
                     System.err.println(s_error.toString());
                 }
+                System.err.println("\n" + s_errors.size() + " Semantic errors found -> Compilation failed.");
                 return;
             }
         }catch (Exception exc) {

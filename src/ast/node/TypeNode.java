@@ -6,18 +6,10 @@ import Semantic.SemanticError;
 import java.util.ArrayList;
 
 public class TypeNode implements Node{
-    private String type;
+    private final String type;
 
     /*
-    Empty constructor
-    */
-    public TypeNode(){
-        type = "";
-    }
-
-    /*
-    Constructor
-    @param type
+     * Constructor
     */
     public TypeNode(String type){
         this.type = type;
@@ -25,18 +17,13 @@ public class TypeNode implements Node{
 
     /**
      * Check semantic errors for this node in a given environment
-     * @param env
-     * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-        return errors;
+        return new ArrayList<>();
     }
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     public Node typeCheck(){
         return null;
@@ -50,9 +37,7 @@ public class TypeNode implements Node{
     }
 
     /**
-     *
-     * @param indent
-     * @returns
+     * Print this node
      */
     public String toPrint(String indent){
         return type;

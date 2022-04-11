@@ -20,7 +20,7 @@ public class FunctionNode implements Node {
 
 	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements) {
 		this.id = id;
-		this.type = (Node)typenode;
+		this.type = typenode;
 		this.params = params;
 		this.aparams = aparams;
 		this.body_params = body_params;
@@ -58,14 +58,14 @@ public class FunctionNode implements Node {
 
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
 		STentry entry = new STentry(env.getNestingLevel(),-1,type);
-		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+		ArrayList<SemanticError> errors = new ArrayList<>();
 
-		if(env.addDecl(id,entry) != null) {
-			errors.add(new SemanticError("Function " + id + " already declared"));
+		SemanticError f_error = env.addDecl(id,entry);
+		if(f_error != null) {
+			errors.add(f_error);
 		}
 
 		env.newEmptyScope();
-
 		for(Node n : params) {
 			errors.addAll(n.checkSemantics(env));
 
@@ -82,6 +82,7 @@ public class FunctionNode implements Node {
 		for(Node n : statements) {
 			errors.addAll(n.checkSemantics(env));
 		}
+		env.exitScope();
 		return errors;
 	}
 }
