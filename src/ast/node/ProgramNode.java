@@ -42,6 +42,20 @@ public class ProgramNode implements Node {
 	public String codeGeneration() {return null;}
 
 	@Override
-	public ArrayList<SemanticError> checkSemantics(Environment env){return null;}
+	public ArrayList<SemanticError> checkSemantics(Environment env){
+		ArrayList<SemanticError> errors = new ArrayList<>();
+		env.newEmptyScope();
+
+		for (Node f : fields)
+			errors.addAll(f.checkSemantics(env));
+		//for (Node a : assets)
+			//errors.addAll(a.checkSemantics(env));
+		//for (Node f : functions)
+			//errors.addAll(f.checkSemantics(env));
+
+		//if (initcallnode != null) errors.addAll(initcallnode.checkSemantics(env));
+
+		return errors;
+	}
 }
 

@@ -1,7 +1,7 @@
 package ast.node;
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
-import ast.node.exp.ExpNode;
 
 import java.util.ArrayList;
 
@@ -9,15 +9,6 @@ public class FieldNode implements Node{
 	private String id;
 	private Node type;
 	private Node value;
-
-	/**
-	 * Empty Constructor
-	 */
-	public FieldNode(){
-		this.id = "";
-		this.type = null;
-		this.value = null;
-	}
 
 	/**
 	 * Constructor
@@ -39,7 +30,16 @@ public class FieldNode implements Node{
 	 * @return errors
 	 */
 	public ArrayList<SemanticError> checkSemantics(Environment env){
+		STentry entry = new STentry(env.getNestingLevel(), -1, this);
+
 		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+		SemanticError error=env.addDecl(id, entry);
+		System.out.println(error);
+		if(error!=null) {
+			errors.add(error);
+			throw new RuntimeException("Error in FieldNode " + id);
+		}
+
 		return errors;
 	}
 
@@ -62,7 +62,6 @@ public class FieldNode implements Node{
 	/**
 	 *
 	 * @param indent
-	 * @return
 	 */
 	public String toPrint(String indent){
 		String s = indent+"FieldNode\n";

@@ -58,9 +58,9 @@ public class CallNode implements Node{
             s.append(e.toPrint(indent + "\t"));
             s.append("\n");
         }
-        s.append(indent).append("Assets:\n");
+        s.append(indent).append("\tAssets:\n");
         for (String id : ids){
-            s.append(indent).append("\t").append(id);
+            s.append(indent).append("\t\t").append(id);
             s.append("\n");
         }
         s.append("\n");

@@ -54,7 +54,7 @@ public class NegExpNode extends ExpNode {
      * @returns
      */
     public String toPrint(String indent){
-        return indent + "NegExpNode\n\t" + exp.toPrint(indent + "\t");
+        return "\n" + indent + "NegExpNode\t" + exp.toPrint(indent + "\t");
 
     }
 

@@ -20,23 +20,18 @@ public class BinExpNode extends ExpNode {
 	private String op;
 	private Node right;
 
-	public BinExpNode() {
-		this.left = null;
-		this.op = null;
-		this.right = null;
-	}
-
 	public BinExpNode(Node left, String op, Node right) {
+		super();
 		this.left = left;
 		this.op = op;
 		this.right = right;
 	}
 
 	public String toPrint(String indent){
-		String res = indent + "BinExpNode\n\t";
-		res += left.toPrint(indent + "\t");
-		res += "\n" + indent + "\t\tOP: " + op + "\n\t";
-		res += right.toPrint(indent + "\t");
+		String res = indent + "BinExpNode\t";
+		res += left.toPrint(indent+"\t\t");
+		res += "\n" + indent + "\t\tOP: " + op + "\t";
+		res += right.toPrint(indent+"\t\t");
 		return res;
 	}
 }

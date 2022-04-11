@@ -23,6 +23,7 @@ public class ExpNode implements Node {
         }
         return s;
     }
+
     public Node typeCheck() {
         return null;
     }

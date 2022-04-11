@@ -123,6 +123,4 @@ public class Environment implements Cloneable {
 		this.nestingLevel--;
 	}
 
-
-
 }

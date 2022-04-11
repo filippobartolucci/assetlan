@@ -54,8 +54,8 @@ public class TransferNode implements Node {
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        String res = indent + "TransferNode\n";
+        res += indent + "\tid: " + id + "\n";
+        return res;
     }
-
-
 }

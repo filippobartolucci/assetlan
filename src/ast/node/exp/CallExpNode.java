@@ -11,18 +11,10 @@ public class CallExpNode extends ExpNode {
     // | call                                              #callExp
     private Node call;
 
-    /*Empty Constructor
-    * @param call
-    */
-    public CallExpNode() {
-        call = null;
-    }
-
     /* Constructor */
     public CallExpNode(Node call) {
         this.call = call;
     }
-
 
     /**
      * Check semantic errors for this node in a given environment
@@ -57,7 +49,10 @@ public class CallExpNode extends ExpNode {
      */
     @Override
     public String toPrint(String indent){
-        return null;
+        String s = "";
+        s += indent + "CallExpNode\n";
+        s += indent + call.toPrint(indent + "\t");
+        return s;
     }
 
 }

@@ -45,7 +45,6 @@ public class FunctionNode implements Node {
 		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
 
 		return s.toString();
-
 	}
 
 	public Node typeCheck() {

@@ -47,8 +47,8 @@ public class DerExpNode extends ExpNode {
      * @returns
      */
     public String toPrint(String indent){
-        String s = indent + "DerExpNode";
-        s += " id: " + id;
+        String s = "\n" + indent + "DerExpNode\n";
+        s += indent + "\t id: " + id;
         return s;
     }
 

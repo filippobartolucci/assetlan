@@ -10,7 +10,7 @@ public class STentry {
 	public STentry(){
 		this.nestingLevel = -1;
 		this.offset = -1;
-		// this.type = null;
+		this.type = null;
 	}
 
 	public STentry(int nestingLevel, int offset) {

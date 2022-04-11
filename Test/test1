@@ -1,10 +1,13 @@
 int x = 1;
+int x = 2;
+
 asset w;
 int f(int x, int z,int o)[asset y]{
     int w
     int i
-    l=1;
-    f(i,op,i)[op,f,g,j,l];
+    l=-1;
+    f(piero,cosimo)[paoletta,paola];
+    print giancarlo;
 }
 
 f(-a1)[a2-a3]

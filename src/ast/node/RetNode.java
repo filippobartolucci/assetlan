@@ -52,7 +52,12 @@ public class RetNode implements Node{
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        String res = indent + "Return\n";
+        if(exp != null){
+            res += exp.toPrint(indent + "\t");
+        }
+        res +="\n";
+        return res;
     }
 
 }

@@ -47,8 +47,6 @@ public class main {
             }
             System.out.println("Parsing successful!");
 
-            System.out.println(ast.toPrint(""));
-
             // Ex1
             PrintWriter out = null;
             try {
@@ -60,7 +58,13 @@ public class main {
 
             // Ex2
             Environment env = new Environment();
-            ArrayList<SemanticError> s_errors = ast.checkSemantics(env);
+
+            ArrayList<SemanticError> s_errors = new ArrayList<>();
+            try {
+                s_errors = ast.checkSemantics(env);
+            } catch (RuntimeException e) {
+                System.err.println(e.getMessage());
+            }
 
             if(s_errors.size() > 0){
                 for (SemanticError s_error : s_errors) {

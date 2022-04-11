@@ -11,17 +11,6 @@ public class IteNode implements Node {
     private StatementNode statement1;
     private StatementNode statement2;
 
-
-
-    /**
-     * Empty constructor
-     */
-    public IteNode(){
-        this.statement1 = null;
-        this.statement2 = null;
-        this.exp = null;
-
-    }
     /**
      * Contstructor
      * @param statement1
@@ -67,9 +56,9 @@ public class IteNode implements Node {
      */
     public String toPrint(String indent){
         String s = indent + "IteNode\n";
-        s += indent + "\tExp:\n" + exp.toPrint(indent + "\t");
-        s += indent + "\tStatement1:\n" + statement1.toPrint(indent + "\t");
-        s += indent + "\tStatement2:\n" + statement2.toPrint(indent + "\t");
+        s += indent + "\tCONDITION:" + exp.toPrint(indent + "\t\t");
+        s += "\n" + indent + "\tIF:\n" + statement1.toPrint(indent + "\t");
+        s +=  indent + "\tELSE:\n" + statement2.toPrint(indent + "\t");
         return s;
     }
 
