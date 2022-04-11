@@ -27,6 +27,9 @@ public class RetNode implements Node{
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        if(exp != null){
+            errors.addAll(exp.checkSemantics(env));
+        }
         return errors;
     }
 

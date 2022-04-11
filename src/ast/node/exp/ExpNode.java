@@ -31,11 +31,11 @@ public class ExpNode implements Node {
         return null;
     }
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> semanticErrors = new ArrayList<>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
         if (exp != null) {
-            //semanticErrors.addAll(exp.checkSemantics());
+            errors.addAll(exp.checkSemantics(env));
         }
-        return semanticErrors;
+        return errors;
     }
 
 }

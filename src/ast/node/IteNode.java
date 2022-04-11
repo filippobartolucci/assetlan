@@ -8,19 +8,19 @@ import java.util.ArrayList;
 
 public class IteNode implements Node {
     private ExpNode exp;
-    private StatementNode statement1;
-    private StatementNode statement2;
+    private StatementNode if_statement;
+    private StatementNode else_statement;
 
     /**
      * Contstructor
-     * @param statement1
-     * @param statement2
+     * @param if_statement
+     * @param else_statement
      * @param exp
      */
-    public IteNode(ExpNode exp, StatementNode statement1, StatementNode statement2){
+    public IteNode(ExpNode exp, StatementNode if_statement, StatementNode else_statement){
         this.exp = exp;
-        this.statement1 = statement1;
-        this.statement2 = statement2;
+        this.if_statement = if_statement;
+        this.else_statement = else_statement;
     }
 
     /**
@@ -30,6 +30,15 @@ public class IteNode implements Node {
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        if (exp.checkSemantics(env) != null) {
+            errors.addAll(exp.checkSemantics(env));
+            if (if_statement.checkSemantics(env) != null) {
+                errors.addAll(if_statement.checkSemantics(env));
+            }
+        }
+        if (else_statement.checkSemantics(env) != null)
+            errors.addAll(else_statement.checkSemantics(env));
+
         return errors;
     }
 
@@ -57,8 +66,8 @@ public class IteNode implements Node {
     public String toPrint(String indent){
         String s = indent + "IteNode\n";
         s += indent + "\tCONDITION:" + exp.toPrint(indent + "\t\t");
-        s += "\n" + indent + "\tIF:\n" + statement1.toPrint(indent + "\t");
-        s +=  indent + "\tELSE:\n" + statement2.toPrint(indent + "\t");
+        s += "\n" + indent + "\tIF:\n" + if_statement.toPrint(indent + "\t");
+        s +=  indent + "\tELSE:\n" + else_statement.toPrint(indent + "\t");
         return s;
     }
 

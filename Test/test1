@@ -9,6 +9,7 @@ int f(int x, int z,int o)[asset y, asset y]{
     l=-1;
     f(piero,cosimo)[paoletta,paola];
     print giancarlo;
+    return;
 }
 int f(int x, int z)[]{}
 f(-a1)[]

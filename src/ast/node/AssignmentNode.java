@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.exp.ExpNode;
 
@@ -27,6 +28,10 @@ public class AssignmentNode implements Node {
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        STentry entry = env.lookup(id);
+        if(entry == null){
+            errors.add(new SemanticError("Undeclared variable: " + id));
+        }
         return errors;
     }
 

@@ -34,6 +34,14 @@ public class MoveNode implements Node {
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        STentry entry1 = env.lookup(id1);
+        if(entry1 == null){
+            errors.add(new SemanticError("Undeclared variable: " + id1));
+        }
+        STentry entry2 = env.lookup(id1);
+        if(entry2 == null){
+            errors.add(new SemanticError("Undeclared variable: " + id2));
+        }
         return errors;
     }
 

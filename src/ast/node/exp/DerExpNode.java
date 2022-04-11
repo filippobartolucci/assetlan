@@ -1,6 +1,7 @@
 package ast.node.exp;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.Node;
 
@@ -23,7 +24,14 @@ public class DerExpNode extends ExpNode {
      * @param env
      * @return errors
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){return null;}
+    public ArrayList<SemanticError> checkSemantics(Environment env){
+        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        STentry entry = env.lookup(id);
+        if(entry == null){
+            errors.add(new SemanticError("Variable " + id + " not declared"));
+        }
+        return errors;
+    }
 
     /**
      * Generate code for this node

@@ -29,6 +29,9 @@ public class CallNode implements Node{
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        for(Node e : expressions){
+            errors.addAll(e.checkSemantics(env));
+        }
         return errors;
     }
 
