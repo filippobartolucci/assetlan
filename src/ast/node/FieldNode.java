@@ -31,15 +31,12 @@ public class FieldNode implements Node{
 	 */
 	public ArrayList<SemanticError> checkSemantics(Environment env){
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
-
 		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
 		SemanticError error=env.addDecl(id, entry);
-		System.out.println(error);
 		if(error!=null) {
 			errors.add(error);
 			throw new RuntimeException("Error in FieldNode " + id);
 		}
-
 		return errors;
 	}
 
@@ -67,7 +64,7 @@ public class FieldNode implements Node{
 		String s = indent+"FieldNode\n";
 		s += indent+"\tid: "+id+"\n";
 		s += indent+"\ttype: "+type.toPrint(indent)+"\n";
-		//s += indent+"\tvalue: "+value.toPrint(indent)+"\n";
+		//s += indent+"\t value: "+value.toPrint(indent)+"\n";
 		return s;
 	}
 }

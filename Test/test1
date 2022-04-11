@@ -2,6 +2,7 @@ int x = 1;
 int x = 2;
 
 asset w;
+asset w;
 int f(int x, int z,int o)[asset y]{
     int w
     int i
@@ -10,5 +11,5 @@ int f(int x, int z,int o)[asset y]{
     print giancarlo;
 }
 
-f(-a1)[a2-a3]
+f(-a1)[]
 
