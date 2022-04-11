@@ -34,10 +34,8 @@ public class FieldNode implements Node{
 
 		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
 		SemanticError error=env.addDecl(id, entry);
-		System.out.println(error);
 		if(error!=null) {
 			errors.add(error);
-			throw new RuntimeException("Error in FieldNode " + id);
 		}
 
 		return errors;
