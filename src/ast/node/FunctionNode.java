@@ -17,15 +17,6 @@ public class FunctionNode implements Node {
 	private final ArrayList<Node> body_params; // param inside function
 	private final ArrayList<Node> statements;
 
-	public FunctionNode(){
-		this.type = null;
-		this.id = null;
-		this.params = new ArrayList<>();
-		this.aparams = new ArrayList<>();
-		this.body_params = new ArrayList<>();
-		this.statements = new ArrayList<>();
-	}
-
 	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements) {
 		this.id = id;
 		this.type = (TypeNode)typenode;
@@ -36,26 +27,24 @@ public class FunctionNode implements Node {
 	}
 
 	public String toPrint(String indent) {
-		String s = indent + "FunctionNode\n";
-		s += indent + "\tid: " + id + "\n";
-		s += indent + "\ttype: " + type.toPrint("  ") + "\n";
-		s += indent + "\tParams: \n";
-		for (Node n : params) {
-			s += n.toPrint(indent + "\t	");
-		}
-		s += indent + "\tAparams: \n";
-		for (Node n : aparams) {
-			s += n.toPrint(indent + "\t	");
-		}
-		s += indent + "\tBody Params: \n";
-		for (Node n : body_params) {
-			s += n.toPrint(indent + "\t	");
-		}
-		s += indent + "\tStatements: \n";
-		for (Node n : statements) {
-			s += n.toPrint(indent + "\t");
-		}
-		return s;
+		StringBuilder s = new StringBuilder(indent + "FunctionNode\n");
+
+		s.append(indent).append("\tid: ").append(id).append("\n");
+		s.append(indent).append("\ttype: ").append(type.toPrint("  ")).append("\n");
+		s.append(indent).append("\tParams: \n");
+
+		for (Node n : params) s.append(n.toPrint(indent + "\t	"));
+		s.append(indent).append("\tAparams: \n");
+
+		for (Node n : aparams) s.append(n.toPrint(indent + "\t	"));
+		s.append(indent).append("\tBody Params: \n");
+
+		for (Node n : body_params) s.append(n.toPrint(indent + "\t	"));
+		s.append(indent).append("\tStatements: \n");
+
+		for (Node n : statements) s.append(n.toPrint(indent + "\t"));
+
+		return s.toString();
 
 	}
 
