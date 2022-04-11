@@ -31,6 +31,14 @@ public class BinExpNode extends ExpNode {
 		this.op = op;
 		this.right = right;
 	}
+
+	public String toPrint(String indent){
+		String res = indent + "BinExpNode\n\t";
+		res += left.toPrint(indent + "\t");
+		res += "\n" + indent + "\t\tOP: " + op + "\n\t";
+		res += right.toPrint(indent + "\t");
+		return res;
+	}
 }
 
 

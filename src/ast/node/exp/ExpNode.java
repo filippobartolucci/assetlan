@@ -6,17 +6,22 @@ import ast.node.Node;
 import java.util.ArrayList;
 
 public class ExpNode implements Node {
-    private Node exp;
+    Node exp;
 
-    public ExpNode() {
-        this.exp = null;
-    }
     public ExpNode(Node exp) {
         this.exp = exp;
     }
 
+    public ExpNode() {
+        this.exp = null;
+    }
+
     public String toPrint(String indent) {
-        return null;
+        String s = indent + "ExpNode\n";
+        if (exp != null) {
+            s += exp.toPrint(indent + "  ");
+        }
+        return s;
     }
     public Node typeCheck() {
         return null;

@@ -27,7 +27,7 @@ public class main {
             if(!Paths.get(file).toFile().exists()) {
                 throw new FileNotFoundException("File: " + file + " not found.");
             }// File found, continue with lexer and parser...
-            System.out.println("\nFile: \"" + file + "\" found.\nParsing...");
+            System.out.println("File: \"" + file + "\" found.\nParsing...");
 
             AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
 

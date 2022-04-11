@@ -11,14 +11,6 @@ public class AssignmentNode implements Node {
     private Node exp;
 
     /**
-     * Empty constructor
-     */
-    public AssignmentNode(){
-        this.id = "";
-        this.exp = null;
-    }
-
-    /**
      * Construtor
      * @param id
      * @param exp
@@ -60,7 +52,10 @@ public class AssignmentNode implements Node {
      * @return
      */
     public String toPrint(String indent){
-        return null;
+        String res = indent + "AssignmentNode\n";
+        res += indent + "\tid: " + id + "\n";
+        res += indent + "\tExp: " + exp.toPrint(indent + "\t\t") + "\n";
+        return res;
     }
 
 }

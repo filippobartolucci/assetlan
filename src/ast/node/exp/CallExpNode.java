@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class CallExpNode extends ExpNode {
     // | call                                              #callExp
-    private CallNode call;
+    private Node call;
 
     /*Empty Constructor
     * @param call
@@ -19,9 +19,10 @@ public class CallExpNode extends ExpNode {
     }
 
     /* Constructor */
-    public CallExpNode(CallNode call) {
+    public CallExpNode(Node call) {
         this.call = call;
     }
+
 
     /**
      * Check semantic errors for this node in a given environment

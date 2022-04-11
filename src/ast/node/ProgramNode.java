@@ -21,11 +21,13 @@ public class ProgramNode implements Node {
 	@Override
 	public String toPrint(String indent) {
 		StringBuilder s = new StringBuilder();
-
+		s.append("------------------------------------\n");
 		for (Node f : fields) s.append(f.toPrint(indent + "\t"));
+		s.append("------------------------------------\n");
 		for (Node a : assets) s.append(a.toPrint(indent + "\t"));
+		s.append("------------------------------------\n");
 		for (Node f : functions) s.append(f.toPrint(indent + "\t"));
-
+		s.append("------------------------------------\n");
 		if (initcallnode != null) {
 			s.append(initcallnode.toPrint(indent + "\t"));
 		}

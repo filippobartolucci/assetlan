@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class ValExpNode extends ExpNode {
 	private int val;
 
-	public ValExpNode(int val) {
-		this.val = val;
+	public ValExpNode(String val) {
+		this.val = Integer.parseInt(val);
 	}
 
 	public ArrayList<SemanticError> checkSemantics(Environment env){

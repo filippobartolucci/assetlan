@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class InitCallNode implements Node{
     private String id;
-    ArrayList<BaseExpNode> exp;
-    ArrayList<BaseExpNode> aexp;
+    ArrayList<Node> exp;
+    ArrayList<Node> aexp;
 
     /**
      * Contstructor
@@ -19,9 +19,8 @@ public class InitCallNode implements Node{
      */
     public InitCallNode(String id, ArrayList<Node> expnodes, ArrayList<Node> aexpnodes) {
         this.id = id;
-        this.exp = exp;
-        this.aexp = aexp;
-
+        this.exp = expnodes;
+        this.aexp = aexpnodes;
     }
 
     /**
@@ -58,8 +57,19 @@ public class InitCallNode implements Node{
     public String toPrint(String indent){
         String s = indent + "InitCallNode\n";
         s += indent + "\tid: " + id + "\n";
-        s += indent + "\texp: " + exp + "\n";
-        s += indent + "\taexp: " + aexp + "\n";
+
+        if (exp != null) {
+            for (Node e : exp) {
+                s += indent + "\tExp: \n\t" + e.toPrint(indent + "\t") + "\n";
+            }
+        }else s += indent + "\tExp: no exp\n";
+
+        if (aexp != null) {
+            for (Node e : aexp) {
+                s += indent + "\tAExp: \n\t " + e.toPrint(indent + "\t") + "\n";
+            }
+        }else s += indent + "\tAExp: no aexp\n";
+
         return s;
     }
 

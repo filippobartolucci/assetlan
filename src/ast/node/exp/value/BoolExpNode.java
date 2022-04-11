@@ -22,7 +22,11 @@ public class BoolExpNode extends ExpNode {
         this.bool = bool;
     }
 
-    /**
+    public BoolExpNode(String text) {
+        this.bool = Boolean.parseBoolean(text);
+    }
+
+	/**
      * Check semantic errors for this node in a given environment
      * @param env
      * @return errors

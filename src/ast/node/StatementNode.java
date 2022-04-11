@@ -6,20 +6,24 @@ import Semantic.SemanticError;
 import java.util.ArrayList;
 
 public class StatementNode implements Node {
-    private StatementNode statement;
+    private Node statement;
 
     public StatementNode() {
         this.statement = null;
     }
 
-    public  StatementNode(StatementNode statement) {
+    public  StatementNode(Node statement) {
         this.statement = statement;
     }
 
 
     @Override
     public String toPrint(String indent) {
-        return null;
+        String s = indent + "\tStatementNode\n";
+        if (statement != null) {
+            s += statement.toPrint(indent+"\t\t");
+        }
+        return s;
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class NegExpNode extends ExpNode {
     // | '-' exp					                        #negExp
-    public ExpNode exp;
+    public Node exp;
 
     /*Empty Constructor*/
     public NegExpNode() {
@@ -19,7 +19,7 @@ public class NegExpNode extends ExpNode {
     @param exp
     */
     public NegExpNode(Node exp) {
-        super(exp);
+        this.exp = exp;
     }
 
     /**
@@ -54,7 +54,8 @@ public class NegExpNode extends ExpNode {
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        return indent + "NegExpNode\n\t" + exp.toPrint(indent + "\t");
+
     }
 
 }

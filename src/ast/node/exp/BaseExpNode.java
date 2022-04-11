@@ -7,8 +7,11 @@ import ast.node.Node;
 import java.util.ArrayList;
 
 public class BaseExpNode extends ExpNode{
-    /*Empty Constructor*/
-    public BaseExpNode(){super(null);}
+    private Node exp;
+    public BaseExpNode(Node exp){
+        this.exp = exp;
+    }
+
 
     /*Constructor
     * @param exp

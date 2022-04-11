@@ -8,24 +8,15 @@ import java.util.ArrayList;
 
 public class CallNode implements Node{
     private String id;
-    private ArrayList<ExpNode> expressions;
+    private ArrayList<Node> expressions;
     private ArrayList<String> ids;
-
-    /**
-     * Empty constructor
-     */
-    public CallNode(){
-        this.id = "";
-        this.expressions = new ArrayList<ExpNode>();
-        this.ids = new ArrayList<String>();
-    }
 
     /**
      * Contstructor
      * @param id
      * @param expressions
      */
-    public CallNode(String id, ArrayList<ExpNode> expressions, ArrayList<String> ids){
+    public CallNode(String id, ArrayList<Node> expressions, ArrayList<String> ids){
         this.id = id;
         this.expressions = expressions;
         this.ids = ids;
@@ -59,15 +50,21 @@ public class CallNode implements Node{
 
     /**
      *
-     * @param indent
      * @returns
      */
     public String toPrint(String indent){
-        String s = indent + "CallNode: " + id + "\n";
-        for(ExpNode e : expressions){
-            s += e.toPrint(indent + "  ");
+        StringBuilder s = new StringBuilder(indent + "CallNode: " + id + "\n");
+        for(Node e : expressions){
+            s.append(e.toPrint(indent + "\t"));
+            s.append("\n");
         }
-        return s;
+        s.append(indent).append("Assets:\n");
+        for (String id : ids){
+            s.append(indent).append("\t").append(id);
+            s.append("\n");
+        }
+        s.append("\n");
+        return s.toString();
     }
 
 

@@ -30,19 +30,19 @@ public class FunctionNode implements Node {
 		StringBuilder s = new StringBuilder(indent + "FunctionNode\n");
 
 		s.append(indent).append("\tid: ").append(id).append("\n");
-		s.append(indent).append("\ttype: ").append(type.toPrint("  ")).append("\n");
+		s.append(indent).append("\ttype: ").append(type.toPrint(" ")).append("\n");
 		s.append(indent).append("\tParams: \n");
 
-		for (Node n : params) s.append(n.toPrint(indent + "\t	"));
+		for (Node n : params) s.append(n.toPrint(indent + "\t\t"));
 		s.append(indent).append("\tAparams: \n");
 
-		for (Node n : aparams) s.append(n.toPrint(indent + "\t	"));
+		for (Node n : aparams) s.append(n.toPrint(indent + "\t\t"));
 		s.append(indent).append("\tBody Params: \n");
 
-		for (Node n : body_params) s.append(n.toPrint(indent + "\t	"));
+		for (Node n : body_params) s.append(n.toPrint(indent + "\t\t"));
 		s.append(indent).append("\tStatements: \n");
 
-		for (Node n : statements) s.append(n.toPrint(indent + "\t"));
+		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
 
 		return s.toString();
 

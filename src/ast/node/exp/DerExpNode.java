@@ -10,15 +10,11 @@ public class DerExpNode extends ExpNode {
     // | ID						                        #derExp
     private String id;
 
-    /*Empty Constructor*/
-    public DerExpNode() {
-        id = "";
-    }
-
     /*Constructor
     * @param id
     */
     public DerExpNode(String id) {
+        super();
         this.id = id;
     }
 
@@ -51,7 +47,9 @@ public class DerExpNode extends ExpNode {
      * @returns
      */
     public String toPrint(String indent){
-        return null;
+        String s = indent + "DerExpNode";
+        s += " id: " + id;
+        return s;
     }
 
 }
