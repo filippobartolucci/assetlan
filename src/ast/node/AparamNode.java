@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 import java.util.ArrayList;
 
@@ -22,6 +23,12 @@ public class AparamNode implements Node{
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        STentry entry = new STentry(env.getNestingLevel(),-1,this);
+
+        SemanticError error=env.addDecl(id, entry);
+        if(error!=null) {
+            errors.add(error);
+        }
         return errors;
     }
 

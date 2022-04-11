@@ -48,10 +48,10 @@ public class ProgramNode implements Node {
 
 		for (Node f : fields)
 			errors.addAll(f.checkSemantics(env));
-		//for (Node a : assets)
-			//errors.addAll(a.checkSemantics(env));
-		//for (Node f : functions)
-			//errors.addAll(f.checkSemantics(env));
+		for (Node a : assets)
+			errors.addAll(a.checkSemantics(env));
+		for (Node f : functions)
+			errors.addAll(f.checkSemantics(env));
 
 		//if (initcallnode != null) errors.addAll(initcallnode.checkSemantics(env));
 

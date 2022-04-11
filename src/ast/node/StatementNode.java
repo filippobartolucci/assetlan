@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 
 import java.util.ArrayList;
@@ -38,6 +39,11 @@ public class StatementNode implements Node {
 
     @Override
     public ArrayList<SemanticError> checkSemantics(Environment env) {
-        return null;
+        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+
+        if (statement != null) {
+            errors.addAll(statement.checkSemantics(env));
+        }
+        return errors;
     }
 }

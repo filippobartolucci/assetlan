@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 
 import java.util.ArrayList;

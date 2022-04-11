@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ public class FunctionNode implements Node {
 	//              '(' (param (',' param)* )? ')'
 	//              '[' (aparam (',' aparam)* )? ']'
 	//	          '{' param* statement* '}' ;
-	private final TypeNode type;
+	private final Node type;
 	private final String id;
 	private final ArrayList<Node> params;
 	private final ArrayList<Node> aparams;
@@ -19,7 +20,7 @@ public class FunctionNode implements Node {
 
 	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements) {
 		this.id = id;
-		this.type = (TypeNode)typenode;
+		this.type = (Node)typenode;
 		this.params = params;
 		this.aparams = aparams;
 		this.body_params = body_params;
@@ -56,6 +57,31 @@ public class FunctionNode implements Node {
 	}
 
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		return null;
+		STentry entry = new STentry(env.getNestingLevel(),-1,type);
+		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+
+		if(env.addDecl(id,entry) != null) {
+			errors.add(new SemanticError("Function " + id + " already declared"));
+		}
+
+		env.newEmptyScope();
+
+		for(Node n : params) {
+			errors.addAll(n.checkSemantics(env));
+
+		}
+
+		for(Node n : aparams) {
+			errors.addAll(n.checkSemantics(env));
+		}
+
+		for(Node n : body_params) {
+			errors.addAll(n.checkSemantics(env));
+		}
+
+		for(Node n : statements) {
+			errors.addAll(n.checkSemantics(env));
+		}
+		return errors;
 	}
 }

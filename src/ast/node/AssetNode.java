@@ -26,8 +26,9 @@ public class AssetNode implements Node{
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
 		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
 
-		if (env.addDecl(id, entry) != null) {
-			errors.add(new SemanticError("Error: Variable " + id + " already declared"));
+		SemanticError err = env.addDecl(id, entry);
+		if (err != null) {
+			errors.add(err);
 		}
 		return errors;
 	}
