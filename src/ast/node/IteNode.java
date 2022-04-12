@@ -26,6 +26,9 @@ public class IteNode implements Node {
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<>();
+
+        env.newEmptyScope();
+
         if (exp.checkSemantics(env) != null) {
             errors.addAll(exp.checkSemantics(env));
         }
@@ -36,6 +39,8 @@ public class IteNode implements Node {
 
         if (else_statement.checkSemantics(env) != null)
             errors.addAll(else_statement.checkSemantics(env));
+
+        env.exitScope();
 
         return errors;
     }

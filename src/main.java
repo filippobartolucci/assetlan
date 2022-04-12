@@ -24,10 +24,9 @@ public class main {
             }// Check if file is provided
 
             String file = args[0];
-            if(!Paths.get(file).toFile().exists()) {
-                throw new FileNotFoundException("File: " + file + " not found.");
-            }// File found, continue with lexer and parser...
-            System.out.println("File: \"" + file + "\" found.\nParsing...");
+            // File found, continue with lexer and parser...
+            if(!Paths.get(file).toFile().exists()) throw new FileNotFoundException("File: " + file + " not found.");
+            System.out.println("File: \"" + file + "\" found.\n\nParsing...");
 
             AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
 
@@ -42,10 +41,10 @@ public class main {
             Node ast = visitor.visitInit(parser.init());
 
             if (parser.getNumberOfSyntaxErrors()>0) {
-                System.err.println(parser.getNumberOfSyntaxErrors() + " Syntax errors found.");
+                System.err.println("\n" + parser.getNumberOfSyntaxErrors() + " Syntax errors found -> Compilation failed.");
                 return;
             }
-            System.out.println("Parsing successful!");
+            System.out.println("Parsing successful!\n\nSemantic analysis...");
 
             // Ex1
             PrintWriter out = null;
@@ -69,6 +68,8 @@ public class main {
                 System.err.println("\n" + s_errors.size() + " Semantic errors found -> Compilation failed.");
                 return;
             }
+            System.out.println("Semantic analysis successful!\n");
+
         }catch (Exception exc) {
             System.err.println(exc.getMessage());
             System.exit(2);

@@ -16,7 +16,7 @@ function    : (type | 'void') ID
 param       : type ID;
 bparam      : param;
 
-aparam       : 'asset' ID;
+aparam      : 'asset' ID;
 
 statement   : assignment ';'
             | move ';'     // sposta un asset da una parte all'altra

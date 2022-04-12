@@ -16,6 +16,22 @@ public class ExpNode implements Node {
         this.exp = null;
     }
 
+    public ArrayList<SemanticError> checkSemantics(Environment env) {
+        ArrayList<SemanticError> errors = new ArrayList<>();
+        if (exp != null) {
+            errors.addAll(exp.checkSemantics(env));
+        }
+        return errors;
+    }
+
+    public Node typeCheck() {
+        return null;
+    }
+
+    public String codeGeneration() {
+        return null;
+    }
+
     public String toPrint(String indent) {
         String s = indent + "ExpNode\n";
         if (exp != null) {
@@ -24,19 +40,5 @@ public class ExpNode implements Node {
         return s;
     }
 
-    public Node typeCheck() {
-        return null;
-    }
-    public String codeGeneration() {
-        return null;
-    }
-
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
-        ArrayList<SemanticError> errors = new ArrayList<>();
-        if (exp != null) {
-            errors.addAll(exp.checkSemantics(env));
-        }
-        return errors;
-    }
 
 }

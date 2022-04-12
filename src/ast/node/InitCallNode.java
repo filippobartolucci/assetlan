@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.Environment;
+import Semantic.STentry;
 import Semantic.SemanticError;
 import java.util.ArrayList;
 
@@ -22,17 +23,19 @@ public class InitCallNode implements Node{
      * Check semantic errors for this node in a given environment
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> res = new ArrayList<>();
-        if(env.lookup(id) == null){
-            res.add(new SemanticError("Function " + id + " is not declared"));
+        ArrayList<SemanticError> errors = new ArrayList<>();
+
+        STentry f_entry = env.lookup(id);
+        if (f_entry == null){
+            errors.add(new SemanticError("Function " + id + " is not defined"));
         }
 
         for (Node e : exp) {
-            res.addAll(e.checkSemantics(env));
+            errors.addAll(e.checkSemantics(env));
         }
 
         for (Node e : aexp) {
-            res.addAll(e.checkSemantics(env));
+            errors.addAll(e.checkSemantics(env));
         }
 
         return new ArrayList<>();

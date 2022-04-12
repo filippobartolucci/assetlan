@@ -28,6 +28,14 @@ public class BinExpNode extends ExpNode {
 	}
 
 	@Override
+	public ArrayList<SemanticError> checkSemantics(Environment env) {
+		ArrayList<SemanticError> errors = new ArrayList<>();
+		errors.addAll(left.checkSemantics(env));
+		errors.addAll(right.checkSemantics(env));
+		return errors;
+	}
+
+	@Override
 	public String toPrint(String indent){
 		String res = indent + "BinExpNode\t";
 		res += left.toPrint(indent+"\t\t");
@@ -35,15 +43,6 @@ public class BinExpNode extends ExpNode {
 		res += right.toPrint(indent+"\t\t");
 		return res;
 	}
-
-	@Override
-	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		ArrayList<SemanticError> res = new ArrayList<>();
-		res.addAll(left.checkSemantics(env));
-		res.addAll(right.checkSemantics(env));
-		return res;
-	}
-
 }
 
 

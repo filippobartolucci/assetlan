@@ -14,6 +14,9 @@ public class ValExpNode extends ExpNode {
 		this.val = Integer.parseInt(val);
 	}
 
+	/**
+	 * Check semantic errors for this node in a given environment
+	 */
 	public ArrayList<SemanticError> checkSemantics(Environment env){
 		return new ArrayList<>();
 	}
