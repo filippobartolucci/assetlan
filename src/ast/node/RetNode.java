@@ -24,6 +24,7 @@ public class RetNode implements Node{
         if(exp != null){
             errors.addAll(exp.checkSemantics(env));
         }
+
         return errors;
     }
 

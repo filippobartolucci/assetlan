@@ -26,6 +26,8 @@ public class AssignmentNode implements Node {
         if(entry == null){
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
+
+        errors.addAll(exp.checkSemantics(env));
         return errors;
     }
 

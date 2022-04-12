@@ -8,15 +8,15 @@ import java.util.ArrayList;
 public class FieldNode implements Node{
 	private final String id;
 	private final Node type;
-	private final Node value;
+	private final Node exp;
 
 	/**
 	 * Constructor
 	 */
-	public FieldNode(String id, Node type, Node value) {
+	public FieldNode(String id, Node type, Node exp) {
 		this.id = id;
 		this.type = type;
-		this.value = value;
+		this.exp = exp;
 	}
 
 	// Node interface to implement
@@ -31,6 +31,8 @@ public class FieldNode implements Node{
 		if(error!=null) {
 			errors.add(error);
 		}
+
+		errors.addAll(exp.checkSemantics(env));
 		return errors;
 	}
 
@@ -55,7 +57,7 @@ public class FieldNode implements Node{
 		String s = indent+"FieldNode\n";
 		s += indent+"\tid: "+id+"\n";
 		s += indent+"\ttype: "+type.toPrint(indent)+"\n";
-		//s += indent+"\t value: "+value.toPrint(indent)+"\n";
+		//s += indent+"\t exp: "+exp.toPrint(indent)+"\n";
 		return s;
 	}
 }

@@ -30,7 +30,9 @@ public class AssetNode implements Node{
 		if (err != null) {
 			errors.add(err);
 		}
+
 		return errors;
+
 	}
 
 	public String toPrint(String indent) {
