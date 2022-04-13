@@ -24,6 +24,12 @@ public class ParamNode implements Node {
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
         STentry entry = new STentry(env.getNestingLevel(),-1,this);
         SemanticError error=env.addDecl(id, entry);
+
+        // Check if type == null
+        if("void".equals(((TypeNode)type).getType())){
+            errors.add(new SemanticError("Variable " + id + " can't have void type"));
+        }
+
         if(error!=null) {
             errors.add(error);
         }
