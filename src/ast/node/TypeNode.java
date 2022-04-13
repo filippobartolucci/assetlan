@@ -15,6 +15,14 @@ public class TypeNode implements Node{
         this.type = type;
     }
 
+
+    /*
+     * Getters
+    */
+    public String getType(){
+        return this.type;
+    }
+
     /**
      * Check semantic errors for this node in a given environment
      */

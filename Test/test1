@@ -1,7 +1,7 @@
 int x = 1;
 asset p;
 void f()[]{
-    x=k;
-
+    int x = 1;
+    print x;
 }
 f()[]

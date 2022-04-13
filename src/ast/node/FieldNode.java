@@ -9,7 +9,6 @@ public class FieldNode implements Node{
 	private final String id;
 	private final Node type;
 	private final Node exp;
-
 	/**
 	 * Constructor
 	 */
@@ -28,6 +27,12 @@ public class FieldNode implements Node{
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
 		ArrayList<SemanticError> errors = new ArrayList<>();
 		SemanticError error=env.addDecl(id, entry);
+
+		// Check if type == null
+        if("void".equals(((TypeNode)type).getType())){
+            errors.add(new SemanticError("Variable " + id + " can't have void type"));
+        }
+
 		if(error!=null) {
 			errors.add(error);
 		}

@@ -1,4 +1,4 @@
-// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
+// Generated from /home/alfonso/Scrivania/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
 package ast;
 import Parser.AssetLanParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -47,12 +47,6 @@ public interface AssetLanVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParam(AssetLanParser.ParamContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link AssetLanParser#bparam}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBparam(AssetLanParser.BparamContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link AssetLanParser#aparam}.
 	 * @param ctx the parse tree

@@ -47,20 +47,31 @@ public class main {
             AssetLanVisitorImpl visitor = new AssetLanVisitorImpl();
             Node ast = visitor.visitInit(parser.init());
 
-            if (parser.getNumberOfSyntaxErrors()>0) {
-                System.err.println("\n" + parser.getNumberOfSyntaxErrors() + " Syntax errors found -> Compilation failed.");
-                return;
-            }
-            System.out.println("Parsing successful!\n\nSemantic analysis...");
-
             // Ex1
             PrintWriter out = null;
-            try {
-                out = new PrintWriter("lexer_errors.txt");
-                for (Error error : lexerListener.getLexerErrors()) out.write(error.getErrorMessage()+"\n");
-                out.flush(); // Flush the output, save the file
-            } catch (FileNotFoundException ex) {ex.printStackTrace();}
-            if (out != null) out.close();
+            if (lexerListener.getLexerErrors().size()>0){
+                try {
+                    out = new PrintWriter("lexer_errors.txt");
+                    for (Error error : lexerListener.getLexerErrors()) {
+                        out.write(error.getErrorMessage()+"\n");
+                    }
+                    out.flush(); // Flush the output, save the file
+                } catch (FileNotFoundException ex) {ex.printStackTrace();}
+            }
+            if (out != null) {
+                out.close();
+                System.exit(exitCode.LEXER_ERROR.ordinal());
+            }
+
+
+            if (parser.getNumberOfSyntaxErrors()>0) {
+                System.err.println("\n" + parser.getNumberOfSyntaxErrors() + " Syntax errors found -> Compilation failed.");
+                // PARSER ERROR EXIT CODE
+                return;
+            }
+
+            System.out.println("Parsing successful!\n\nSemantic analysis...");
+
 
             // Ex2
             Environment env = new Environment();

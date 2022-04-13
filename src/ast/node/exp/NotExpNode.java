@@ -7,11 +7,9 @@ public class NotExpNode extends ExpNode {
 		super(exp);
 	}
 
-	@Override
-	public String toPrint(String indent) {
-		return "\n"+indent+"NotExp !";
+	public String toPrint(String indent){
+		return "\n" + indent + "NotExpNode\t" + exp.toPrint(indent + "\t");
 	}
-
 
 
 }

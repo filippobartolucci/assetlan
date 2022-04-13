@@ -1,4 +1,4 @@
-// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
+// Generated from /home/alfonso/Scrivania/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
 package ast;
 import Parser.AssetLanParser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
@@ -54,13 +54,6 @@ public class AssetLanBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitParam(AssetLanParser.ParamContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitBparam(AssetLanParser.BparamContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
