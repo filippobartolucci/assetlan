@@ -31,7 +31,6 @@ public class FieldNode implements Node{
 		if(error!=null) {
 			errors.add(error);
 		}
-
 		errors.addAll(exp.checkSemantics(env));
 		return errors;
 	}

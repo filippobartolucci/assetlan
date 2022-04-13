@@ -38,7 +38,7 @@ public class InitCallNode implements Node{
             errors.addAll(e.checkSemantics(env));
         }
 
-        return new ArrayList<>();
+        return errors;
     }
 
     /**

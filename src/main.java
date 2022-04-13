@@ -11,8 +11,15 @@ import ErrorHandler.*;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import Semantic.*;
 
-import Semantic.Environment;
+enum exitCode{
+    LEXER_ERROR,
+    PARSER_ERROR,
+    SEMANTIC_ERROR,
+    RUNTIME_ERROR,
+    SUCCESS
+}
 
 public class main {
     public static void main(String[] args){
@@ -66,7 +73,7 @@ public class main {
                     System.err.println(s_error.toString());
                 }
                 System.err.println("\n" + s_errors.size() + " Semantic errors found -> Compilation failed.");
-                return;
+                System.exit(-1);
             }
             System.out.println("Semantic analysis successful!\n");
 

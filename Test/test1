@@ -1,5 +1,4 @@
 int x = 1;
-
 asset p;
 void f()[]{
     x=k;

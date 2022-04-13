@@ -25,13 +25,14 @@ public class MoveNode implements Node {
 
         STentry entry = env.lookup(id1);
         if(entry == null){
-            errors.add(new SemanticError("Undeclared variable: " + id1));
+            errors.add(new SemanticError("Undeclared asset: " + id1));
         }
 
         entry = env.lookup(id2);
         if(entry == null){
-            errors.add(new SemanticError("Undeclared variable: " + id2));
+            errors.add(new SemanticError("Undeclared asset: " + id2));
         }
+
         return errors;
     }
 
