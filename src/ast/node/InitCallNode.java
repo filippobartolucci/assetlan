@@ -45,7 +45,8 @@ public class InitCallNode implements Node{
      * Generate code for this node
      */
     public Node typeCheck(){
-        return null;
+
+        return new TypeNode("TO BE IMPLEMENTED");
     }
 
     /**

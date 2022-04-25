@@ -10,21 +10,24 @@ public class FunctionNode implements Node {
 	// function    : (type | 'void') ID
 	//              '(' (param (',' param)* )? ')'
 	//              '[' (aparam (',' aparam)* )? ']'
-	//	          '{' param* statement* '}' ;
+	//	          '{' field* statement* '}' ;
 	private final Node type;
 	private final String id;
 	private final ArrayList<Node> params;
 	private final ArrayList<Node> aparams;
 	private final ArrayList<Node> body_params; // param inside function
 	private final ArrayList<Node> statements;
+	private final ArrayList<Node> return_statement;
 
-	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements) {
+
+	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements, ArrayList<Node> return_statement) {
 		this.id = id;
 		this.type = typenode;
 		this.params = params;
 		this.aparams = aparams;
 		this.body_params = body_params;
 		this.statements = statements;
+		this.return_statement = return_statement;
 	}
 
 	public String toPrint(String indent) {
@@ -44,12 +47,31 @@ public class FunctionNode implements Node {
 		s.append(indent).append("\tStatements: \n");
 
 		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
+		for (Node n : return_statement) s.append(n.toPrint(indent + "\t\t"));
 
 		return s.toString();
 	}
 
 	public Node typeCheck() {
-		return null;
+		if (type!=null && return_statement.size()==0) {
+			throw new RuntimeException("Type mismatch -> Function " + id + " has return type but no return statement");
+		}
+		for (Node n : return_statement){
+			Node retType = n.typeCheck();
+			if(!retType.toPrint("").equals(type.toPrint(""))){
+				throw new RuntimeException("Type mismatch -> Function " + id + " return type " +retType.toPrint("")+" does not match function type " +type.toPrint(""));
+			}
+		}
+
+		for (Node n : body_params) {
+			n.typeCheck();
+		}
+
+		for (Node n : statements) {
+			n.typeCheck();
+		}
+
+		return type;
 	}
 
 	public String codeGeneration() {
@@ -68,7 +90,6 @@ public class FunctionNode implements Node {
 		env.newEmptyScope();
 		for(Node n : params) {
 			errors.addAll(n.checkSemantics(env));
-
 		}
 
 		for(Node n : aparams) {
@@ -82,6 +103,7 @@ public class FunctionNode implements Node {
 		for(Node n : statements) {
 			errors.addAll(n.checkSemantics(env));
 		}
+
 		env.exitScope();
 		return errors;
 	}

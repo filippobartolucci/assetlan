@@ -48,8 +48,7 @@ public class FieldNode implements Node{
 		String expType = exp.typeCheck().toPrint("");
 
 		if(!varType.equals(expType)){
-			System.err.println("Type mismatch -> var " + id + " has type " + varType + " and exp has type " + expType);
-			System.exit(1);
+			throw new RuntimeException("Type mismatch -> var " + id + " has type " + varType + " and exp has type " + expType);
 		}
 
 		return type;

@@ -25,7 +25,7 @@ public class ExpNode implements Node {
     }
 
     public Node typeCheck() {
-        return null;
+        return exp.typeCheck();
     }
 
     public String codeGeneration() {

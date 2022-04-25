@@ -23,7 +23,6 @@ public class RetNode implements Node{
         if(exp != null){
             errors.addAll(exp.checkSemantics(env));
         }
-
         return errors;
     }
 
@@ -31,7 +30,13 @@ public class RetNode implements Node{
      * Generate code for this node
      */
     public Node typeCheck(){
-        return null;
+        if (exp == null){
+            System.out.println("Return without expression");
+            return new TypeNode("void");
+        }
+        Node type = exp.typeCheck();
+        System.out.println("Type: " + type.toPrint(""));
+        return type;
     }
 
     /**

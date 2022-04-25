@@ -13,8 +13,7 @@ public class NotExpNode extends ExpNode {
 	public Node typeCheck() {
 		Node type = exp.typeCheck();
 		if (!type.toPrint("").equals("bool")) {
-			System.err.println("Type mismatch -> NotExpNode: " + exp.toPrint("") + " is not bool");
-			System.exit(1);
+			throw new RuntimeException("Type mismatch -> NotExpNode: " + exp.toPrint("") + " is not bool");
 		}
 		return type;
 	}

@@ -14,7 +14,7 @@ public class AssetNode implements Node{
 	}
 
 	public Node typeCheck(){
-		return null;
+		return new TypeNode("asset");
 	}
 
 	public String codeGeneration(){

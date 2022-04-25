@@ -30,7 +30,7 @@ public class PrintNode implements Node {
 	 * @return
 	 */
 	public Node typeCheck(){
-		return null;
+		return exp.typeCheck();
 	}
 
 	/**

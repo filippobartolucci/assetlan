@@ -1,11 +1,15 @@
 // commented examples for typechecking
 // bool x = !2;
 // int x = true
-bool x = 1;
+bool x = true;
 
 asset p;
 void f(int x)[]{
-    x = 1;
+    int y = true;
+    x = true;
+
+
     print x;
+    return ;
 }
 f()[]

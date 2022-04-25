@@ -3,6 +3,7 @@ package ast.node.exp;
 import Semantic.Environment;
 import Semantic.SemanticError;
 import ast.node.Node;
+import ast.node.TypeNode;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,15 @@ public class BinExpNode extends ExpNode {
 		res += "\n" + indent + "\t\tOP: " + op + "\t";
 		res += right.toPrint(indent+"\t\t");
 		return res;
+	}
+
+	public Node typeCheck() {
+		Node leftType = left.typeCheck();
+		Node rightType = right.typeCheck();
+		if (!leftType.toPrint("").equals(rightType.toPrint(""))){
+			throw new RuntimeException("Type mismatch in binary expression -> left: " + leftType.toPrint("") + " right: " + rightType.toPrint(""));
+		}
+		return leftType;
 	}
 }
 

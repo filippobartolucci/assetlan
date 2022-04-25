@@ -3,19 +3,17 @@ package ast.node;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
-import ast.node.exp.ExpNode;
+
 
 import java.util.ArrayList;
 
 public class CallNode implements Node{
-    private String id;
-    private ArrayList<Node> expressions;
-    private ArrayList<String> ids;
+    private final String  id;
+    private final ArrayList<Node> expressions;
+    private final ArrayList<String> ids;
 
     /**
-     * Contstructor
-     * @param id
-     * @param expressions
+     * Constructor
      */
     public CallNode(String id, ArrayList<Node> expressions, ArrayList<String> ids){
         this.id = id;
@@ -25,8 +23,6 @@ public class CallNode implements Node{
 
     /**
      * Check semantic errors for this node in a given environment
-     * @param env
-     * @return errors
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
@@ -50,8 +46,6 @@ public class CallNode implements Node{
 
     /**
      * Generate code for this node
-     * @param
-     * @return
      */
     public Node typeCheck(){
         return null;
@@ -66,7 +60,6 @@ public class CallNode implements Node{
 
     /**
      *
-     * @returns
      */
     public String toPrint(String indent){
         StringBuilder s = new StringBuilder(indent + "CallNode: " + id + "\n");

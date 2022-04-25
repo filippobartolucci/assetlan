@@ -40,14 +40,10 @@ public class ProgramNode implements Node {
 		for (Node f : fields){
 			f.typeCheck();
 		}
-		for (Node a : assets){
-			a.typeCheck();
-		}
 		for (Node f : functions){
 			f.typeCheck();
 		}
-		initcallnode.typeCheck();
-		return this;
+		return initcallnode.typeCheck();
 	}
 
 	@Override
