@@ -5,6 +5,7 @@ import Parser.AssetLanParser;
 import Semantic.SemanticError;
 import ast.AssetLanVisitorImpl;
 import ast.node.Node;
+import ast.node.TypeNode;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import ErrorHandler.*;
@@ -49,10 +50,12 @@ public class main {
 
             System.out.println("Parsing successful!\n\nSemantic analysis...");
 
+            System.out.println(ast.toPrint(""));
 
             Environment env = new Environment();
             ArrayList<SemanticError> s_errors;
             s_errors = ast.checkSemantics(env);
+
 
             if(s_errors.size() > 0){
                 for (SemanticError s_error : s_errors) {
@@ -61,7 +64,10 @@ public class main {
                 System.err.println("\n" + s_errors.size() + " Semantic errors found -> Compilation failed.");
                 System.exit(exitCode.SEMANTIC_ERROR.ordinal());
             }
-            System.out.println("Semantic analysis successful!");
+            System.out.println("Semantic analysis successful!\n\nType checking...");
+            Node type = ast.typeCheck();
+            //System.out.println("Type checking successful!\nProgram type is: " + type.toString() + "\n\nCompiling...");
+
 
             System.exit(exitCode.SUCCESS.ordinal());
 

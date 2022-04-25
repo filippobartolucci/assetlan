@@ -34,7 +34,7 @@ public class TypeNode implements Node{
      * Generate code for this node
      */
     public Node typeCheck(){
-        return null;
+        return this;
     }
 
     /**

@@ -3,6 +3,7 @@ package ast.node.exp.value;
 import Semantic.Environment;
 import Semantic.SemanticError;
 import ast.node.Node;
+import ast.node.TypeNode;
 import ast.node.exp.ExpNode;
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class BoolExpNode extends ExpNode {
      * Generate code for this node
      */
     public Node typeCheck(){
-        return null;
+        return new TypeNode("bool");
     }
 
     /**

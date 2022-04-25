@@ -36,7 +36,19 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public Node typeCheck() {return null;}
+	public Node typeCheck() {
+		for (Node f : fields){
+			f.typeCheck();
+		}
+		for (Node a : assets){
+			a.typeCheck();
+		}
+		for (Node f : functions){
+			f.typeCheck();
+		}
+		initcallnode.typeCheck();
+		return this;
+	}
 
 	@Override
 	public String codeGeneration() {return null;}
