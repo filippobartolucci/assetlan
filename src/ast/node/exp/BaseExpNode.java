@@ -6,13 +6,11 @@ import ast.node.Node;
 
 import java.util.ArrayList;
 
-public class
-BaseExpNode extends ExpNode{
+public class BaseExpNode extends ExpNode{
     private Node exp;
 
     /*
      * Constructor
     */
-
     public BaseExpNode(ExpNode exp){super(exp);}
 }

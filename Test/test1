@@ -5,7 +5,7 @@ bool x = true;
 
 asset p;
 void f(int x)[]{
-    int y = true;
+    bool y = !1;
     x = true;
 
 

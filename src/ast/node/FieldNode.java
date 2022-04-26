@@ -44,11 +44,11 @@ public class FieldNode implements Node{
 	 * Generate code for this node
 	 */
 	public Node typeCheck(){
-		String varType = type.toPrint("");
-		String expType = exp.typeCheck().toPrint("");
+		Node varType = type;
+		Node expType = exp.typeCheck();
 
 		if(!varType.equals(expType)){
-			throw new RuntimeException("Type mismatch -> var " + id + " has type " + varType + " and exp has type " + expType);
+			throw new RuntimeException("Type mismatch -> var " + id + " has type " + varType.toPrint("") + " and exp has type " + expType.toPrint(""));
 		}
 
 		return type;

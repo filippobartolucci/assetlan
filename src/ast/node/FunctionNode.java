@@ -58,7 +58,7 @@ public class FunctionNode implements Node {
 		}
 		for (Node n : return_statement){
 			Node retType = n.typeCheck();
-			if(!retType.toPrint("").equals(type.toPrint(""))){
+			if(!retType.equals(type)){
 				throw new RuntimeException("Type mismatch -> Function " + id + " return type " +retType.toPrint("")+" does not match function type " +type.toPrint(""));
 			}
 		}

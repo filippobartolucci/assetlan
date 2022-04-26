@@ -48,8 +48,8 @@ public class BinExpNode extends ExpNode {
 	public Node typeCheck() {
 		Node leftType = left.typeCheck();
 		Node rightType = right.typeCheck();
-		if (!leftType.toPrint("").equals(rightType.toPrint(""))){
-			throw new RuntimeException("Type mismatch in binary expression -> left: " + leftType.toPrint("") + " right: " + rightType.toPrint(""));
+		if (!leftType.equals(rightType)){
+			throw new RuntimeException("Type mismatch -> In binary expression, left exp is" + leftType.toPrint("") + "while right ext is " + rightType.toPrint(""));
 		}
 		return leftType;
 	}

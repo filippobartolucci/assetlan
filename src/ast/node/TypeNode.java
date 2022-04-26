@@ -51,4 +51,22 @@ public class TypeNode implements Node{
         return type;
     }
 
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof TypeNode){
+            TypeNode other = (TypeNode) obj;
+            if (this.toPrint("null").equals(other.toPrint(""))){
+                return true;
+            }
+        }
+        if (obj instanceof String){
+            if(this.type.equals(obj)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
