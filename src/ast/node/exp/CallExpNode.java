@@ -28,7 +28,7 @@ public class CallExpNode extends ExpNode {
      */
     @Override
     public Node typeCheck(){
-        return null;
+        return call.typeCheck();
     }
 
     /**

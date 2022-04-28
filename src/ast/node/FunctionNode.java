@@ -7,7 +7,7 @@ import Semantic.SemanticError;
 import java.util.ArrayList;
 
 public class FunctionNode implements Node {
-	// function    : (type | 'void') ID
+	// function    : (type) ID
 	//              '(' (param (',' param)* )? ')'
 	//              '[' (aparam (',' aparam)* )? ']'
 	//	          '{' field* statement* '}' ;
@@ -53,8 +53,9 @@ public class FunctionNode implements Node {
 	}
 
 	public Node typeCheck() {
+		// Check for return statement if function is not void
 		if (type!=null && return_statement.size()==0) {
-			throw new RuntimeException("Type mismatch -> Function " + id + " has return type but no return statement");
+			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
 		}
 		for (Node n : return_statement){
 			Node retType = n.typeCheck();
@@ -79,7 +80,7 @@ public class FunctionNode implements Node {
 	}
 
 	public ArrayList<SemanticError> checkSemantics(Environment env) {
-		STentry entry = new STentry(env.getNestingLevel(),-1,type);
+		STentry entry = new STentry(env.getNestingLevel(),-1,this);
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 		SemanticError f_error = env.addDecl(id,entry);
@@ -107,4 +108,16 @@ public class FunctionNode implements Node {
 		env.exitScope();
 		return errors;
 	}
+
+	public ArrayList<Node> getParams(){
+		return params;
+	}
+	public ArrayList<Node> getAparams(){
+		return aparams;
+	}
+
+	public TypeNode getType(){
+		return (TypeNode) type;
+	}
+
 }

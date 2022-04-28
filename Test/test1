@@ -1,15 +1,12 @@
-// commented examples for typechecking
-// bool x = !2;
-// int x = true
-bool x = true;
-
+// Var Dec
+int x = 1;
 asset p;
-void f(int x)[]{
-    bool y = !1;
-    x = true;
 
-
-    print x;
+// Func Dec
+void f(int x)[asset p,asset q]{
+    f(x)[p,w];
     return ;
 }
-f()[]
+
+// Init
+f(x)[p,p]

@@ -51,13 +51,11 @@ public class TypeNode implements Node{
         return type;
     }
 
-
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof TypeNode){
             TypeNode other = (TypeNode) obj;
-            if (this.toPrint("null").equals(other.toPrint(""))){
+            if (this.toString().equals(other.toString())){
                 return true;
             }
         }
@@ -67,6 +65,11 @@ public class TypeNode implements Node{
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString(){
+        return type;
     }
 
 }

@@ -26,13 +26,6 @@ public class NegExpNode extends ExpNode {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
-        return exp.typeCheck();
-    }
-
-    /**
-     * Generate code for this node
-     */
     public String codeGeneration(){
         return "";
     }

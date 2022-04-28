@@ -29,7 +29,7 @@ public class FieldNode implements Node{
 		SemanticError error=env.addDecl(id, entry);
 
 		// Check if type == null
-        if("void".equals(((TypeNode)type).getType())){
+        if(type.equals("void")){
             errors.add(new SemanticError("Variable " + id + " can't have void type"));
         }
 

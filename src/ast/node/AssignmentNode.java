@@ -35,7 +35,7 @@ public class AssignmentNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        return null;
+        return exp.typeCheck();
     }
 
     /**

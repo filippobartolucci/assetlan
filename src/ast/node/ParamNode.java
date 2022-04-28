@@ -40,7 +40,7 @@ public class ParamNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        return null;
+        return this.type;
     }
 
     /**

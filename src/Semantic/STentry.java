@@ -38,7 +38,6 @@ public class STentry {
 		return type;
 	}
 
-
 	public int getOffset () {
 		return offset;
 	}
@@ -50,8 +49,15 @@ public class STentry {
 	public String toPrint(String s) { //
 		return s+"STentry: nestlev " + Integer.toString(this.nestingLevel) +"\n"+
 				s+"STentry: type\n" +
-				//type.toPrint(s+"  ") +
+				type.toPrint(s+"  ") +
 				s+"STentry: offset " + Integer.toString(this.offset) + "\n";
 	}
 
+	@Override
+	public String toString() {
+		return "STentry: nestlev " + Integer.toString(this.nestingLevel) +"\n"+
+				"STentry: type " +
+				type.toPrint("") +
+				"\nSTentry: offset " + Integer.toString(this.offset) + "\n";
+	}
 }

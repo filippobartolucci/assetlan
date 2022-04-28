@@ -47,6 +47,9 @@ public class IteNode implements Node {
 
 
     public Node typeCheck(){
+        if (!exp.typeCheck().equals("bool")){
+            throw new RuntimeException("Type mismatch -> Condition of If statement must be of type bool");
+        }
         return null;
     }
 

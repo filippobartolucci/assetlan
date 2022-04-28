@@ -38,6 +38,7 @@ public class AssetNode implements Node{
 	public String toPrint(String indent) {
 		String s = indent + "AssetNode\n";
 		s += indent + "\tid: " + id + "\n";
+		s += indent + "\ttype: " + this.typeCheck() + "\n";
 		return s;
 	}
 }

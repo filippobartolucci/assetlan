@@ -46,6 +46,8 @@ public class BoolExpNode extends ExpNode {
     /**
      * Print this node
      */
-    public String toPrint(String indent) {return "\n"+indent + "Bool " + bool;}
+    public String toPrint(String indent) {
+        return "\n"+indent + "Bool " + bool;
+    }
 }
 

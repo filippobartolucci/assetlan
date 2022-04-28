@@ -119,8 +119,19 @@ public class Environment implements Cloneable {
 	 * void exitScope(SymTable st) exits the current scope
 	 */
 	public void exitScope(){
-		this.symTable.remove(this.nestingLevel);
+		//this.symTable.remove(this.nestingLevel);
 		this.nestingLevel--;
 	}
 
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < this.symTable.size(); i++) {
+			sb.append("Scope ").append(i).append(":");
+			for (var entry : this.symTable.get(i).entrySet()) {
+				sb.append(entry.getKey() + " -> " + entry.getValue());
+			}
+		}
+		return sb.toString();
+	}
 }

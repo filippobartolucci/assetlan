@@ -31,11 +31,9 @@ public class RetNode implements Node{
      */
     public Node typeCheck(){
         if (exp == null){
-            System.out.println("Return without expression");
             return new TypeNode("void");
         }
         Node type = exp.typeCheck();
-        System.out.println("Type: " + type.toPrint(""));
         return type;
     }
 
