@@ -1,20 +1,21 @@
-package ast.node;
+package ast.node.statement;
 
 import Semantic.Environment;
 import Semantic.SemanticError;
+import ast.node.Node;
 import ast.node.exp.ExpNode;
 
 import java.util.ArrayList;
 
 public class IteNode implements Node {
-    private final ExpNode exp;
-    private final StatementNode if_statement;
-    private final StatementNode else_statement;
+    private final Node exp;
+    private final Node if_statement;
+    private final Node else_statement;
 
     /**
      * Constructor
      */
-    public IteNode(ExpNode exp, StatementNode if_statement, StatementNode else_statement){
+    public IteNode(Node exp, Node if_statement, Node else_statement){
         this.exp = exp;
         this.if_statement = if_statement;
         this.else_statement = else_statement;
@@ -29,16 +30,17 @@ public class IteNode implements Node {
 
         env.newEmptyScope();
 
-        if (exp.checkSemantics(env) != null) {
+        if (exp != null) {
             errors.addAll(exp.checkSemantics(env));
         }
 
-        if (if_statement.checkSemantics(env) != null) {
+        if (if_statement != null) {
             errors.addAll(if_statement.checkSemantics(env));
         }
 
-        if (else_statement.checkSemantics(env) != null)
+        if (else_statement != null) {
             errors.addAll(else_statement.checkSemantics(env));
+        }
 
         env.exitScope();
 
@@ -50,7 +52,17 @@ public class IteNode implements Node {
         if (!exp.typeCheck().equals("bool")){
             throw new RuntimeException("Type mismatch -> Condition of If statement must be of type bool");
         }
-        return null;
+        Node ifType = if_statement.typeCheck();
+        if (else_statement!=null) {
+
+            Node elseType = else_statement.typeCheck();
+
+            if (!ifType.equals(elseType)) {
+                throw new RuntimeException("Type mismatch -> If and Else statements must have the same type");
+            }
+        }
+
+        return ifType;
     }
 
     public String codeGeneration(){
@@ -61,7 +73,10 @@ public class IteNode implements Node {
         String s = indent + "IteNode\n";
         s += indent + "\tCONDITION:" + exp.toPrint(indent + "\t\t");
         s += "\n" + indent + "\tIF:\n" + if_statement.toPrint(indent + "\t");
-        s +=  indent + "\tELSE:\n" + else_statement.toPrint(indent + "\t");
+        if (else_statement!=null){
+            s +=  indent + "\tELSE:\n" + else_statement.toPrint(indent + "\t");
+        }
+
         return s;
     }
 

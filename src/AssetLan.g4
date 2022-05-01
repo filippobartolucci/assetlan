@@ -97,7 +97,7 @@ di y sono 0.
 
 Gli asset possono essere spostati SOLAMENTE 
 
-* mediante l'o perazione move x -o y il cui significato e`
+* mediante l'operazione move x -o y il cui significato e`
 	(a) il valore di x viene sommato a quello di y e il totale memorizzato in y 
 	(b) il valore di x diventa 0
   (i 2 argomenti di move devono essere 2 asset)

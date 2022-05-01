@@ -8,9 +8,11 @@ import java.util.ArrayList;
 
 public class AssetNode implements Node{
 	private final String id;
+	private int value;
 
 	public AssetNode(String id){
 		this.id = id;
+		this.value = 0;
 	}
 
 	public Node typeCheck(){

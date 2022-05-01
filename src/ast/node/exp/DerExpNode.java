@@ -44,6 +44,7 @@ public class DerExpNode extends ExpNode {
     }
 
     public Node typeCheck(){
+
         return this.symbol.getType().typeCheck();
     }
 }

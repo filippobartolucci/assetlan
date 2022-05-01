@@ -14,7 +14,7 @@ import Utils.*;
 
 public class main {
     public static void main(String[] args){
-        System.out.println("\nAssetLan Compiler");
+        System.out.println("\nAssetLan Compiler" );
         try{
             if(args.length == 0){
                 System.err.println("No file provided.");
@@ -54,13 +54,7 @@ public class main {
             }
             System.out.println("Semantic analysis successful!\n\nType checking...");
 
-            Node program_type = null;
-            try {
-                program_type = ast.typeCheck();
-            }catch (Exception e){
-                System.err.println(e.getMessage());
-                System.exit(ExitCode.SEMANTIC_ERROR.ordinal());
-            }
+            Node program_type = ast.typeCheck();;
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nCompiling...");
 
             System.exit(ExitCode.SUCCESS.ordinal());

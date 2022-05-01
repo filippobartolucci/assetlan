@@ -1,12 +1,14 @@
 // Var Dec
 int x = 1;
-asset p;
+bool z = true + false;
+
+// Asset Dec
 
 // Func Dec
-void f(int x)[asset p,asset q]{
-    f(x)[p,w];
+int f(int x)[]{
+    if (true) x=1; else x=2;
     return ;
 }
 
 // Init
-f(x)[p,p]
+f(x)[]

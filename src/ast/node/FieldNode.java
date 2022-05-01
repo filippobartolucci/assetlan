@@ -33,6 +33,7 @@ public class FieldNode implements Node{
             errors.add(new SemanticError("Variable " + id + " can't have void type"));
         }
 
+
 		if(error!=null) {
 			errors.add(error);
 		}

@@ -1,13 +1,15 @@
-package ast.node;
+package ast.node.statement;
 
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import ast.node.FunctionNode;
+import ast.node.Node;
 
 
 import java.util.ArrayList;
 
-public class CallNode implements Node{
+public class CallNode implements Node {
     private final String  id;
     private final ArrayList<Node> expressions; // formal parameters
     private final ArrayList<String> ids;  // assets parameters

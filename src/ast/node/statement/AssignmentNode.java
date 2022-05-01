@@ -1,20 +1,24 @@
-package ast.node;
+package ast.node.statement;
 
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import ast.node.Node;
+
 import java.util.ArrayList;
 
 public class AssignmentNode implements Node {
     private final String id;
     private final Node exp;
+    private STentry symbol;
 
     /**
      * Construtor
      */
     public AssignmentNode(String id, Node exp) {
         this.id = id;
-        this.exp=exp;
+        this.exp = exp;
+        this.symbol = null;
     }
 
     /**
@@ -22,10 +26,11 @@ public class AssignmentNode implements Node {
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<>();
-        STentry entry = env.lookup(id);
-        if(entry == null){
+        symbol = env.lookup(id);
+        if(symbol == null){
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
+
 
         errors.addAll(exp.checkSemantics(env));
         return errors;
@@ -35,7 +40,16 @@ public class AssignmentNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        return exp.typeCheck();
+        Node var = symbol.getType();
+
+        Node varType = var.typeCheck();
+        Node expType = exp.typeCheck();
+
+        if (!varType.equals(expType)){
+            throw new RuntimeException("Type mismatch -> var " + id + " is " + varType + " and exp is " + expType);
+        }
+
+        return varType;
     }
 
     /**

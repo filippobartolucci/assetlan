@@ -2,7 +2,6 @@ package ast.node.exp;
 
 import Semantic.Environment;
 import Semantic.SemanticError;
-import ast.node.CallNode;
 import ast.node.Node;
 
 import java.util.ArrayList;

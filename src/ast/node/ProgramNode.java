@@ -2,6 +2,7 @@ package ast.node;
 
 import Semantic.Environment;
 import Semantic.SemanticError;
+import Utils.*;
 
 import java.util.ArrayList;
 
@@ -37,13 +38,20 @@ public class ProgramNode implements Node {
 
 	@Override
 	public Node typeCheck() {
-		for (Node f : fields){
-			f.typeCheck();
+		Node type = null;
+		try{
+			for (Node f : fields){
+				f.typeCheck();
+			}
+			for (Node f : functions){
+				f.typeCheck();
+			}
+			type = initcallnode.typeCheck();
+		}catch (Exception e){
+			System.err.println(e.getMessage());
+			System.exit(ExitCode.SEMANTIC_ERROR.ordinal());
 		}
-		for (Node f : functions){
-			f.typeCheck();
-		}
-		return initcallnode.typeCheck();
+		return type;
 	}
 
 	@Override

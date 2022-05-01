@@ -17,6 +17,4 @@ public class NotExpNode extends ExpNode {
 		}
 		return type;
 	}
-
-
 }

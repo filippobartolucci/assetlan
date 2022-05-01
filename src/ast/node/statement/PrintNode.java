@@ -1,7 +1,9 @@
-package ast.node;
+package ast.node.statement;
 
 import Semantic.Environment;
 import Semantic.SemanticError;
+import ast.node.Node;
+import ast.node.TypeNode;
 import ast.node.exp.BaseExpNode;
 import ast.node.exp.ExpNode;
 

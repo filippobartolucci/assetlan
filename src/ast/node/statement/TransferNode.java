@@ -1,19 +1,23 @@
-package ast.node;
+package ast.node.statement;
 
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import ast.node.Node;
+import ast.node.TypeNode;
 
 import java.util.ArrayList;
 
 public class TransferNode implements Node {
     public String id;
+    public STentry entry;
 
     /*
     Constructor
     */
     public TransferNode(String id) {
         this.id = id;
+        this.entry = null;
     }
 
     /**
@@ -32,7 +36,10 @@ public class TransferNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        return new TypeNode("asset");
+        if (!(entry.getType().typeCheck().equals("asset"))) {
+            throw new RuntimeException("Type mismatch: " + id + " is not an asset");
+        }
+        return new TypeNode("void");
     }
 
     /**
