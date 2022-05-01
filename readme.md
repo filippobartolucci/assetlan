@@ -5,25 +5,27 @@ AssetLan è un semplice linguaggio imperativo con ASSET, in cui i parametri poss
 Sviluppo di un Compilatore per AssetLan + report in cui si spiegano le scelte progettuali
 
 ## Esercizio 1
-L'analizzatore lessicale deve restituire la lista degli errori lessicali in un file
-di output. Il report deve contenere la discussione di tre esempi e degli errori segnalati
+- [x] L'analizzatore lessicale deve restituire la lista degli errori lessicali in un file
+di output. 
+
+Il report deve contenere la discussione di tre esempi e degli errori segnalati
 
 ## Esercizio 2
 Sviluppare la tabella dei simboli del programma. Decidere se implementarlo come
 lista di hash-table o come hash-table di liste.
 Il codice sviluppato deve controllare:
-* variabili/funzioni non dichiarate
-* variabili/funzioni dichiarate più volte nello stesso ambiente
+- [x] variabili/funzioni non dichiarate
+- [x] variabili/funzioni dichiarate più volte nello stesso ambiente
 
 ## Esercizio 3
 Sviluppare un'analisi semantica che verifica:
-* la correttezza dei tipi (in particolare numero e tipo dei parametri attuali
+- [x] la correttezza dei tipi (in particolare numero e tipo dei parametri attuali
   se conformi al numero e tipo dei parametri formali)
 * Liquidity, ovvero:  
-     * per ogni funzione, i parametri formali asset devono essere 0 alla fine della
+     - [ ] per ogni funzione, i parametri formali asset devono essere 0 alla fine della
 	    sua esecuzione (i valori sono stati spostati nei campi asset oppure trasferiti
 	    con una transfer)
-     * alla fine del programma i campi asset sono 0. 
+     - [ ] alla fine del programma i campi asset sono 0. 
 
 Il report deve contenere TUTTE le regole semantiche utilizzate e relativa discussione.
 Si faccia attenzione all'aliasing.
