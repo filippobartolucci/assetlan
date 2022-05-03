@@ -80,7 +80,14 @@ public class IteNode implements Node {
         return s;
     }
 
+    public Node getIf() {
+        return if_statement;
+    }
 
-
-
+    public Node getElse() {
+        return else_statement;
+    }
 }
+
+
+

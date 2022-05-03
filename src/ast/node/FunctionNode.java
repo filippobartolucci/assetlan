@@ -3,8 +3,10 @@ package ast.node;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
-
+import ast.node.statement.IteNode;
+import ast.node.statement.RetNode;
 import java.util.ArrayList;
+
 
 public class FunctionNode implements Node {
 	// function    : (type) ID
@@ -17,7 +19,6 @@ public class FunctionNode implements Node {
 	private final ArrayList<Node> aparams;
 	private final ArrayList<Node> body_params; // param inside function
 	private final ArrayList<Node> statements;
-	private final ArrayList<Node> return_statement;
 
 
 	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements, ArrayList<Node> return_statement) {
@@ -27,7 +28,6 @@ public class FunctionNode implements Node {
 		this.aparams = aparams;
 		this.body_params = body_params;
 		this.statements = statements;
-		this.return_statement = return_statement;
 	}
 
 	public String toPrint(String indent) {
@@ -47,20 +47,25 @@ public class FunctionNode implements Node {
 		s.append(indent).append("\tStatements: \n");
 
 		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
-		for (Node n : return_statement) s.append(n.toPrint(indent + "\t\t"));
 
 		return s.toString();
 	}
 
 	public Node typeCheck() {
-		// Check for return statement if function is not void
+		// Search all return statement inside the function body
+		ArrayList <Node> return_statement = new ArrayList<>();
+		for (Node n : statements) {
+			return_statement.addAll(this.getReturns(n));
+		}
+
 		if (type!=null && return_statement.size()==0) {
 			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
 		}
+
 		for (Node n : return_statement){
 			Node retType = n.typeCheck();
 			if(!retType.equals(type)){
-				throw new RuntimeException("Type mismatch -> Function " + id + " return type " +retType.toPrint("")+" does not match function type " +type.toPrint(""));
+				throw new RuntimeException("Type mismatch -> in " + id + " return type " +retType.toPrint("")+" does not match declaration function type " +type.toPrint(""));
 			}
 		}
 
@@ -118,6 +123,22 @@ public class FunctionNode implements Node {
 
 	public TypeNode getType(){
 		return (TypeNode) type;
+	}
+
+	private ArrayList<Node> getReturns(Node n){
+		ArrayList<Node> ret_list = new ArrayList<>();
+		if (n instanceof RetNode) {
+			ret_list.add(n);
+			return ret_list;
+		}
+		if (n instanceof IteNode ite) {
+			ret_list.addAll(getReturns(ite.getIf()));
+			ret_list.addAll(getReturns(ite.getElse()));
+		}
+		if (n instanceof StatementNode st) {
+			ret_list.addAll(getReturns(st.getChild()));
+		}
+		return ret_list;
 	}
 
 }
