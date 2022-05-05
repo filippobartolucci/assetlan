@@ -3,12 +3,11 @@ int x = 1;
 bool z = true + false;
 
 // Asset Dec
-asset a
+asset a;
 
 // Func Dec
 void f(int x)[]{
-    if (true) return true; else return false;
-    return;
+
 }
 
 // Init

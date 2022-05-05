@@ -48,6 +48,12 @@ public class BinExpNode extends ExpNode {
 	public Node typeCheck() {
 		Node leftType = left.typeCheck();
 		Node rightType = right.typeCheck();
+
+		// TODO: differenziare il TypeCheck di left e right in base al tipo di operazione
+		// operazioni: *, /, +, -, <, <=, >, >=  ammettono interi o asset
+		// 			   &&, || ammettono booleani
+		//			   ==, != ammettono interi, asset o boolean
+
 		if (!leftType.equals(rightType)){
 			throw new RuntimeException("Type mismatch -> In binary expression, left exp is" + leftType.toPrint("") + "while right ext is " + rightType.toPrint(""));
 		}

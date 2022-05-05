@@ -58,7 +58,7 @@ public class FunctionNode implements Node {
 			return_statement.addAll(this.getReturns(n));
 		}
 
-		if (type!=null && return_statement.size()==0) {
+		if (!(type.equals("void")) && return_statement.size()==0) {
 			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
 		}
 
