@@ -6,19 +6,16 @@ public class STentry {
 	private int nestingLevel;
 	private int offset;
 	private Node type;
+	private Effects status;
 
 	public STentry(){
 		this.nestingLevel = -1;
 		this.offset = -1;
 		this.type = null;
+		this.status = Effects.BOTTOM;
 	}
 
-	public STentry(int nestingLevel, int offset) {
-		this.nestingLevel = nestingLevel;
-		this.offset = offset;
-	}
-
-	public STentry(STentry s) {
+	public STentry(STentry s){
 		this.nestingLevel = s.nestingLevel;
 		this.offset = s.offset;
 		this.type = s.type;
@@ -29,9 +26,14 @@ public class STentry {
 		this.nestingLevel = nestingLevel;
 		this.offset = offset;
 		this.type = t;
+		this.status = Effects.BOTTOM;
 	}
 	public void addType(Node t){
 		this.type = t;
+	}
+
+	public void setStatus(Effects status) {
+		this.status = status;
 	}
 
 	public Node getType () {

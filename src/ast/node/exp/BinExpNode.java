@@ -3,7 +3,6 @@ package ast.node.exp;
 import Semantic.Environment;
 import Semantic.SemanticError;
 import ast.node.Node;
-import ast.node.TypeNode;
 
 import java.util.ArrayList;
 
@@ -49,14 +48,23 @@ public class BinExpNode extends ExpNode {
 		Node leftType = left.typeCheck();
 		Node rightType = right.typeCheck();
 
-		// TODO: differenziare il TypeCheck di left e right in base al tipo di operazione
-		// operazioni: *, /, +, -, <, <=, >, >=  ammettono interi o asset
-		// 			   &&, || ammettono booleani
-		//			   ==, != ammettono interi, asset o boolean
 
 		if (!leftType.equals(rightType)){
 			throw new RuntimeException("Type mismatch -> In binary expression, left exp is" + leftType.toPrint("") + "while right ext is " + rightType.toPrint(""));
 		}
+
+		switch (this.op){
+			case "*","/","+","-","<","<=",">",">=":
+				if ( !( (leftType.equals("int") || (leftType.equals("asset") ) && rightType.equals(leftType)))){
+					throw new RuntimeException("Type mismatch -> in op " + op + " type of both expression must be an int");
+				}
+				break;
+			case "&&","||":
+				if (!(leftType.equals("boolean") && rightType.equals(leftType))){
+					throw new RuntimeException("Type mismatch -> in op " + op + " type of both expression must be a boolean");
+				}
+		}
+
 		return leftType;
 	}
 }
