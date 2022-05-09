@@ -43,6 +43,11 @@ public class AssignmentNode implements Node {
         Node var = symbol.getType();
 
         Node varType = var.typeCheck();
+
+        if(varType.equals("asset")){
+            throw new RuntimeException("Asset " + id + " cannot be used lhs");
+        }
+
         Node expType = exp.typeCheck();
 
         if (!varType.equals(expType)){
