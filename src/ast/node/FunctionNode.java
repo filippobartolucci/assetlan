@@ -116,11 +116,13 @@ public class FunctionNode implements Node {
 		}
 
 		env.newEmptyScope();
+
 		for(Node n : params) {
 			errors.addAll(n.checkSemantics(env));
 		}
 
 		for(Node n : aparams) {
+
 			errors.addAll(n.checkSemantics(env));
 		}
 

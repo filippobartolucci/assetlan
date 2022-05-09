@@ -1,5 +1,6 @@
 package ast.node;
 
+import Semantic.Effects;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -44,6 +45,8 @@ public class AssetNode implements Node{
 		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
 		SemanticError err = env.addDecl(id, entry);
+
+		entry.setStatus(Effects.RW);
 
 		if (err != null) {
 			errors.add(err);
