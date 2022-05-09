@@ -70,6 +70,18 @@ public class IteNode implements Node {
         return "";
     }
 
+    public ArrayList<SemanticError> checkEffects(Environment env) {
+        ArrayList<SemanticError> errors = new ArrayList<>();
+        env.newEmptyScope();
+        errors.addAll(exp.checkEffects(env));
+        errors.addAll(if_statement.checkEffects(env));
+        if (else_statement != null) {
+            errors.addAll(else_statement.checkEffects(env));
+        }
+        env.exitScope();
+        return errors;
+    }
+
     public String toPrint(String indent){
         String s = indent + "IteNode\n";
         s += indent + "\tCONDITION:" + exp.toPrint(indent + "\t\t");
@@ -88,6 +100,8 @@ public class IteNode implements Node {
     public Node getElse() {
         return else_statement;
     }
+
+
 }
 
 

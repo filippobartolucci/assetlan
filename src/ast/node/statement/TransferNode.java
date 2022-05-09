@@ -1,5 +1,6 @@
 package ast.node.statement;
 
+import Semantic.Effects;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -27,6 +28,20 @@ public class TransferNode implements Node {
         if(entry == null){
             errors.add(new SemanticError("Asset " + id + " not declared"));
         }
+        return errors;
+    }
+
+    public ArrayList<SemanticError> checkEffects(Environment env) {
+        STentry entry = env.lookup(id);
+
+        ArrayList<SemanticError> errors = new ArrayList<>();
+        if(!(entry.getStatus() == Effects.RW )) {
+            errors.add(new SemanticError("Asset " + id + " is not transferable or is empty"));
+        }
+
+        // Da regolamento l'asset dopo il trasferimento diventa 0, si svuota
+        entry.setStatus(Effects.D);
+
         return errors;
     }
 

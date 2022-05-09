@@ -4,6 +4,7 @@ import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.Node;
+import Semantic.Effects;
 
 import java.util.ArrayList;
 
@@ -44,4 +45,29 @@ public class DerExpNode extends ExpNode {
         STentry entry = env.lookup(id);
         return entry.getType().typeCheck(env);
     }
+
+    public ArrayList<SemanticError> checkEffects(Environment env){
+        STentry entry = env.lookup(id);
+        // entry can't be null because it was checked in checkSemantics
+
+        ArrayList<SemanticError> errors = new ArrayList<>();
+
+        switch (entry.getStatus()){
+            case BOTTOM :
+                errors.add(new SemanticError( id + " is not initialized"));
+                break;
+
+            case D:
+                errors.add(new SemanticError( id + " status is error"));
+                break;
+            case TOP:
+                errors.add(new SemanticError( id + " is not in a consistent state"));
+                break;
+            default:
+                break;
+        }
+
+        return errors;
+    }
+
 }

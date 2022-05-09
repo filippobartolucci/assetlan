@@ -30,6 +30,10 @@ public class TypeNode implements Node{
         return new ArrayList<>();
     }
 
+    public ArrayList<SemanticError> checkEffects(Environment env) {
+        return new ArrayList<SemanticError>();
+    }
+
     /**
      * Generate code for this node
      */

@@ -40,6 +40,18 @@ public class AssetNode implements Node{
 
 	}
 
+	public ArrayList<SemanticError> checkEffects(Environment env) {
+		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+		STentry entry = new STentry(env.getNestingLevel(), -1, this);
+		SemanticError err = env.addDecl(id, entry);
+
+		if (err != null) {
+			errors.add(err);
+		}
+
+		return new ArrayList<SemanticError>();
+	}
+
 	public String toPrint(String indent) {
 		String s = indent + "AssetNode\n";
 		s += indent + "\tid: " + id + "\n";

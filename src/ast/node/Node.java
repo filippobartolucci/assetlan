@@ -8,5 +8,6 @@ public interface Node {
 	Node typeCheck(Environment env);
 	String codeGeneration();
 	ArrayList<SemanticError> checkSemantics(Environment env);
+	ArrayList<SemanticError> checkEffects(Environment env);
 
 }

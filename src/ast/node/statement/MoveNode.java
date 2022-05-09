@@ -1,5 +1,6 @@
 package ast.node.statement;
 
+import Semantic.Effects;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -55,6 +56,24 @@ public class MoveNode implements Node {
         }
 
         return new TypeNode("void");
+    }
+
+    public ArrayList<SemanticError> checkEffects(Environment env) {
+        ArrayList<SemanticError> errors = new ArrayList<>();
+
+        STentry entry1 = env.lookup(id1);
+        if(!(entry1.getStatus() == Effects.RW )) {
+            errors.add(new SemanticError("Asset " + id1 + " is not initialized or is empty"));
+        }
+
+        STentry entry2 = env.lookup(id2);
+        if(!(entry2.getStatus() == Effects.RW )) {
+            errors.add(new SemanticError("Asset " + id2 + " is not initialized"));
+        }
+        entry1.setStatus(Effects.D); //?? da comprendere
+
+
+        return errors;
     }
 
     /**

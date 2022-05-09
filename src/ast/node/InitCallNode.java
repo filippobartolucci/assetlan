@@ -81,6 +81,11 @@ public class InitCallNode implements Node{
         }
     }
 
+    public ArrayList<SemanticError> checkEffects(Environment env){
+        return new ArrayList<SemanticError>();
+    }
+
+
     /**
      * Generate code for this node
      */

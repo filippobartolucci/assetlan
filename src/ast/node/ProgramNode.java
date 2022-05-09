@@ -80,5 +80,29 @@ public class ProgramNode implements Node {
 
 		return errors;
 	}
+
+	@Override
+	public ArrayList<SemanticError> checkEffects(Environment env){
+		ArrayList<SemanticError> errors = new ArrayList<>();
+		env.newEmptyScope();
+
+		for (Node f : fields){
+			errors.addAll(f.checkEffects(env));
+		}
+
+		for (Node a : assets){
+			errors.addAll(a.checkEffects(env));
+		}
+
+		for (Node f : functions){
+			errors.addAll(f.checkEffects(env));
+		}
+
+		errors.addAll(initcallnode.checkEffects(env));
+
+		env.exitScope();
+		return errors;
+	}
+	
 }
 

@@ -13,7 +13,7 @@ public class STentry {
 		this.nestingLevel = -1;
 		this.offset = -1;
 		this.type = null;
-		this.status = null;
+		this.status = Effects.BOTTOM;
 	}
 
 	public STentry(STentry s){
@@ -27,7 +27,7 @@ public class STentry {
 		this.nestingLevel = nestingLevel;
 		this.offset = offset;
 		this.type = t;
-		this.status = null;
+		this.status = Effects.BOTTOM;
 	}
 	public void addType(Node t){
 		this.type = t;
@@ -36,6 +36,8 @@ public class STentry {
 	public void setStatus(Effects status) {
 		this.status = status;
 	}
+
+	public Effects getStatus() {return status;}
 
 	public Node getType () {
 		return type;

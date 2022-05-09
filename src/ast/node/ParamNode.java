@@ -36,6 +36,14 @@ public class ParamNode implements Node {
         return errors;
     }
 
+    public ArrayList<SemanticError> checkEffects(Environment env){
+        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        STentry entry = new STentry(env.getNestingLevel(),-1,this);
+        SemanticError error=env.addDecl(id, entry);
+
+        return new ArrayList<SemanticError>();
+    }
+
     /**
      * Generate code for this node
      */

@@ -118,5 +118,10 @@ public class CallNode implements Node {
         return s.toString();
     }
 
+    // TODO: da scrivere
+    public ArrayList<SemanticError> checkEffects(Environment env) {
+        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        return errors;
+    }
 
 }

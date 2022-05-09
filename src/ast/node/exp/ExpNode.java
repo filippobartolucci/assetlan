@@ -40,6 +40,8 @@ public class ExpNode implements Node {
         return s;
     }
 
+    public ArrayList<SemanticError> checkEffects(Environment env) {return this.exp.checkEffects(env);}
+
 
 
 }

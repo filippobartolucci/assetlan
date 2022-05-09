@@ -136,6 +136,32 @@ public class FunctionNode implements Node {
 		return errors;
 	}
 
+	public ArrayList<SemanticError> checkEffects(Environment env){
+		ArrayList<SemanticError> errors = new ArrayList<>();
+		env.newEmptyScope();
+
+		for(Node n : params) {
+			errors.addAll(n.checkEffects(env));
+		}
+
+		for(Node n : aparams) {
+			errors.addAll(n.checkEffects(env));
+		}
+
+		for(Node n : body_params) {
+			errors.addAll(n.checkEffects(env));
+		}
+
+		for(Node n : statements) {
+			errors.addAll(n.checkEffects(env));
+		}
+
+		env.exitScope();
+
+		// TODO: fare altre cose da capire
+		return errors;
+	}
+
 	public ArrayList<Node> getParams(){
 		return params;
 	}

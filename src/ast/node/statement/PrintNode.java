@@ -36,6 +36,10 @@ public class PrintNode implements Node {
 		return new TypeNode("void");
 	}
 
+	public ArrayList<SemanticError> checkEffects(Environment env) {
+		return exp.checkEffects(env);
+	}
+
 	/**
 	 * Generate code for this node
 	 */

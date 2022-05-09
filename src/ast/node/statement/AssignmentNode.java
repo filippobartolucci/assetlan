@@ -1,5 +1,6 @@
 package ast.node.statement;
 
+import Semantic.Effects;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -54,6 +55,15 @@ public class AssignmentNode implements Node {
         }
 
         return varType;
+    }
+
+    public ArrayList<SemanticError> checkEffects(Environment env) {
+        ArrayList<SemanticError> errors = new ArrayList<>();
+        STentry entry = env.lookup(id);
+        // Variables in AssetLan cannot be deleted
+        entry.setStatus(Effects.RW);
+        errors.addAll(exp.checkEffects(env));
+        return errors;
     }
 
     /**

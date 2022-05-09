@@ -58,6 +58,18 @@ public class FieldNode implements Node{
 		return type;
 	}
 
+	public ArrayList<SemanticError> checkEffects(Environment env){
+		STentry entry = new STentry(env.getNestingLevel(), -1, this);
+		ArrayList<SemanticError> errors = new ArrayList<>();
+		SemanticError error=env.addDecl(id, entry);
+
+		if (exp != null) {
+			errors.addAll(exp.checkEffects(env));
+		}
+
+		return errors;
+	}
+
 	/**
 	 * Generate code for this node
 	 */

@@ -39,6 +39,11 @@ public class RetNode implements Node {
         return type;
     }
 
+    public ArrayList<SemanticError> checkEffects(Environment env) {
+        return new ArrayList<>();
+    }
+
+
     /**
      * Generate code for this node
      */
