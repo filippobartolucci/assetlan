@@ -10,14 +10,12 @@ import java.util.ArrayList;
 public class DerExpNode extends ExpNode {
     // | ID						                        #derExp
     private final String id;
-    private STentry symbol;
 
     /*Constructor
     */
     public DerExpNode(String id) {
         super();
         this.id = id;
-        this.symbol = null;
     }
 
     /**
@@ -30,7 +28,6 @@ public class DerExpNode extends ExpNode {
         if(entry == null){
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
-        this.symbol = entry;
         return errors;
     }
 
@@ -43,8 +40,8 @@ public class DerExpNode extends ExpNode {
         return s;
     }
 
-    public Node typeCheck(){
-
-        return this.symbol.getType().typeCheck();
+    public Node typeCheck(Environment env){
+        STentry entry = env.lookup(id);
+        return entry.getType().typeCheck(env);
     }
 }

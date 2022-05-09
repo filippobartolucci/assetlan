@@ -1,4 +1,5 @@
 package ast.node.exp;
+import Semantic.Environment;
 import ast.node.Node;
 
 public class NotExpNode extends ExpNode {
@@ -10,8 +11,8 @@ public class NotExpNode extends ExpNode {
 		return "\n" + indent + "NotExpNode\t" + exp.toPrint(indent + "\t");
 	}
 
-	public Node typeCheck() {
-		Node type = exp.typeCheck();
+	public Node typeCheck(Environment env) {
+		Node type = exp.typeCheck(env);
 		if (!type.equals("bool")) {
 			throw new RuntimeException("Type mismatch -> expression type "+ type.toPrint("") +" is not bool");
 		}

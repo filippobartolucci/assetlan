@@ -54,7 +54,7 @@ public class main {
             }
             System.out.println("Semantic analysis successful!\n\nType checking...");
 
-            Node program_type = ast.typeCheck();;
+            Node program_type = ast.typeCheck(env);;
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nCompiling...");
 
             System.exit(ExitCode.SUCCESS.ordinal());

@@ -25,9 +25,7 @@ public class ValExpNode extends ExpNode {
 	/**
 	 * Generate code for this node
 	 */
-	public Node typeCheck(){
-		return new TypeNode("int");
-	}
+	public Node typeCheck(Environment env) {return new TypeNode("int");}
 
 	/**
 	 * Generate code for this node

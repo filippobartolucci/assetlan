@@ -51,7 +51,20 @@ public class FunctionNode implements Node {
 		return s.toString();
 	}
 
-	public Node typeCheck() {
+	public Node typeCheck(Environment env) {
+		STentry entry = new STentry(env.getNestingLevel(),-1,this);
+		env.addDecl(id,entry);
+
+		env.newEmptyScope();
+
+		for (Node p :params){
+			p.typeCheck(env);
+		}
+
+		for (Node a : aparams) {
+			a.typeCheck(env);
+		}
+
 		// Search all return statement inside the function body
 		ArrayList <Node> return_statement = new ArrayList<>();
 		for (Node n : statements) {
@@ -61,21 +74,30 @@ public class FunctionNode implements Node {
 		if (!(type.equals("void")) && return_statement.size()==0) {
 			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
 		}
+		for (Node p :params){
+			p.typeCheck(env);
+		}
+
+		for (Node a : aparams) {
+			a.typeCheck(env);
+		}
 
 		for (Node n : return_statement){
-			Node retType = n.typeCheck();
+			Node retType = n.typeCheck(env);
 			if(!retType.equals(type)){
 				throw new RuntimeException("Type mismatch -> in " + id + " return type " +retType.toPrint("")+" does not match declaration function type " +type.toPrint(""));
 			}
 		}
 
 		for (Node n : body_params) {
-			n.typeCheck();
+			n.typeCheck(env);
 		}
 
 		for (Node n : statements) {
-			n.typeCheck();
+			n.typeCheck(env);
 		}
+
+		env.exitScope();
 
 		return type;
 	}

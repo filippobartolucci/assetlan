@@ -30,6 +30,14 @@ public class NegExpNode extends ExpNode {
         return "";
     }
 
+    public Node typeCheck(Environment env) {
+        Node expType = exp.typeCheck(env);
+        if(!(expType.equals("int"))){
+            throw new RuntimeException("Type mismatch -> the type of the expression is not int");
+        }
+        return expType;
+    }
+
     /**
      * Print this node
      */

@@ -31,8 +31,8 @@ public class PrintNode implements Node {
 	 * @param
 	 * @return
 	 */
-	public Node typeCheck(){
-		exp.typeCheck();
+	public Node typeCheck(Environment env){
+		exp.typeCheck(env);
 		return new TypeNode("void");
 	}
 

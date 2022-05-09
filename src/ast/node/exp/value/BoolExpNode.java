@@ -32,7 +32,7 @@ public class BoolExpNode extends ExpNode {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
+    public Node typeCheck(Environment env){
         return new TypeNode("bool");
     }
 

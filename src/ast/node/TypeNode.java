@@ -33,7 +33,7 @@ public class TypeNode implements Node{
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
+    public Node typeCheck(Environment env){
         return this;
     }
 

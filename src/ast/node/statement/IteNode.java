@@ -48,20 +48,21 @@ public class IteNode implements Node {
     }
 
 
-    public Node typeCheck(){
-        if (!exp.typeCheck().equals("bool")){
+    public Node typeCheck(Environment env) {
+        env.newEmptyScope();
+        if (!exp.typeCheck(env).equals("bool")){
             throw new RuntimeException("Type mismatch -> Condition of If statement must be of type bool");
         }
-        Node ifType = if_statement.typeCheck();
+        Node ifType = if_statement.typeCheck(env);
         if (else_statement!=null) {
 
-            Node elseType = else_statement.typeCheck();
+            Node elseType = else_statement.typeCheck(env);
 
             if (!ifType.equals(elseType)) {
                 throw new RuntimeException("Type mismatch -> If and Else statements must have the same type");
             }
         }
-
+        env.exitScope();
         return ifType;
     }
 

@@ -15,7 +15,10 @@ public class AssetNode implements Node{
 		this.value = 0;
 	}
 
-	public Node typeCheck(){
+	public Node typeCheck(Environment env) {
+		STentry entry = new STentry(env.getNestingLevel(), -1, this);
+		env.addDecl(id, entry);
+
 		return new TypeNode("asset");
 	}
 
@@ -40,7 +43,7 @@ public class AssetNode implements Node{
 	public String toPrint(String indent) {
 		String s = indent + "AssetNode\n";
 		s += indent + "\tid: " + id + "\n";
-		s += indent + "\ttype: " + this.typeCheck() + "\n";
+		s += indent + "\ttype: " + new TypeNode("asset") + "\n";
 		return s;
 	}
 }

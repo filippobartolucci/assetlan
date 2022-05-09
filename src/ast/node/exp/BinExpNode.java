@@ -44,9 +44,9 @@ public class BinExpNode extends ExpNode {
 		return res;
 	}
 
-	public Node typeCheck() {
-		Node leftType = left.typeCheck();
-		Node rightType = right.typeCheck();
+	public Node typeCheck(Environment env) {
+		Node leftType = left.typeCheck(env);
+		Node rightType = right.typeCheck(env);
 
 
 		if (!leftType.equals(rightType)){

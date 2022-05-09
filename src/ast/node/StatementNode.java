@@ -23,8 +23,8 @@ public class StatementNode implements Node {
     }
 
     @Override
-    public Node typeCheck() {
-        return statement.typeCheck();
+    public Node typeCheck(Environment env) {
+        return statement.typeCheck(env);
     }
 
     @Override

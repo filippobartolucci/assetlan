@@ -37,20 +37,25 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public Node typeCheck() {
+	public Node typeCheck(Environment env) {
 		Node type = null;
+		env.newEmptyScope();
 		try{
 			for (Node f : fields){
-				f.typeCheck();
+				f.typeCheck(env);
+			}
+			for (Node a : assets){
+				a.typeCheck(env);
 			}
 			for (Node f : functions){
-				f.typeCheck();
+				f.typeCheck(env);
 			}
-			type = initcallnode.typeCheck();
+			type = initcallnode.typeCheck(env);
 		}catch (Exception e){
 			System.err.println(e.getMessage());
 			System.exit(ExitCode.SEMANTIC_ERROR.ordinal());
 		}
+		env.exitScope();
 		return type;
 	}
 
@@ -70,6 +75,8 @@ public class ProgramNode implements Node {
 			errors.addAll(f.checkSemantics(env));
 
 		errors.addAll(initcallnode.checkSemantics(env));
+
+		env.exitScope();
 
 		return errors;
 	}

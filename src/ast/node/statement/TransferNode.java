@@ -10,14 +10,12 @@ import java.util.ArrayList;
 
 public class TransferNode implements Node {
     public String id;
-    public STentry entry;
 
     /*
     Constructor
     */
     public TransferNode(String id) {
         this.id = id;
-        this.entry = null;
     }
 
     /**
@@ -35,8 +33,9 @@ public class TransferNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
-        if (!(entry.getType().typeCheck().equals("asset"))) {
+    public Node typeCheck(Environment env){
+        STentry entry = env.lookup(id);
+        if (!(entry.getType().typeCheck(env).equals("asset"))) {
             throw new RuntimeException("Type mismatch: " + id + " is not an asset");
         }
         return new TypeNode("void");

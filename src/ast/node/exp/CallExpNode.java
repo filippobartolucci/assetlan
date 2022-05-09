@@ -26,8 +26,8 @@ public class CallExpNode extends ExpNode {
      * Generate code for this node
      */
     @Override
-    public Node typeCheck(){
-        return call.typeCheck();
+    public Node typeCheck(Environment env){
+        return call.typeCheck(env);
     }
 
     /**

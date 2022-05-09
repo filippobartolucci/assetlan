@@ -31,11 +31,11 @@ public class RetNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
+    public Node typeCheck(Environment env){
         if (exp == null){
             return new TypeNode("void");
         }
-        Node type = exp.typeCheck();
+        Node type = exp.typeCheck(env);
         return type;
     }
 

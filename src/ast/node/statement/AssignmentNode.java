@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class AssignmentNode implements Node {
     private final String id;
     private final Node exp;
-    private STentry symbol;
 
     /**
      * Construtor
@@ -18,7 +17,6 @@ public class AssignmentNode implements Node {
     public AssignmentNode(String id, Node exp) {
         this.id = id;
         this.exp = exp;
-        this.symbol = null;
     }
 
     /**
@@ -26,7 +24,7 @@ public class AssignmentNode implements Node {
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<>();
-        symbol = env.lookup(id);
+        STentry symbol = env.lookup(id);
         if(symbol == null){
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
@@ -39,16 +37,17 @@ public class AssignmentNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
+    public Node typeCheck(Environment env){
+        STentry symbol = env.lookup(id);
         Node var = symbol.getType();
 
-        Node varType = var.typeCheck();
+        Node varType = var.typeCheck(env);
 
         if(varType.equals("asset")){
             throw new RuntimeException("Asset " + id + " cannot be used lhs");
         }
 
-        Node expType = exp.typeCheck();
+        Node expType = exp.typeCheck(env);
 
         if (!varType.equals(expType)){
             throw new RuntimeException("Type mismatch -> var " + id + " is " + varType + " and exp is " + expType);

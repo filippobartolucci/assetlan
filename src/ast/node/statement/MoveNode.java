@@ -11,8 +11,7 @@ import java.util.ArrayList;
 public class MoveNode implements Node {
     private final String id1;
     private final String id2;
-    private STentry entry1;
-    private STentry entry2;
+
 
     /**
      * Constructor
@@ -20,8 +19,6 @@ public class MoveNode implements Node {
     public MoveNode(String id1, String id2){
         this.id1 = id1;
         this.id2 = id2;
-        this.entry1 = null;
-        this.entry2 = null;
     }
     /**
      * Check semantic errors for this node in a given environment
@@ -29,12 +26,12 @@ public class MoveNode implements Node {
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<>();
 
-        entry1 = env.lookup(id1);
+        STentry entry1 = env.lookup(id1);
         if(entry1 == null){
             errors.add(new SemanticError("Undeclared asset: " + id1));
         }
 
-        entry2 = env.lookup(id2);
+        STentry entry2 = env.lookup(id2);
         if(entry2 == null){
             errors.add(new SemanticError("Undeclared asset: " + id2));
         }
@@ -45,11 +42,15 @@ public class MoveNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
-        if (!entry1.getType().equals("asset")){
+    public Node typeCheck(Environment env){
+        STentry entry1 = env.lookup(id1);
+
+        if (!entry1.getType().typeCheck(env).equals("asset")){
             throw new RuntimeException("Type mismatch: " + id1 + " is not an asset");
         }
-        if (!entry2.getType().equals("asset")){
+
+        STentry entry2 = env.lookup(id2);
+        if (!entry2.getType().typeCheck(env).equals("asset")){
             throw new RuntimeException("Type mismatch: " + id2 + " is not an asset");
         }
 

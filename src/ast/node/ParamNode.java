@@ -39,7 +39,9 @@ public class ParamNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(){
+    public Node typeCheck(Environment env){
+        STentry entry = new STentry(env.getNestingLevel(),-1,this);
+        env.addDecl(id,entry);
         return this.type;
     }
 

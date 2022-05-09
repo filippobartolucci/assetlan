@@ -1,6 +1,7 @@
 package Semantic;
 
 import ast.node.Node;
+import Semantic.*;
 
 public class STentry {
 	private int nestingLevel;
@@ -12,7 +13,7 @@ public class STentry {
 		this.nestingLevel = -1;
 		this.offset = -1;
 		this.type = null;
-		this.status = Effects.BOTTOM;
+		this.status = null;
 	}
 
 	public STentry(STentry s){
@@ -26,7 +27,7 @@ public class STentry {
 		this.nestingLevel = nestingLevel;
 		this.offset = offset;
 		this.type = t;
-		this.status = Effects.BOTTOM;
+		this.status = null;
 	}
 	public void addType(Node t){
 		this.type = t;

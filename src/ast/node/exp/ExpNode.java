@@ -24,8 +24,8 @@ public class ExpNode implements Node {
         return errors;
     }
 
-    public Node typeCheck() {
-        return exp.typeCheck();
+    public Node typeCheck(Environment env) {
+        return exp.typeCheck(env);
     }
 
     public String codeGeneration() {
