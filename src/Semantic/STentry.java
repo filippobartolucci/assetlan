@@ -7,19 +7,30 @@ public class STentry {
 	private int nestingLevel;
 	private int offset;
 	private Node type;
-	private Effects status;
+	private boolean status;
+
 
 	public STentry(){
 		this.nestingLevel = -1;
 		this.offset = -1;
 		this.type = null;
-		this.status = Effects.BOTTOM;
+		this.status = false;
 	}
 
 	public STentry(STentry s){
 		this.nestingLevel = s.nestingLevel;
 		this.offset = s.offset;
 		this.type = s.type;
+		this.status = s.status;
+
+		// Status field is used for effects valuation
+		// For a var:
+		// 		true: var is initialized
+		// 		false: var is not initialized
+		// For an asset:
+		// 		true: non empty asset
+		// 		false: empty asset
+
 	}
 
 
@@ -27,17 +38,17 @@ public class STentry {
 		this.nestingLevel = nestingLevel;
 		this.offset = offset;
 		this.type = t;
-		this.status = Effects.BOTTOM;
+		this.status = false;
 	}
 	public void addType(Node t){
 		this.type = t;
 	}
 
-	public void setStatus(Effects status) {
+	public void setStatus(boolean status) {
 		this.status = status;
 	}
 
-	public Effects getStatus() {return status;}
+	public boolean getStatus() {return this.status;}
 
 	public Node getType () {
 		return type;

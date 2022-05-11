@@ -1,6 +1,6 @@
 package ast.node;
 
-import Semantic.Effects;
+
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -10,16 +10,15 @@ import java.util.ArrayList;
 public class AssetNode implements Node{
 	private final String id;
 	private int value;
+	private STentry entry;
 
 	public AssetNode(String id){
 		this.id = id;
 		this.value = 0;
+		this.entry = null;
 	}
 
-	public Node typeCheck(Environment env) {
-		STentry entry = new STentry(env.getNestingLevel(), -1, this);
-		env.addDecl(id, entry);
-
+	public Node typeCheck(){
 		return new TypeNode("asset");
 	}
 
@@ -36,21 +35,16 @@ public class AssetNode implements Node{
 		if (err != null) {
 			errors.add(err);
 		}
+		//this.entry = entry;
 
 		return errors;
 
 	}
 
-	public ArrayList<SemanticError> checkEffects(Environment env) {
+	public ArrayList<SemanticError> checkEffects() {
 		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-		STentry entry = new STentry(env.getNestingLevel(), -1, this);
-		SemanticError err = env.addDecl(id, entry);
 
-		entry.setStatus(Effects.RW);
-
-		if (err != null) {
-			errors.add(err);
-		}
+		//entry.setStatus(Effects.RW);
 
 		return new ArrayList<SemanticError>();
 	}

@@ -31,15 +31,15 @@ public class RetNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(Environment env){
+    public Node typeCheck(){
         if (exp == null){
             return new TypeNode("void");
         }
-        Node type = exp.typeCheck(env);
+        Node type = exp.typeCheck();
         return type;
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env) {
+    public ArrayList<SemanticError> checkEffects() {
         return new ArrayList<>();
     }
 

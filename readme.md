@@ -45,7 +45,7 @@ void main()[u,v]{
 }
 main()[2,3]	// scambia i valori di x e y; il contratto non e` liquido
 ```
-   
+
 ```
 int a; int b = 0 ;
 asset z ;

@@ -14,6 +14,7 @@ public class CallNode implements Node {
     private final ArrayList<Node> expressions; // formal parameters
     private final ArrayList<String> ids;  // assets parameters
     private final ArrayList<STentry> assets; // assets entry in the symbol table
+    private STentry entry; // entry in the symbol table
 
     /**
      * Constructor
@@ -23,6 +24,7 @@ public class CallNode implements Node {
         this.expressions = expressions;
         this.ids = ids;
         this.assets = new ArrayList<STentry>();
+        this.entry = null;
     }
 
     /**
@@ -46,6 +48,7 @@ public class CallNode implements Node {
             }
             assets.add(entry);
         }
+        this.entry = f_entry;
 
         return errors;
     }
@@ -53,9 +56,8 @@ public class CallNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(Environment env){
-        STentry f_entry = env.lookup(id);
-        Node symbol = f_entry.getType();
+    public Node typeCheck(){
+        Node symbol = this.entry.getType();
 
         if ((symbol instanceof FunctionNode)){
             FunctionNode f = (FunctionNode) symbol;
@@ -71,8 +73,8 @@ public class CallNode implements Node {
             }
 
             for (int i=0; i<params.size(); i++){
-                Node formal_parType = params.get(i).typeCheck(env);
-                Node actual_parType = expressions.get(i).typeCheck(env); // this also checks type correctness in exp
+                Node formal_parType = params.get(i).typeCheck();
+                Node actual_parType = expressions.get(i).typeCheck(); // this also checks type correctness in exp
 
                 if (!formal_parType.equals(actual_parType)){
                     throw new RuntimeException("Type mismatch -> Wrong type for " + (i+1) + "-th parameter in the invocation of " + id);
@@ -82,7 +84,7 @@ public class CallNode implements Node {
             for (int i=0; i<aparams.size(); i++){
                 Node actual_parType = assets.get(i).getType();
 
-                if (!actual_parType.typeCheck(env).equals("asset")){
+                if (!actual_parType.typeCheck().equals("asset")){
                     throw new RuntimeException("Type mismatch -> type of asset parameter " + ids.get(i) + " in function " + id + " is not an asset");
                 }
             }
@@ -118,8 +120,7 @@ public class CallNode implements Node {
         return s.toString();
     }
 
-    // TODO: da scrivere
-    public ArrayList<SemanticError> checkEffects(Environment env) {
+    public ArrayList<SemanticError> checkEffects() {
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
         return errors;
     }

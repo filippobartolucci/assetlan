@@ -23,8 +23,8 @@ public class StatementNode implements Node {
     }
 
     @Override
-    public Node typeCheck(Environment env) {
-        return statement.typeCheck(env);
+    public Node typeCheck() {
+        return statement.typeCheck();
     }
 
     @Override
@@ -33,8 +33,8 @@ public class StatementNode implements Node {
     }
 
     @Override
-    public ArrayList<SemanticError> checkEffects(Environment env) {
-        return this.statement.checkEffects(env);
+    public ArrayList<SemanticError> checkEffects() {
+        return this.statement.checkEffects();
     }
 
     @Override

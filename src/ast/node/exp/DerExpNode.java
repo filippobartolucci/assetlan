@@ -4,19 +4,19 @@ import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.Node;
-import Semantic.Effects;
-
 import java.util.ArrayList;
 
 public class DerExpNode extends ExpNode {
     // | ID						                        #derExp
     private final String id;
+    private STentry entry;
 
     /*Constructor
     */
     public DerExpNode(String id) {
         super();
         this.id = id;
+        this.entry = null;
     }
 
     /**
@@ -29,6 +29,8 @@ public class DerExpNode extends ExpNode {
         if(entry == null){
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
+        this.entry = entry;
+
         return errors;
     }
 
@@ -41,30 +43,16 @@ public class DerExpNode extends ExpNode {
         return s;
     }
 
-    public Node typeCheck(Environment env){
-        STentry entry = env.lookup(id);
-        return entry.getType().typeCheck(env);
+    public Node typeCheck(){
+        return this.entry.getType().typeCheck();
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env){
-        STentry entry = env.lookup(id);
-        // entry can't be null because it was checked in checkSemantics
+    public ArrayList<SemanticError> checkEffects(){
 
         ArrayList<SemanticError> errors = new ArrayList<>();
 
-        switch (entry.getStatus()){
-            case BOTTOM :
-                errors.add(new SemanticError( id + " is not initialized"));
-                break;
-
-            case D:
-                errors.add(new SemanticError( id + " status is error"));
-                break;
-            case TOP:
-                errors.add(new SemanticError( id + " is not in a consistent state"));
-                break;
-            default:
-                break;
+        if (!entry.getStatus()){
+            errors.add(new SemanticError("Variable " + id + " is not initialized and cannot be used in a rhs exp"));
         }
 
         return errors;

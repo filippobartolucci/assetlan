@@ -1,6 +1,5 @@
 package ast.node.statement;
 
-import Semantic.Effects;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -12,6 +11,8 @@ import java.util.ArrayList;
 public class MoveNode implements Node {
     private final String id1;
     private final String id2;
+    private STentry entry1;
+    private STentry entry2;
 
 
     /**
@@ -20,6 +21,8 @@ public class MoveNode implements Node {
     public MoveNode(String id1, String id2){
         this.id1 = id1;
         this.id2 = id2;
+        this.entry1 = null;
+        this.entry2 = null;
     }
     /**
      * Check semantic errors for this node in a given environment
@@ -31,11 +34,13 @@ public class MoveNode implements Node {
         if(entry1 == null){
             errors.add(new SemanticError("Undeclared asset: " + id1));
         }
+        this.entry1 = entry1;
 
         STentry entry2 = env.lookup(id2);
         if(entry2 == null){
             errors.add(new SemanticError("Undeclared asset: " + id2));
         }
+        this.entry2 = entry2;
 
         return errors;
     }
@@ -43,35 +48,27 @@ public class MoveNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(Environment env){
-        STentry entry1 = env.lookup(id1);
-
-        if (!entry1.getType().typeCheck(env).equals("asset")){
+    public Node typeCheck(){
+        if (!entry1.getType().typeCheck().equals("asset")){
             throw new RuntimeException("Type mismatch: " + id1 + " is not an asset");
         }
 
-        STentry entry2 = env.lookup(id2);
-        if (!entry2.getType().typeCheck(env).equals("asset")){
+        if (!entry2.getType().typeCheck().equals("asset")){
             throw new RuntimeException("Type mismatch: " + id2 + " is not an asset");
         }
 
         return new TypeNode("void");
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env) {
+    public ArrayList<SemanticError> checkEffects() {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
-        STentry entry1 = env.lookup(id1);
-        if(!(entry1.getStatus() == Effects.RW )) {
-            errors.add(new SemanticError("Asset " + id1 + " is not initialized or is empty"));
+        if (id1.equals(id2)) {
+            errors.add(new SemanticError("Can't move asset " + id1 + " to itself"));
         }
 
-        STentry entry2 = env.lookup(id2);
-        if(!(entry2.getStatus() == Effects.RW )) {
-            errors.add(new SemanticError("Asset " + id2 + " is not initialized"));
-        }
-        entry1.setStatus(Effects.D); //?? da comprendere
-
+        entry1.setStatus(false); // Asset1 -> empty
+        entry2.setStatus(true); // Asset2 -> RW
 
         return errors;
     }

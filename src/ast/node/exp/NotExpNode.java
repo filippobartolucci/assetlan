@@ -11,8 +11,8 @@ public class NotExpNode extends ExpNode {
 		return "\n" + indent + "NotExpNode\t" + exp.toPrint(indent + "\t");
 	}
 
-	public Node typeCheck(Environment env) {
-		Node type = exp.typeCheck(env);
+	public Node typeCheck() {
+		Node type = exp.typeCheck();
 		if (!type.equals("bool")) {
 			throw new RuntimeException("Type mismatch -> expression type "+ type.toPrint("") +" is not bool");
 		}

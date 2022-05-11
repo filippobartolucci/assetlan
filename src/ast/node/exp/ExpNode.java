@@ -24,8 +24,8 @@ public class ExpNode implements Node {
         return errors;
     }
 
-    public Node typeCheck(Environment env) {
-        return exp.typeCheck(env);
+    public Node typeCheck() {
+        return exp.typeCheck();
     }
 
     public String codeGeneration() {
@@ -40,7 +40,7 @@ public class ExpNode implements Node {
         return s;
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env) {return this.exp.checkEffects(env);}
+    public ArrayList<SemanticError> checkEffects() {return this.exp.checkEffects();}
 
 
 

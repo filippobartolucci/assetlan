@@ -37,25 +37,23 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public Node typeCheck(Environment env) {
+	public Node typeCheck() {
 		Node type = null;
-		env.newEmptyScope();
 		try{
 			for (Node f : fields){
-				f.typeCheck(env);
+				f.typeCheck();
 			}
 			for (Node a : assets){
-				a.typeCheck(env);
+				a.typeCheck();
 			}
 			for (Node f : functions){
-				f.typeCheck(env);
+				f.typeCheck();
 			}
-			type = initcallnode.typeCheck(env);
+			type = initcallnode.typeCheck();
 		}catch (Exception e){
 			System.err.println(e.getMessage());
 			System.exit(ExitCode.SEMANTIC_ERROR.ordinal());
 		}
-		env.exitScope();
 		return type;
 	}
 
@@ -82,25 +80,25 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public ArrayList<SemanticError> checkEffects(Environment env){
+	public ArrayList<SemanticError> checkEffects(){
 		ArrayList<SemanticError> errors = new ArrayList<>();
-		env.newEmptyScope();
+
 
 		for (Node f : fields){
-			errors.addAll(f.checkEffects(env));
+			errors.addAll(f.checkEffects());
 		}
 
 		for (Node a : assets){
-			errors.addAll(a.checkEffects(env));
+			errors.addAll(a.checkEffects());
 		}
 
 		for (Node f : functions){
-			errors.addAll(f.checkEffects(env));
+			errors.addAll(f.checkEffects());
 		}
 
-		errors.addAll(initcallnode.checkEffects(env));
+		errors.addAll(initcallnode.checkEffects());
 
-		env.exitScope();
+
 		return errors;
 	}
 	

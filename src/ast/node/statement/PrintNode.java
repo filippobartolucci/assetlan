@@ -31,13 +31,13 @@ public class PrintNode implements Node {
 	 * @param
 	 * @return
 	 */
-	public Node typeCheck(Environment env){
-		exp.typeCheck(env);
+	public Node typeCheck(){
+		exp.typeCheck();
 		return new TypeNode("void");
 	}
 
-	public ArrayList<SemanticError> checkEffects(Environment env) {
-		return exp.checkEffects(env);
+	public ArrayList<SemanticError> checkEffects() {
+		return exp.checkEffects();
 	}
 
 	/**

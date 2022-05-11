@@ -54,21 +54,19 @@ public class main {
             }
             System.out.println("Semantic analysis successful!\n\nType checking...");
 
-            Node program_type = ast.typeCheck(env);;
+            Node program_type = ast.typeCheck();;
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nChecking effects...");
 
 
-            s_errors = ast.checkEffects(env);
+            s_errors = ast.checkEffects();
             if(s_errors.size() > 0){
                 for (SemanticError s_error : s_errors) {
                     System.err.println(s_error.toString());
                 }
-                System.err.println("\n" + s_errors.size() + " Semantic errors found -> Compilation failed.");
+                System.err.println("\n" + s_errors.size() + " Effect errors found -> Compilation failed.");
                 System.exit(ExitCode.SEMANTIC_ERROR.ordinal());
             }
             System.out.println("Effects analysis successful!\n\nCode generation...");
-
-
 
             System.exit(ExitCode.SUCCESS.ordinal());
 

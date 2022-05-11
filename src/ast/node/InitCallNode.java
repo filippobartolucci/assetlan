@@ -9,6 +9,7 @@ public class InitCallNode implements Node{
     private final String id;
     ArrayList<Node> exp;
     ArrayList<Node> aexp;
+    private STentry entry;
 
     /**
      * Contstructor
@@ -17,6 +18,7 @@ public class InitCallNode implements Node{
         this.id = id;
         this.exp = expnodes;
         this.aexp = aexpnodes;
+        this.entry = null;
     }
 
     /**
@@ -38,17 +40,16 @@ public class InitCallNode implements Node{
             errors.addAll(e.checkSemantics(env));
         }
 
+        this.entry = f_entry;
         return errors;
     }
 
     /**
      * Generate code for this node
      */
-    public Node typeCheck(Environment env){
-        STentry symbol = env.lookup(id);
-        if ((symbol.getType() instanceof FunctionNode)){
-            FunctionNode f = (FunctionNode) symbol.getType();
-
+    public Node typeCheck(){
+        Node function = this.entry.getType();
+        if ((function instanceof FunctionNode f)){
             ArrayList<Node> params = f.getParams();
             if (params.size() != exp.size()){
                 throw new RuntimeException("Error -> number of parameters in function call does not match the number of parameters in the function definition");
@@ -60,8 +61,8 @@ public class InitCallNode implements Node{
             }
 
             for (int i=0; i<exp.size(); i++){
-                Node formal_parType = params.get(i).typeCheck(env);
-                Node actual_parType = exp.get(i).typeCheck(env); // this also checks type correctness in exp
+                Node formal_parType = params.get(i).typeCheck();
+                Node actual_parType = exp.get(i).typeCheck(); // this also checks type correctness in exp
 
                 if (!formal_parType.equals(actual_parType)){
                     throw new RuntimeException("Type mismatch -> Wrong type for " + (i+1) + "-th parameter in the invocation of "+id);
@@ -69,7 +70,7 @@ public class InitCallNode implements Node{
             }
 
             for (int i=0; i<aparams.size(); i++){
-                Node actual_parType = aexp.get(i).typeCheck(env); // this also checks type correctness in exp
+                Node actual_parType = aexp.get(i).typeCheck(); // this also checks type correctness in exp
 
                 if (!actual_parType.equals("asset")){
                     throw new RuntimeException("Type mismatch -> type of " + (i+1) + "-th asset parameter in function " + id + " is not an asset");
@@ -81,8 +82,8 @@ public class InitCallNode implements Node{
         }
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env){
-        return new ArrayList<SemanticError>();
+    public ArrayList<SemanticError> checkEffects(){
+        return new ArrayList<>();
     }
 
 

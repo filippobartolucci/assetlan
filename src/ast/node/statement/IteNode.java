@@ -48,21 +48,19 @@ public class IteNode implements Node {
     }
 
 
-    public Node typeCheck(Environment env) {
-        env.newEmptyScope();
-        if (!exp.typeCheck(env).equals("bool")){
+    public Node typeCheck() {
+        if (!exp.typeCheck().equals("bool")){
             throw new RuntimeException("Type mismatch -> Condition of If statement must be of type bool");
         }
-        Node ifType = if_statement.typeCheck(env);
+        Node ifType = if_statement.typeCheck();
         if (else_statement!=null) {
 
-            Node elseType = else_statement.typeCheck(env);
+            Node elseType = else_statement.typeCheck();
 
             if (!ifType.equals(elseType)) {
                 throw new RuntimeException("Type mismatch -> If and Else statements must have the same type");
             }
         }
-        env.exitScope();
         return ifType;
     }
 
@@ -70,15 +68,13 @@ public class IteNode implements Node {
         return "";
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env) {
+    public ArrayList<SemanticError> checkEffects() {
         ArrayList<SemanticError> errors = new ArrayList<>();
-        env.newEmptyScope();
-        errors.addAll(exp.checkEffects(env));
-        errors.addAll(if_statement.checkEffects(env));
+        errors.addAll(exp.checkEffects());
+        errors.addAll(if_statement.checkEffects());
         if (else_statement != null) {
-            errors.addAll(else_statement.checkEffects(env));
+            errors.addAll(else_statement.checkEffects());
         }
-        env.exitScope();
         return errors;
     }
 

@@ -51,19 +51,7 @@ public class FunctionNode implements Node {
 		return s.toString();
 	}
 
-	public Node typeCheck(Environment env) {
-		STentry entry = new STentry(env.getNestingLevel(),-1,this);
-		env.addDecl(id,entry);
-
-		env.newEmptyScope();
-
-		for (Node p :params){
-			p.typeCheck(env);
-		}
-
-		for (Node a : aparams) {
-			a.typeCheck(env);
-		}
+	public Node typeCheck() {
 
 		// Search all return statement inside the function body
 		ArrayList <Node> return_statement = new ArrayList<>();
@@ -74,30 +62,21 @@ public class FunctionNode implements Node {
 		if (!(type.equals("void")) && return_statement.size()==0) {
 			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
 		}
-		for (Node p :params){
-			p.typeCheck(env);
-		}
-
-		for (Node a : aparams) {
-			a.typeCheck(env);
-		}
 
 		for (Node n : return_statement){
-			Node retType = n.typeCheck(env);
+			Node retType = n.typeCheck();
 			if(!retType.equals(type)){
 				throw new RuntimeException("Type mismatch -> in " + id + " return type " +retType.toPrint("")+" does not match declaration function type " +type.toPrint(""));
 			}
 		}
 
 		for (Node n : body_params) {
-			n.typeCheck(env);
+			n.typeCheck();
 		}
 
 		for (Node n : statements) {
-			n.typeCheck(env);
+			n.typeCheck();
 		}
-
-		env.exitScope();
 
 		return type;
 	}
@@ -111,6 +90,8 @@ public class FunctionNode implements Node {
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 		SemanticError f_error = env.addDecl(id,entry);
+
+
 		if(f_error != null) {
 			errors.add(f_error);
 		}
@@ -138,27 +119,25 @@ public class FunctionNode implements Node {
 		return errors;
 	}
 
-	public ArrayList<SemanticError> checkEffects(Environment env){
+	public ArrayList<SemanticError> checkEffects(){
 		ArrayList<SemanticError> errors = new ArrayList<>();
-		env.newEmptyScope();
+
 
 		for(Node n : params) {
-			errors.addAll(n.checkEffects(env));
+			errors.addAll(n.checkEffects());
 		}
 
 		for(Node n : aparams) {
-			errors.addAll(n.checkEffects(env));
+			errors.addAll(n.checkEffects());
 		}
 
 		for(Node n : body_params) {
-			errors.addAll(n.checkEffects(env));
+			errors.addAll(n.checkEffects());
 		}
 
 		for(Node n : statements) {
-			errors.addAll(n.checkEffects(env));
+			errors.addAll(n.checkEffects());
 		}
-
-		env.exitScope();
 
 		// TODO: fare altre cose da capire
 		return errors;

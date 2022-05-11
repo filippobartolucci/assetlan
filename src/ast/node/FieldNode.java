@@ -26,45 +26,48 @@ public class FieldNode implements Node{
 	public ArrayList<SemanticError> checkSemantics(Environment env){
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
 		ArrayList<SemanticError> errors = new ArrayList<>();
-		SemanticError error=env.addDecl(id, entry);
+
+		if (exp != null) {
+			errors.addAll(exp.checkSemantics(env));
+			entry.setStatus(true);
+		}
 
 		// Check if type == null
-        if(type.equals("void")){
-            errors.add(new SemanticError("Variable " + id + " can't have void type"));
-        }
+		if(type.equals("void")){
+			errors.add(new SemanticError("Variable " + id + " can't have void type"));
+		}
 
+		SemanticError error=env.addDecl(id, entry);
 
 		if(error!=null) {
 			errors.add(error);
 		}
-		errors.addAll(exp.checkSemantics(env));
+
 		return errors;
 	}
 
 	/**
 	 * Generate code for this node
 	 */
-	public Node typeCheck(Environment env){
+	public Node typeCheck(){
 		Node varType = type;
-		Node expType = exp.typeCheck(env);
 
-		STentry entry = new STentry(env.getNestingLevel(), -1, this);
-		env.addDecl(id, entry);
+		if(exp != null){
+			Node expType = exp.typeCheck();
 
-		if(!varType.equals(expType)){
-			throw new RuntimeException("Type mismatch -> var " + id + " has type " + varType.toPrint("") + " and exp has type " + expType.toPrint(""));
+			if(!varType.equals(expType)){
+				throw new RuntimeException("Type mismatch -> var " + id + " has type " + varType.toPrint("") + " and exp has type " + expType.toPrint(""));
+			}
 		}
 
 		return type;
 	}
 
-	public ArrayList<SemanticError> checkEffects(Environment env){
-		STentry entry = new STentry(env.getNestingLevel(), -1, this);
+	public ArrayList<SemanticError> checkEffects(){
 		ArrayList<SemanticError> errors = new ArrayList<>();
-		SemanticError error=env.addDecl(id, entry);
 
 		if (exp != null) {
-			errors.addAll(exp.checkEffects(env));
+			errors.addAll(exp.checkEffects());
 		}
 
 		return errors;

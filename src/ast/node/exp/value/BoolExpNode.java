@@ -32,11 +32,11 @@ public class BoolExpNode extends ExpNode {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(Environment env){
+    public Node typeCheck(){
         return new TypeNode("bool");
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env){
+    public ArrayList<SemanticError> checkEffects(){
         return new ArrayList<>();
     }
 

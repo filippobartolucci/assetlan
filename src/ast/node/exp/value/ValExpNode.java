@@ -25,9 +25,9 @@ public class ValExpNode extends ExpNode {
 	/**
 	 * Generate code for this node
 	 */
-	public Node typeCheck(Environment env) {return new TypeNode("int");}
+	public Node typeCheck() {return new TypeNode("int");}
 
-	public ArrayList<SemanticError> checkEffects(Environment env){
+	public ArrayList<SemanticError> checkEffects(){
 		return new ArrayList<>();
 	}
 

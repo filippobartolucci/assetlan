@@ -1,6 +1,6 @@
 package ast.node.statement;
 
-import Semantic.Effects;
+
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class AssignmentNode implements Node {
     private final String id;
     private final Node exp;
+    private STentry entry;
 
     /**
      * Construtor
@@ -18,6 +19,7 @@ public class AssignmentNode implements Node {
     public AssignmentNode(String id, Node exp) {
         this.id = id;
         this.exp = exp;
+        this.entry = null;
     }
 
     /**
@@ -26,29 +28,28 @@ public class AssignmentNode implements Node {
     public ArrayList<SemanticError> checkSemantics(Environment env){
         ArrayList<SemanticError> errors = new ArrayList<>();
         STentry symbol = env.lookup(id);
-        if(symbol == null){
+        if(symbol == null) {
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
-
-
         errors.addAll(exp.checkSemantics(env));
+        this.entry= entry;
+
         return errors;
     }
 
     /**
      * Generate code for this node
      */
-    public Node typeCheck(Environment env){
-        STentry symbol = env.lookup(id);
-        Node var = symbol.getType();
+    public Node typeCheck(){
+        Node var = this.entry.getType();
 
-        Node varType = var.typeCheck(env);
+        Node varType = var.typeCheck();
 
         if(varType.equals("asset")){
             throw new RuntimeException("Asset " + id + " cannot be used lhs");
         }
 
-        Node expType = exp.typeCheck(env);
+        Node expType = exp.typeCheck();
 
         if (!varType.equals(expType)){
             throw new RuntimeException("Type mismatch -> var " + id + " is " + varType + " and exp is " + expType);
@@ -57,12 +58,12 @@ public class AssignmentNode implements Node {
         return varType;
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env) {
+    public ArrayList<SemanticError> checkEffects() {
         ArrayList<SemanticError> errors = new ArrayList<>();
-        STentry entry = env.lookup(id);
+        errors.addAll(exp.checkEffects());
         // Variables in AssetLan cannot be deleted
-        entry.setStatus(Effects.RW);
-        errors.addAll(exp.checkEffects(env));
+        entry.setStatus(true);
+
         return errors;
     }
 

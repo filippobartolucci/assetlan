@@ -1,6 +1,6 @@
 package ast.node.statement;
 
-import Semantic.Effects;
+
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
@@ -10,13 +10,16 @@ import ast.node.TypeNode;
 import java.util.ArrayList;
 
 public class TransferNode implements Node {
-    public String id;
+    private String id;
+    private STentry entry;
+
 
     /*
     Constructor
     */
     public TransferNode(String id) {
         this.id = id;
+        this.entry = null;
     }
 
     /**
@@ -28,19 +31,18 @@ public class TransferNode implements Node {
         if(entry == null){
             errors.add(new SemanticError("Asset " + id + " not declared"));
         }
+        this.entry = entry;
+
         return errors;
     }
 
-    public ArrayList<SemanticError> checkEffects(Environment env) {
-        STentry entry = env.lookup(id);
-
+    public ArrayList<SemanticError> checkEffects() {
         ArrayList<SemanticError> errors = new ArrayList<>();
-        if(!(entry.getStatus() == Effects.RW )) {
+        if(!(entry.getStatus())) {
             errors.add(new SemanticError("Asset " + id + " is not transferable or is empty"));
         }
 
-        // Da regolamento l'asset dopo il trasferimento diventa 0, si svuota
-        entry.setStatus(Effects.D);
+        entry.setStatus(false); // Asset -> Empty after transfer
 
         return errors;
     }
@@ -48,9 +50,8 @@ public class TransferNode implements Node {
     /**
      * Generate code for this node
      */
-    public Node typeCheck(Environment env){
-        STentry entry = env.lookup(id);
-        if (!(entry.getType().typeCheck(env).equals("asset"))) {
+    public Node typeCheck(){
+        if (!(entry.getType().typeCheck().equals("asset"))) {
             throw new RuntimeException("Type mismatch: " + id + " is not an asset");
         }
         return new TypeNode("void");

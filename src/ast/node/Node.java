@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public interface Node {
 	String toPrint(String indent);
-	Node typeCheck(Environment env);
+	Node typeCheck();
 	String codeGeneration();
 	ArrayList<SemanticError> checkSemantics(Environment env);
-	ArrayList<SemanticError> checkEffects(Environment env);
+	ArrayList<SemanticError> checkEffects();
 
 }

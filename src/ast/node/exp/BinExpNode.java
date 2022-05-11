@@ -44,9 +44,9 @@ public class BinExpNode extends ExpNode {
 		return res;
 	}
 
-	public Node typeCheck(Environment env) {
-		Node leftType = left.typeCheck(env);
-		Node rightType = right.typeCheck(env);
+	public Node typeCheck() {
+		Node leftType = left.typeCheck();
+		Node rightType = right.typeCheck();
 
 
 		if (!leftType.equals(rightType)){
@@ -69,10 +69,10 @@ public class BinExpNode extends ExpNode {
 	}
 
 	@Override
-	public ArrayList<SemanticError> checkEffects(Environment env) {
+	public ArrayList<SemanticError> checkEffects() {
 		ArrayList<SemanticError> errors = new ArrayList<>();
-		errors.addAll(left.checkEffects(env));
-		errors.addAll(right.checkEffects(env));
+		errors.addAll(left.checkEffects());
+		errors.addAll(right.checkEffects());
 		return errors;
 	}
 }
