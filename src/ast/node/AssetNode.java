@@ -35,7 +35,7 @@ public class AssetNode implements Node{
 		if (err != null) {
 			errors.add(err);
 		}
-		//this.entry = entry;
+		this.entry = entry;
 
 		return errors;
 
@@ -54,5 +54,17 @@ public class AssetNode implements Node{
 		s += indent + "\tid: " + id + "\n";
 		s += indent + "\ttype: " + new TypeNode("asset") + "\n";
 		return s;
+	}
+
+	public void setStatus(boolean s){
+		entry.setStatus(s);
+	}
+	public boolean getStatus(){
+		return entry.getStatus();
+	}
+
+	@Override
+	public String toString() {
+		return id;
 	}
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ParamNode implements Node {
     private String id;
     private Node type;
+    public STentry entry;
 
 
     /**
@@ -17,6 +18,7 @@ public class ParamNode implements Node {
     public ParamNode(String id, Node type) {
         this.id = id;
         this.type = type;
+        this.entry = null;
     }
     /**
      * Check semantic errors for this node in a given environment
@@ -34,6 +36,8 @@ public class ParamNode implements Node {
         if(error!=null) {
             errors.add(error);
         }
+        this.entry = entry;
+
         return errors;
     }
 
@@ -64,6 +68,12 @@ public class ParamNode implements Node {
         s += indent+"\ttype: "+type.toPrint(indent)+"\n";
         //s += indent+"\tvalue: "+value.toPrint(indent)+"\n";
         return s;
+    }
+
+    public void setStatusRW(){
+        // Assetlan variables cannot be deleted,
+        // so the status can only change in RW
+        this.entry.setStatus(true);
     }
 
 

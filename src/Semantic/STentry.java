@@ -9,6 +9,14 @@ public class STentry {
 	private Node type;
 	private boolean status;
 
+	// Status field is used for effects valuation
+	// For a var:
+	// 		true: var is initialized
+	// 		false: var is not initialized
+	// For an asset:
+	// 		true: non empty asset
+	// 		false: empty asset
+
 
 	public STentry(){
 		this.nestingLevel = -1;
@@ -22,15 +30,6 @@ public class STentry {
 		this.offset = s.offset;
 		this.type = s.type;
 		this.status = s.status;
-
-		// Status field is used for effects valuation
-		// For a var:
-		// 		true: var is initialized
-		// 		false: var is not initialized
-		// For an asset:
-		// 		true: non empty asset
-		// 		false: empty asset
-
 	}
 
 

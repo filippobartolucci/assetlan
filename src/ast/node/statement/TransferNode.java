@@ -43,7 +43,6 @@ public class TransferNode implements Node {
         }
 
         entry.setStatus(false); // Asset -> Empty after transfer
-
         return errors;
     }
 

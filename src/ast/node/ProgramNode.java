@@ -98,6 +98,14 @@ public class ProgramNode implements Node {
 
 		errors.addAll(initcallnode.checkEffects());
 
+		for (Node n : assets) {
+			if (n instanceof AssetNode a) {
+				if (a.getStatus()) {
+					errors.add(new SemanticError("Contract not liquid -> "+ a+" is not empty"));
+				}
+			}
+		}
+
 
 		return errors;
 	}

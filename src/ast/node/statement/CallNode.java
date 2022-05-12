@@ -3,6 +3,7 @@ package ast.node.statement;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import ast.node.AssetNode;
 import ast.node.FunctionNode;
 import ast.node.Node;
 
@@ -59,8 +60,7 @@ public class CallNode implements Node {
     public Node typeCheck(){
         Node symbol = this.entry.getType();
 
-        if ((symbol instanceof FunctionNode)){
-            FunctionNode f = (FunctionNode) symbol;
+        if ((symbol instanceof FunctionNode f)){
 
             ArrayList<Node> params = f.getParams();
             if (params.size() != expressions.size()){
@@ -121,8 +121,28 @@ public class CallNode implements Node {
     }
 
     public ArrayList<SemanticError> checkEffects() {
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
+
+        // Checking effects for each expression used as actual parameter
+        for (Node e : expressions) {
+            errors.addAll(e.checkEffects());
+        }
+
+        // Checking effects for each asset  used as actual parameter
+        for (STentry a_entry : assets) {
+            // Empty asset cannot be used in a function call as an actual parameter
+            if (!a_entry.getStatus()){
+                errors.add( new SemanticError("Asset " + a_entry.getType() + " is empty -> " + a_entry.getType()  + " can't be used in a function call"));
+            }else{
+                // Asset must be emptied during the function call
+                a_entry.setStatus(false);
+            }
+        }
+
+        errors.addAll(((FunctionNode) entry.getType()).checkFunctionEffects());
+
         return errors;
+
     }
 
 }

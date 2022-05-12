@@ -3,6 +3,8 @@ package ast.node;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import Utils.TypeValue;
+
 import java.util.ArrayList;
 
 public class InitCallNode implements Node{
@@ -20,6 +22,8 @@ public class InitCallNode implements Node{
         this.aexp = aexpnodes;
         this.entry = null;
     }
+
+
 
     /**
      * Check semantic errors for this node in a given environment
@@ -41,6 +45,7 @@ public class InitCallNode implements Node{
         }
 
         this.entry = f_entry;
+
         return errors;
     }
 
@@ -72,8 +77,9 @@ public class InitCallNode implements Node{
             for (int i=0; i<aparams.size(); i++){
                 Node actual_parType = aexp.get(i).typeCheck(); // this also checks type correctness in exp
 
-                if (!actual_parType.equals("asset")){
-                    throw new RuntimeException("Type mismatch -> type of " + (i+1) + "-th asset parameter in function " + id + " is not an asset");
+                // AExpr can be only of type Asset
+                if ((actual_parType.equals("bool"))  ){
+                    throw new RuntimeException("Type mismatch -> type of " + (i+1) + "-th asset parameter in function " + id + " is not a valid expression");
                 }
             }
             return f.getType();
@@ -83,7 +89,24 @@ public class InitCallNode implements Node{
     }
 
     public ArrayList<SemanticError> checkEffects(){
-        return new ArrayList<>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
+
+        // Checking effects for each expression used as actual parameter
+        for (Node e : exp) {
+            errors.addAll(e.checkEffects());
+        }
+
+        // Same as before, but for asset expressions
+        for (Node e : aexp) {
+            errors.addAll(e.checkEffects());
+            if (e instanceof AssetNode a){
+                a.setStatus(false);
+            }
+        }
+
+        errors.addAll(((FunctionNode) entry.getType()).checkFunctionEffects());
+
+        return errors;
     }
 
 

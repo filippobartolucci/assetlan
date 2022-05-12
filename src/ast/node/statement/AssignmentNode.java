@@ -32,7 +32,7 @@ public class AssignmentNode implements Node {
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
         errors.addAll(exp.checkSemantics(env));
-        this.entry= entry;
+        this.entry= symbol;
 
         return errors;
     }

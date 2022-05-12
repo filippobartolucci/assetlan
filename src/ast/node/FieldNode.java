@@ -9,6 +9,7 @@ public class FieldNode implements Node{
 	private final String id;
 	private final Node type;
 	private final Node exp;
+
 	/**
 	 * Constructor
 	 */
@@ -89,5 +90,10 @@ public class FieldNode implements Node{
 		s += indent+"\ttype: "+type.toPrint(indent)+"\n";
 		//s += indent+"\t exp: "+exp.toPrint(indent)+"\n";
 		return s;
+	}
+
+	@Override
+	public String toString() {
+		return id;
 	}
 }

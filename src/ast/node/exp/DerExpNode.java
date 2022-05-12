@@ -4,6 +4,8 @@ import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.Node;
+import ast.node.TypeNode;
+
 import java.util.ArrayList;
 
 public class DerExpNode extends ExpNode {
@@ -44,7 +46,7 @@ public class DerExpNode extends ExpNode {
     }
 
     public Node typeCheck(){
-        return this.entry.getType().typeCheck();
+        return new TypeNode("int");
     }
 
     public ArrayList<SemanticError> checkEffects(){

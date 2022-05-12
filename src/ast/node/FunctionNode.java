@@ -5,6 +5,8 @@ import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.statement.IteNode;
 import ast.node.statement.RetNode;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 
@@ -20,6 +22,8 @@ public class FunctionNode implements Node {
 	private final ArrayList<Node> body_params; // param inside function
 	private final ArrayList<Node> statements;
 
+	private ArrayList<AssetNode> assets;
+
 
 	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements, ArrayList<Node> return_statement) {
 		this.id = id;
@@ -28,6 +32,17 @@ public class FunctionNode implements Node {
 		this.aparams = aparams;
 		this.body_params = body_params;
 		this.statements = statements;
+		this.assets = new ArrayList<>();
+	}
+
+	public FunctionNode(FunctionNode f){
+		this.id = f.id;
+		this.type = f.type;
+		this.params = f.params;
+		this.aparams = f.aparams;
+		this.body_params = f.body_params;
+		this.statements = f.statements;
+		this.assets = f.assets;
 	}
 
 	public String toPrint(String indent) {
@@ -98,13 +113,16 @@ public class FunctionNode implements Node {
 
 		env.newEmptyScope();
 
-		for(Node n : params) {
+		for(Node n : params) {;
 			errors.addAll(n.checkSemantics(env));
+			((ParamNode) n).setStatusRW();
 		}
 
 		for(Node n : aparams) {
-
 			errors.addAll(n.checkSemantics(env));
+			AssetNode a = ((AssetNode) n);
+			assets.add(a);
+			a.setStatus(true);
 		}
 
 		for(Node n : body_params) {
@@ -119,7 +137,11 @@ public class FunctionNode implements Node {
 		return errors;
 	}
 
-	public ArrayList<SemanticError> checkEffects(){
+	public ArrayList<SemanticError> checkEffects() {
+		return new ArrayList<>();
+	}
+
+	public ArrayList<SemanticError> checkFunctionEffects(){
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 
@@ -140,6 +162,12 @@ public class FunctionNode implements Node {
 		}
 
 		// TODO: fare altre cose da capire
+		for (AssetNode a : assets) {
+			if(a.getStatus()){
+				errors.add(new SemanticError("Contract is not liquid -> "+ a+" is not empty"));
+			}
+		}
+
 		return errors;
 	}
 
