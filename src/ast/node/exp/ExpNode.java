@@ -29,7 +29,7 @@ public class ExpNode implements Node {
     }
 
     public String codeGeneration() {
-        return null;
+        return this.exp.codeGeneration();
     }
 
     public String toPrint(String indent) {

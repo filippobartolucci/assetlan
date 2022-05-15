@@ -13,12 +13,15 @@ public class DerExpNode extends ExpNode {
     private final String id;
     private STentry entry;
 
+    private int currentNL;
+
     /*Constructor
     */
     public DerExpNode(String id) {
         super();
         this.id = id;
         this.entry = null;
+        this.currentNL = 0;
     }
 
     /**
@@ -32,6 +35,7 @@ public class DerExpNode extends ExpNode {
             errors.add(new SemanticError("Variable " + id + " not declared"));
         }
         this.entry = entry;
+        this.currentNL = env.getNestingLevel();
 
         return errors;
     }
@@ -58,6 +62,18 @@ public class DerExpNode extends ExpNode {
         }
 
         return errors;
+    }
+
+    public String codeGeneration() {
+        StringBuilder out = new StringBuilder();
+
+        for (int i = this.entry.getNestinglevel(); i > this.entry.getNestinglevel(); i--)
+            out.append("lw $al $al\n");
+
+        int offsetWithAL = entry.getOffset();
+        out.append("lw $a0 ").append(offsetWithAL).append("($al) ; loads in $a0 the value in ").append(id).append("\n");
+
+        return out.toString();
     }
 
 }

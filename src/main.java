@@ -68,7 +68,11 @@ public class main {
             }
             System.out.println("Effects analysis successful! -> Liquidity is respected.\n\nCode generation...");
 
+            String bytecode = ast.codeGeneration();
+
+
             System.exit(ExitCode.SUCCESS.ordinal());
+
 
         }catch (Exception exc) {
             System.err.println(exc.getMessage());

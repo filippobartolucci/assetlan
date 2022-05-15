@@ -72,17 +72,12 @@ public class Environment implements Cloneable {
 		return offset;
 	}
 
-
-	// METHODS
-
-	/**
-	 * void newScope(SymTable st) extends the st with a new scope
-	 */
-	public void newScope(HashMap<String, STentry> st){
-		this.nestingLevel++;
-		this.symTable.add(st);
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
+
+	// METHODS
 	/**
 	 * void newEmptyScope(SymTable st) extends the st with a new empty scope
 	 */

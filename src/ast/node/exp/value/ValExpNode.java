@@ -35,7 +35,7 @@ public class ValExpNode extends ExpNode {
 	 * Generate code for this node
 	 */
 	public String codeGeneration(){
-		return "";
+		return "li $a0 " + this.val + "\n";
 	}
 
 	/**

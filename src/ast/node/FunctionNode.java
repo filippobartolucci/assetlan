@@ -3,6 +3,7 @@ package ast.node;
 import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import ast.node.statement.CallNode;
 import ast.node.statement.IteNode;
 import ast.node.statement.RetNode;
 
@@ -25,7 +26,7 @@ public class FunctionNode implements Node {
 	private ArrayList<AssetNode> assets;
 
 
-	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements, ArrayList<Node> return_statement) {
+	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements) {
 		this.id = id;
 		this.type = typenode;
 		this.params = params;
@@ -144,7 +145,6 @@ public class FunctionNode implements Node {
 	public ArrayList<SemanticError> checkFunctionEffects(){
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
-
 		for(Node n : params) {
 			errors.addAll(n.checkEffects());
 		}
@@ -158,10 +158,17 @@ public class FunctionNode implements Node {
 		}
 
 		for(Node n : statements) {
-			errors.addAll(n.checkEffects());
+			StatementNode s = (StatementNode) n;
+			if (s.getChild() instanceof CallNode c) {
+				if (!c.getId().equals(id)) {
+					errors.addAll(n.checkEffects());
+				}
+			}else{
+				errors.addAll(n.checkEffects());
+			}
+
 		}
 
-		// TODO: fare altre cose da capire
 		for (AssetNode a : assets) {
 			if(a.getStatus()){
 				errors.add(new SemanticError("Contract is not liquid -> "+ a+" is not empty"));

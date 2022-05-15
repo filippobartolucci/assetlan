@@ -58,12 +58,23 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public String codeGeneration() {return null;}
+	public String codeGeneration() {
+		StringBuilder out = new StringBuilder();
+		for (Node f : fields) out.append(f.codeGeneration());
+		for (Node a : assets) out.append(a.codeGeneration());
+		for (Node f : functions) out.append(f.codeGeneration());
+		if (initcallnode != null) out.append(initcallnode.codeGeneration());
+		return out.toString();
+	}
 
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env){
 		ArrayList<SemanticError> errors = new ArrayList<>();
 		env.newEmptyScope();
+
+		int offset = env.getOffset();
+		offset--; // Reserve space for the transfer of assets
+		env.setOffset(offset);
 
 		for (Node f : fields)
 			errors.addAll(f.checkSemantics(env));

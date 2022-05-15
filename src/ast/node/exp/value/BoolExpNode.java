@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class BoolExpNode extends ExpNode {
     //| BOOL                    #boolExp
-    public Boolean bool;
+    public boolean bool;
 
     /*
      * Constructor
     */
-    public BoolExpNode(Boolean bool) {
+    public BoolExpNode(boolean bool) {
         this.bool = bool;
     }
 
@@ -44,7 +44,7 @@ public class BoolExpNode extends ExpNode {
      * Generate code for this node
      */
     public String codeGeneration(){
-        return "";
+        return "li $a0 "+(this.bool?1:0)+"\n";
     }
 
     /**

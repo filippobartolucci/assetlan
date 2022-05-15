@@ -24,7 +24,7 @@ public class CallNode implements Node {
         this.id = id;
         this.expressions = expressions;
         this.ids = ids;
-        this.assets = new ArrayList<STentry>();
+        this.assets = new ArrayList<>();
         this.entry = null;
     }
 
@@ -32,7 +32,7 @@ public class CallNode implements Node {
      * Check semantic errors for this node in a given environment
      */
     public ArrayList<SemanticError> checkSemantics(Environment env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
 
         STentry f_entry = env.lookup(id);
         if (f_entry == null){
@@ -129,7 +129,7 @@ public class CallNode implements Node {
         }
 
         // Checking effects for each asset  used as actual parameter
-        for (STentry a_entry : assets) {
+        /*for (STentry a_entry : assets) {
             // Empty asset cannot be used in a function call as an actual parameter
             if (!a_entry.getStatus()){
                 errors.add( new SemanticError("Asset " + a_entry.getType() + " is empty -> " + a_entry.getType()  + " can't be used in a function call"));
@@ -137,12 +137,29 @@ public class CallNode implements Node {
                 // Asset must be emptied during the function call
                 a_entry.setStatus(false);
             }
+        }*/
+
+        FunctionNode called_function = (FunctionNode)this.entry.getType();
+        ArrayList<Node> aparams = called_function.getAparams();
+
+        // Moving values of assets in the function call
+        //      def :f()[asset a]{}
+        //      call :f()[b];
+        //      -> value of b is moved to a
+        for (int i=0; i<aparams.size(); i++){
+            AssetNode formal  = (AssetNode)aparams.get(i); // Formal asset parameter
+            AssetNode actual = (AssetNode)assets.get(i).getType(); // Actual asset parameter
+
+            formal.setStatus(actual.getStatus()); // Formal asset parameter is now the same as the actual asset parameter
+            actual.setStatus(false); // Actual asset parameter is now empty
         }
 
-        errors.addAll(((FunctionNode) entry.getType()).checkFunctionEffects());
-
+        errors.addAll(called_function.checkFunctionEffects());
         return errors;
 
     }
 
+    public String getId() {
+        return id;
+    }
 }

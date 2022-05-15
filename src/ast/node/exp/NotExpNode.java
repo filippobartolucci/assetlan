@@ -18,4 +18,8 @@ public class NotExpNode extends ExpNode {
 		}
 		return type;
 	}
+
+	public String codeGeneration() {
+		return exp.codeGeneration() + "not $a0 $a0\n";
+	}
 }

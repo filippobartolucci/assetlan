@@ -29,7 +29,7 @@ public class StatementNode implements Node {
 
     @Override
     public String codeGeneration() {
-        return null;
+        return this.statement.codeGeneration();
     }
 
     @Override

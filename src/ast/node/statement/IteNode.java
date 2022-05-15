@@ -72,9 +72,11 @@ public class IteNode implements Node {
         ArrayList<SemanticError> errors = new ArrayList<>();
         errors.addAll(exp.checkEffects());
         errors.addAll(if_statement.checkEffects());
+
         if (else_statement != null) {
             errors.addAll(else_statement.checkEffects());
         }
+
         return errors;
     }
 

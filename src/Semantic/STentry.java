@@ -58,7 +58,7 @@ public class STentry {
 	}
 
 	public int getNestinglevel() {
-		return nestingLevel;
+		return this.nestingLevel;
 	}
 
 	public String toPrint(String s) { //

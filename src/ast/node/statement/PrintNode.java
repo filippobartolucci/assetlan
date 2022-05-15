@@ -44,7 +44,7 @@ public class PrintNode implements Node {
 	 * Generate code for this node
 	 */
 	public String codeGeneration(){
-		return "";
+		return this.exp.codeGeneration() + "print $a0\n";
 	}
 
 	/**

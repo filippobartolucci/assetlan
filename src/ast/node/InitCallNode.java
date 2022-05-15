@@ -138,7 +138,5 @@ public class InitCallNode implements Node{
 
         return s.toString();
     }
-
-
 }
 

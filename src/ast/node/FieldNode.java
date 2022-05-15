@@ -25,7 +25,11 @@ public class FieldNode implements Node{
 	 * Check semantic errors for this node in a given environment
 	 */
 	public ArrayList<SemanticError> checkSemantics(Environment env){
-		STentry entry = new STentry(env.getNestingLevel(), -1, this);
+
+		int offset = env.getOffset();
+		STentry entry = new STentry(env.getNestingLevel(), offset--, this);
+		env.setOffset(offset);
+
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 		if (exp != null) {
@@ -78,7 +82,15 @@ public class FieldNode implements Node{
 	 * Generate code for this node
 	 */
 	public String codeGeneration(){
-		return "";
+		StringBuilder builder = new StringBuilder();
+		if (exp != null) {
+			builder.append(exp.codeGeneration());
+			builder.append("push $a0\n");
+		} else {
+			builder.append("addi $sp -1\n");
+		}
+
+		return builder.toString();
 	}
 
 	/**
