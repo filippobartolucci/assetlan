@@ -166,12 +166,11 @@ public class FunctionNode implements Node {
 			}else{
 				errors.addAll(n.checkEffects());
 			}
-
 		}
 
 		for (AssetNode a : assets) {
 			if(a.getStatus()){
-				errors.add(new SemanticError("Contract is not liquid -> "+ a+" is not empty"));
+				errors.add(new SemanticError("Liquidity in " + id + " not respected -> "+ a+" is not empty"));
 			}
 		}
 

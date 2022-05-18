@@ -1,15 +1,12 @@
-int a;
-int b = 0 ;
+int a ;
+ asset x ;
+ void f()[asset u, asset v, asset w]{
+    u -o x ;
+	f()[v,w,u] ;
+ }
+ void main()[asset a, asset b, asset c]{
+	f()[a,a,a] ;
+	transfer x ;
+ }
 
-asset z ;
-
-void g()[asset x]{
-    transfer x;
-}
-
-void f()[asset y]{
-    f()[y];
-    g()[y];
-}
-
-f()[2] 		// il contratto e` liquido
+ main()[1,2,3] ;

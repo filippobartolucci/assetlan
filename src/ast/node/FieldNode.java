@@ -26,9 +26,8 @@ public class FieldNode implements Node{
 	 */
 	public ArrayList<SemanticError> checkSemantics(Environment env){
 
-		int offset = env.getOffset();
-		STentry entry = new STentry(env.getNestingLevel(), offset--, this);
-		env.setOffset(offset);
+		int offset = env.decOffset(2);
+		STentry entry = new STentry(env.getNestingLevel(), offset, this);
 
 		ArrayList<SemanticError> errors = new ArrayList<>();
 

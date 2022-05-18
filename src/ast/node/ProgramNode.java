@@ -70,22 +70,21 @@ public class ProgramNode implements Node {
 	@Override
 	public ArrayList<SemanticError> checkSemantics(Environment env){
 		ArrayList<SemanticError> errors = new ArrayList<>();
-		env.newEmptyScope();
 
-		int offset = env.getOffset();
-		offset--; // Reserve space for the transfer of assets
-		env.setOffset(offset);
+		env.newEmptyScope();	// Initial Empy Scope [ ]
+		env.decOffset(2);	// Reserving space for the transfer of assets
 
-		for (Node f : fields)
-			errors.addAll(f.checkSemantics(env));
-		for (Node a : assets)
-			errors.addAll(a.checkSemantics(env));
-		for (Node f : functions)
-			errors.addAll(f.checkSemantics(env));
+		for (Node f : fields) // Var Dec
+			errors.addAll(f.checkSemantics(env)); // \gamma' = \gamma U {x: t}
 
-		errors.addAll(initcallnode.checkSemantics(env));
+		for (Node a : assets) // Asset Dec
+			errors.addAll(a.checkSemantics(env)); // \gamma' = \gamma U {x: asset}
 
-		env.exitScope();
+		for (Node f : functions) // Func Dec
+			errors.addAll(f.checkSemantics(env)); // \gamma' = \gamma U {f: t, x1: t1, ..., xn: t1, a1: asset, ..., an: asset}
+
+		errors.addAll(initcallnode.checkSemantics(env)); 
+		env.exitScope(); //  [ ]
 
 		return errors;
 	}
@@ -112,7 +111,7 @@ public class ProgramNode implements Node {
 		for (Node n : assets) {
 			if (n instanceof AssetNode a) {
 				if (a.getStatus()) {
-					errors.add(new SemanticError("Contract not liquid -> "+ a+" is not empty"));
+					errors.add(new SemanticError("Liquidity not respected -> "+ a+" is not empty"));
 				}
 			}
 		}

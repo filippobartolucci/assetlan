@@ -67,6 +67,7 @@ public class Environment implements Cloneable {
 
 	/**
 	 * return the current offset level.
+	 * @return offset
 	 */
 	public int getOffset() {
 		return offset;
@@ -76,6 +77,15 @@ public class Environment implements Cloneable {
 		this.offset = offset;
 	}
 
+	/**
+	 * Return the actual value of the offset and the decrement it by the size of the type
+	 * @return Actual value of the offset
+	 */
+	public int decOffset(int s) {
+		int tmp = this.offset;
+		this.offset -= s;
+		return tmp;
+	}
 
 	// METHODS
 	/**
@@ -100,6 +110,7 @@ public class Environment implements Cloneable {
 
 	/**
 	 * Type lookup(SymTable st, String id) looks for the type of id in st, if any
+	 * @return stentry of id
 	 */
 	public STentry lookup(String id){
 		int nl = this.getNestingLevel();
