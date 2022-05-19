@@ -5,6 +5,7 @@ import Semantic.Environment;
 import Semantic.STentry;
 import Semantic.SemanticError;
 import ast.node.Node;
+import ast.node.TypeNode;
 
 import java.util.ArrayList;
 
@@ -55,7 +56,7 @@ public class AssignmentNode implements Node {
             throw new RuntimeException("Type mismatch -> var " + id + " is " + varType + " and exp is " + expType);
         }
 
-        return varType;
+        return new TypeNode("void");
     }
 
     public ArrayList<SemanticError> checkEffects() {

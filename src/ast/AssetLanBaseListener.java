@@ -1,4 +1,4 @@
-// Generated from /home/alfonso/Scrivania/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
+// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.10.1
 package ast;
 
 import Parser.AssetLanParser;
@@ -192,6 +192,18 @@ public class AssetLanBaseListener implements AssetLanListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIte(AssetLanParser.IteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStatementseq(AssetLanParser.StatementseqContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStatementseq(AssetLanParser.StatementseqContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

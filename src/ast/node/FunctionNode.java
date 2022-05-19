@@ -68,32 +68,24 @@ public class FunctionNode implements Node {
 	}
 
 	public Node typeCheck() {
-
-		// Search all return statement inside the function body
-		ArrayList <Node> return_statement = new ArrayList<>();
-		for (Node n : statements) {
-			return_statement.addAll(this.getReturns(n));
-		}
-
-		if (!(type.equals("void")) && return_statement.size()==0) {
-			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
-		}
-
-		for (Node n : return_statement){
-			Node retType = n.typeCheck();
-			if(!retType.equals(type)){
-				throw new RuntimeException("Type mismatch -> in " + id + " return type " +retType.toPrint("")+" does not match declaration function type " +type.toPrint(""));
-			}
-		}
-
 		for (Node n : body_params) {
 			n.typeCheck();
 		}
 
+		boolean found_return = false;
 		for (Node n : statements) {
-			n.typeCheck();
-		}
+			Node a_type = n.typeCheck();
+			if (!a_type.equals("void")) {
 
+				found_return = true;
+				if (!a_type.equals(type)) {
+					throw new RuntimeException("Type mismatch -> in " + id + " return type " + a_type.toPrint("") + " does not match declaration function type " + type.toPrint(""));
+				}
+			};
+		}
+		if (!found_return && !(type.equals("void"))) {
+			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
+		}
 		return type;
 	}
 
@@ -195,8 +187,8 @@ public class FunctionNode implements Node {
 			return ret_list;
 		}
 		if (n instanceof IteNode ite) {
-			ret_list.addAll(getReturns(ite.getIf()));
-			ret_list.addAll(getReturns(ite.getElse()));
+			//ret_list.addAll(getReturns(ite.getIf()));
+			//ret_list.addAll(getReturns(ite.getElse()));
 		}
 		if (n instanceof StatementNode st) {
 			ret_list.addAll(getReturns(st.getChild()));

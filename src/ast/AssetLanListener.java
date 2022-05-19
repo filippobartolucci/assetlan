@@ -1,4 +1,4 @@
-// Generated from /home/alfonso/Scrivania/assetlan/src/AssetLan.g4 by ANTLR 4.9.2
+// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.10.1
 package ast;
 import Parser.AssetLanParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -158,6 +158,16 @@ public interface AssetLanListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIte(AssetLanParser.IteContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AssetLanParser#statementseq}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatementseq(AssetLanParser.StatementseqContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AssetLanParser#statementseq}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatementseq(AssetLanParser.StatementseqContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AssetLanParser#call}.
 	 * @param ctx the parse tree

@@ -47,7 +47,7 @@ public class StatementNode implements Node {
         return errors;
     }
 
-    Node getChild() {
+    public Node getChild() {
         return statement;
     }
 }

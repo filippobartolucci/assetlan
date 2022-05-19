@@ -1,12 +1,22 @@
 int a ;
- asset x ;
- void f()[asset u, asset v, asset w]{
-    u -o x ;
-	f()[v,w,u] ;
- }
- void main()[asset a, asset b, asset c]{
-	f()[a,a,a] ;
-	transfer x ;
+asset x ;
+
+int f()[]{
+return 1;
+}
+
+void main()[]{
+    if (true){
+        a = 1;
+        a = 2;
+        if(true){
+            f()[];
+            return true;
+        }
+        return false;
+    }else{
+        return;
+    }
  }
 
- main()[1,2,3] ;
+ main()[] ;
