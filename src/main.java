@@ -41,7 +41,7 @@ public class main {
 
             System.out.println("Parsing successful!\n\nSemantic analysis...");
 
-            Environment env = new Environment();
+            GammaEnv env = new GammaEnv();
             ArrayList<SemanticError> s_errors;
             s_errors = ast.checkSemantics(env);
 
@@ -58,7 +58,9 @@ public class main {
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nChecking effects...");
 
 
-            s_errors = ast.checkEffects();
+            SigmaEnv s_env = new SigmaEnv();
+            ast.checkEffects(s_env);
+            s_errors = s_env.getErrors();
             if(s_errors.size() > 0){
                 for (SemanticError s_error : s_errors) {
                     System.err.println(s_error.toString());

@@ -1,7 +1,9 @@
 package ast.node.exp.value;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
 import ast.node.exp.ExpNode;
@@ -18,17 +20,17 @@ public class ValExpNode extends ExpNode {
 	/**
 	 * Check semantic errors for this node in a given environment
 	 */
-	public ArrayList<SemanticError> checkSemantics(Environment env){
+	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 		return new ArrayList<>();
 	}
 
 	/**
 	 * Generate code for this node
 	 */
-	public Node typeCheck() {return new TypeNode("int");}
+	public Node typeCheck() {return new TypeNode(TypeValue.INT);}
 
-	public ArrayList<SemanticError> checkEffects(){
-		return new ArrayList<>();
+	public SigmaEnv checkEffects(SigmaEnv env){
+		return env;
 	}
 
 	/**
@@ -43,5 +45,9 @@ public class ValExpNode extends ExpNode {
 	 */
 	public String toPrint(String indent) {return "\n"+indent + "Value " + val;}
 
+	@Override
+	public int preEvaluation(){
+		return this.val;
+	}
 
 }

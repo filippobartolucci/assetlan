@@ -1,8 +1,10 @@
 package ast.node.statement;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.AssetNode;
 import ast.node.FunctionNode;
 import ast.node.Node;
@@ -31,7 +33,7 @@ public class CallNode implements Node {
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         STentry f_entry = env.lookup(id);
@@ -84,7 +86,7 @@ public class CallNode implements Node {
             for (int i=0; i<aparams.size(); i++){
                 Node actual_parType = assets.get(i).getType();
 
-                if (!actual_parType.typeCheck().equals("asset")){
+                if (!actual_parType.typeCheck().equals(TypeValue.ASSET)){
                     throw new RuntimeException("Type mismatch -> type of asset parameter " + ids.get(i) + " in function " + id + " is not an asset");
                 }
             }
@@ -120,12 +122,10 @@ public class CallNode implements Node {
         return s.toString();
     }
 
-    public ArrayList<SemanticError> checkEffects() {
-        ArrayList<SemanticError> errors = new ArrayList<>();
-
+    public SigmaEnv checkEffects(SigmaEnv env) {
         // Checking effects for each expression used as actual parameter
         for (Node e : expressions) {
-            errors.addAll(e.checkEffects());
+            e.checkEffects(env);
         }
 
         // Checking effects for each asset  used as actual parameter
@@ -154,8 +154,9 @@ public class CallNode implements Node {
             actual.setStatus(false); // Actual asset parameter is now empty
         }
 
-        errors.addAll(called_function.checkFunctionEffects());
-        return errors;
+        //TODO: Da miglirare e riguardare
+        called_function.checkFunctionEffects(env);
+        return env;
 
     }
 

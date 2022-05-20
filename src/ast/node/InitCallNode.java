@@ -1,9 +1,11 @@
 package ast.node;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
 import Utils.TypeValue;
+import ast.node.exp.ExpNode;
 
 import java.util.ArrayList;
 
@@ -28,7 +30,7 @@ public class InitCallNode implements Node{
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         STentry f_entry = env.lookup(id);
@@ -77,8 +79,8 @@ public class InitCallNode implements Node{
             for (int i=0; i<aparams.size(); i++){
                 Node actual_parType = aexp.get(i).typeCheck(); // this also checks type correctness in exp
 
-                // AExpr can be only of type Asset
-                if ((actual_parType.equals("bool"))  ){
+
+                if (!(actual_parType.equals(TypeValue.INT))  ){
                     throw new RuntimeException("Type mismatch -> type of " + (i+1) + "-th asset parameter in function " + id + " is not a valid expression");
                 }
             }
@@ -88,25 +90,35 @@ public class InitCallNode implements Node{
         }
     }
 
-    public ArrayList<SemanticError> checkEffects(){
-        ArrayList<SemanticError> errors = new ArrayList<>();
-
+    public SigmaEnv checkEffects(SigmaEnv env){
         // Checking effects for each expression used as actual parameter
         for (Node e : exp) {
-            errors.addAll(e.checkEffects());
+           e.checkEffects(env);
         }
 
         // Same as before, but for asset expressions
         for (Node e : aexp) {
-            errors.addAll(e.checkEffects());
+            e.checkEffects(env);
             if (e instanceof AssetNode a){
                 a.setStatus(false);
             }
         }
 
-        errors.addAll(((FunctionNode) entry.getType()).checkFunctionEffects());
 
-        return errors;
+        for (Node e: aexp) {
+            try{
+                ExpNode exp = (ExpNode) e;
+                System.out.println("PreEvaluating: " + exp.preEvaluation());
+
+            }catch(RuntimeException ex){
+                System.err.println( "Effect errors found -> "+ ex.getMessage());
+            }
+        }
+        if (entry.getType() instanceof FunctionNode f){
+            f.checkFunctionEffects(env);
+        }
+
+        return env;
     }
 
 

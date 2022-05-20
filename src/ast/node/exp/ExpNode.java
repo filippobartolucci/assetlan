@@ -1,22 +1,23 @@
 package ast.node.exp;
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
 import ast.node.Node;
 
 import java.util.ArrayList;
 
 public class ExpNode implements Node {
-    Node exp;
+    ExpNode exp;
 
     public ExpNode(Node exp) {
-        this.exp = exp;
+        this.exp = (ExpNode) exp;
     }
 
     public ExpNode() {
         this.exp = null;
     }
 
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
         if (exp != null) {
             errors.addAll(exp.checkSemantics(env));
@@ -40,8 +41,11 @@ public class ExpNode implements Node {
         return s;
     }
 
-    public ArrayList<SemanticError> checkEffects() {return this.exp.checkEffects();}
+    public SigmaEnv checkEffects(SigmaEnv env) {
+        exp.checkEffects(env);
+        return env;
+    }
 
-
+    public int preEvaluation(){ return exp.preEvaluation(); }
 
 }

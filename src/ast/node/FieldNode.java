@@ -1,7 +1,6 @@
 package ast.node;
-import Semantic.Environment;
-import Semantic.STentry;
-import Semantic.SemanticError;
+import Semantic.*;
+import Utils.TypeValue;
 
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ public class FieldNode implements Node{
 	/**
 	 * Check semantic errors for this node in a given environment
 	 */
-	public ArrayList<SemanticError> checkSemantics(Environment env){
+	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 
 		int offset = env.decOffset(2);
 		STentry entry = new STentry(env.getNestingLevel(), offset, this);
@@ -37,7 +36,7 @@ public class FieldNode implements Node{
 		}
 
 		// Check if type == null
-		if(type.equals("void")){
+		if(type.equals(TypeValue.VOID)){
 			errors.add(new SemanticError("Variable " + id + " can't have void type"));
 		}
 
@@ -67,14 +66,16 @@ public class FieldNode implements Node{
 		return type;
 	}
 
-	public ArrayList<SemanticError> checkEffects(){
-		ArrayList<SemanticError> errors = new ArrayList<>();
+	public SigmaEnv checkEffects(SigmaEnv env) {
+		EffectEntry entry = new EffectEntry();
+		env.addDecl(id, entry);
 
 		if (exp != null) {
-			errors.addAll(exp.checkEffects());
+			entry.setTrue();
+			exp.checkEffects(env);
 		}
 
-		return errors;
+		return env;
 	}
 
 	/**

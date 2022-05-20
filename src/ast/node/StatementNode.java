@@ -1,11 +1,12 @@
 package ast.node;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
 
 import java.util.ArrayList;
 
-public class StatementNode implements Node {
+public  class StatementNode implements Node {
     private final Node statement;
 
     public  StatementNode(Node statement) {
@@ -33,12 +34,12 @@ public class StatementNode implements Node {
     }
 
     @Override
-    public ArrayList<SemanticError> checkEffects() {
-        return this.statement.checkEffects();
+    public SigmaEnv checkEffects(SigmaEnv env) {
+        return this.statement.checkEffects(env);
     }
 
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env) {
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         if (statement != null) {

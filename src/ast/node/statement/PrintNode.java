@@ -1,11 +1,11 @@
 package ast.node.statement;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
-import ast.node.exp.BaseExpNode;
-import ast.node.exp.ExpNode;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public class PrintNode implements Node {
 	 * @param env
 	 * @return errors
 	 */
-	public ArrayList<SemanticError> checkSemantics(Environment env){
+	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 		return exp.checkSemantics(env);
 	}
 
@@ -33,11 +33,11 @@ public class PrintNode implements Node {
 	 */
 	public Node typeCheck(){
 		exp.typeCheck();
-		return new TypeNode("void");
+		return new TypeNode(TypeValue.VOID);
 	}
 
-	public ArrayList<SemanticError> checkEffects() {
-		return exp.checkEffects();
+	public SigmaEnv checkEffects(SigmaEnv env) {
+		return exp.checkEffects(env);
 	}
 
 	/**

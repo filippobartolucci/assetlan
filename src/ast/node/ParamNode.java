@@ -1,8 +1,6 @@
 package ast.node;
 
-import Semantic.Environment;
-import Semantic.STentry;
-import Semantic.SemanticError;
+import Semantic.*;
 
 import java.util.ArrayList;
 
@@ -23,7 +21,7 @@ public class ParamNode implements Node {
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
         STentry entry = new STentry(env.getNestingLevel(),-1,this);
         SemanticError error=env.addDecl(id, entry);
@@ -41,8 +39,11 @@ public class ParamNode implements Node {
         return errors;
     }
 
-    public ArrayList<SemanticError> checkEffects(){
-        return new ArrayList<SemanticError>();
+    public SigmaEnv checkEffects(SigmaEnv env){
+        EffectEntry entry = new EffectEntry();
+        entry.setTrue();
+        env.addDecl(id,entry);
+        return env;
     }
 
     /**

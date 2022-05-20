@@ -1,8 +1,10 @@
 package ast.node.statement;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
 
@@ -27,7 +29,7 @@ public class MoveNode implements Node {
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();
 
         STentry entry1 = env.lookup(id1);
@@ -49,28 +51,26 @@ public class MoveNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        if (!entry1.getType().typeCheck().equals("asset")){
+        if (!entry1.getType().typeCheck().equals(TypeValue.ASSET)) {
             throw new RuntimeException("Type mismatch: " + id1 + " is not an asset");
         }
 
-        if (!entry2.getType().typeCheck().equals("asset")){
+        if (!entry2.getType().typeCheck().equals(TypeValue.ASSET)){
             throw new RuntimeException("Type mismatch: " + id2 + " is not an asset");
         }
 
-        return new TypeNode("void");
+        return new TypeNode(TypeValue.VOID);
     }
 
-    public ArrayList<SemanticError> checkEffects() {
-        ArrayList<SemanticError> errors = new ArrayList<>();
-
+    public SigmaEnv checkEffects(SigmaEnv env){
         if (id1.equals(id2)) {
-            errors.add(new SemanticError("Can't move asset " + id1 + " to itself"));
+            env.addError(new SemanticError("Can't move asset " + id1 + " to itself"));
         }
 
-        entry1.setStatus(false); // Asset1 -> empty
-        entry2.setStatus(true); // Asset2 -> RW
+        env.lookup(this.id1).setTrue(); // Asset1 -> empty (0)
+        env.lookup(this.id2).setFalse(); // Asset2 -> not empty (1)
 
-        return errors;
+        return env;
     }
 
     /**

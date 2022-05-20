@@ -1,37 +1,57 @@
 package ast.node;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import static Utils.TypeValue.INT;
+
 public class TypeNode implements Node{
-    private final String type;
+    private final TypeValue type;
 
     /*
      * Constructor
     */
     public TypeNode(String type){
-        this.type = type;
+
+        if (type.equals("int")){
+            this.type = TypeValue.INT;
+        }
+        else if (type.equals("bool")){
+            this.type = TypeValue.BOOL;
+        }
+        else if (type.equals("asset")){
+            this.type = TypeValue.ASSET;
+        }else {
+            this.type = TypeValue.VOID;
+        }
+    }
+
+    public TypeNode(TypeValue typeValue) {
+        this.type = typeValue;
     }
 
 
     /*
      * Getters
     */
-    public String getType(){
+    public TypeValue getType(){
         return this.type;
     }
 
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         return new ArrayList<>();
     }
 
-    public ArrayList<SemanticError> checkEffects() {
-        return new ArrayList<SemanticError>();
+    public SigmaEnv checkEffects(SigmaEnv env){
+        return env;
     }
 
     /**
@@ -52,7 +72,7 @@ public class TypeNode implements Node{
      * Print this node
      */
     public String toPrint(String indent){
-        return type;
+        return type.toString();
     }
 
     @Override
@@ -63,7 +83,7 @@ public class TypeNode implements Node{
                 return true;
             }
         }
-        if (obj instanceof String){
+        if (obj instanceof TypeValue){
             if(this.type.equals(obj)){
                 return true;
             }
@@ -73,7 +93,7 @@ public class TypeNode implements Node{
 
     @Override
     public String toString(){
-        return type;
+        return type.toString();
     }
 
 }

@@ -1,7 +1,8 @@
 package ast.node.exp;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
 import ast.node.Node;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class CallExpNode extends ExpNode {
      * Check semantic errors for this node in a given environment
      */
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         return call.checkSemantics(env);}
 
     /**
@@ -47,6 +48,17 @@ public class CallExpNode extends ExpNode {
         s += indent + "CallExpNode\n";
         s += indent + call.toPrint(indent + "\t");
         return s;
+    }
+
+    @Override
+    public SigmaEnv checkEffects(SigmaEnv env) {
+        call.checkEffects(env);
+        return env;
+    }
+
+    @Override
+    public int preEvaluation(){
+        throw new RuntimeException("Cannot use function call in asset expression");
     }
 
 }

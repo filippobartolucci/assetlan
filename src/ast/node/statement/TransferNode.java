@@ -1,9 +1,11 @@
 package ast.node.statement;
 
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
 
@@ -25,7 +27,7 @@ public class TransferNode implements Node {
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();
         STentry entry = env.lookup(id);
         if(entry == null){
@@ -36,24 +38,19 @@ public class TransferNode implements Node {
         return errors;
     }
 
-    public ArrayList<SemanticError> checkEffects() {
-        ArrayList<SemanticError> errors = new ArrayList<>();
-        if(!(entry.getStatus())) {
-            errors.add(new SemanticError("Asset " + id + " is not transferable or is empty"));
-        }
-
-        entry.setStatus(false); // Asset -> Empty after transfer
-        return errors;
+    public SigmaEnv checkEffects(SigmaEnv env) {
+        env.lookup(id).setFalse(); // Asset -> Empty after transfer
+        return env;
     }
 
     /**
      * Generate code for this node
      */
     public Node typeCheck(){
-        if (!(entry.getType().typeCheck().equals("asset"))) {
+        if (!(entry.getType().typeCheck().equals(TypeValue.ASSET))) {
             throw new RuntimeException("Type mismatch: " + id + " is not an asset");
         }
-        return new TypeNode("void");
+        return new TypeNode(TypeValue.VOID);
     }
 
     /**

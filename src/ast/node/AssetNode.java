@@ -1,9 +1,8 @@
 package ast.node;
 
 
-import Semantic.Environment;
-import Semantic.STentry;
-import Semantic.SemanticError;
+import Semantic.*;
+import Utils.TypeValue;
 
 import java.util.ArrayList;
 
@@ -19,14 +18,14 @@ public class AssetNode implements Node{
 	}
 
 	public Node typeCheck(){
-		return new TypeNode("asset");
+		return new TypeNode(TypeValue.ASSET);
 	}
 
 	public String codeGeneration(){
 		return null;
 	}
 
-	public ArrayList<SemanticError> checkSemantics(Environment env) {
+	public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
 		STentry entry = new STentry(env.getNestingLevel(), -1, this);
 		ArrayList<SemanticError> errors;
 		errors = new ArrayList<SemanticError>();
@@ -41,12 +40,11 @@ public class AssetNode implements Node{
 
 	}
 
-	public ArrayList<SemanticError> checkEffects() {
-		ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+	public SigmaEnv checkEffects(SigmaEnv env) {
+		EffectEntry entry = new EffectEntry();
+		env.addDecl(id, entry);
 
-		//entry.setStatus(Effects.RW);
-
-		return new ArrayList<SemanticError>();
+		return env;
 	}
 
 	public String toPrint(String indent) {

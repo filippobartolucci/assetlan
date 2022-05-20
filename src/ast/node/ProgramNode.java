@@ -1,7 +1,8 @@
 package ast.node;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
 import Utils.*;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public ArrayList<SemanticError> checkSemantics(Environment env){
+	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 		env.newEmptyScope();	// Initial Empy Scope [ ]
@@ -90,34 +91,32 @@ public class ProgramNode implements Node {
 	}
 
 	@Override
-	public ArrayList<SemanticError> checkEffects(){
-		ArrayList<SemanticError> errors = new ArrayList<>();
-
+	public SigmaEnv checkEffects(SigmaEnv env){
+		env.newEmptyScope();	// Initial Empy Scope [ ]
 
 		for (Node f : fields){
-			errors.addAll(f.checkEffects());
+			env = f.checkEffects(env);
 		}
 
 		for (Node a : assets){
-			errors.addAll(a.checkEffects());
+			env = a.checkEffects(env);
 		}
 
 		for (Node f : functions){
-			errors.addAll(f.checkEffects());
+			env = f.checkEffects(env);
 		}
 
-		errors.addAll(initcallnode.checkEffects());
+		initcallnode.checkEffects(env);
 
 		for (Node n : assets) {
 			if (n instanceof AssetNode a) {
 				if (a.getStatus()) {
-					errors.add(new SemanticError("Liquidity not respected -> "+ a+" is not empty"));
+					env.addError(new SemanticError("Liquidity not respected -> "+ a+" is not empty"));
 				}
 			}
 		}
-
-
-		return errors;
+		env.exitScope(); //  [ ]
+		return env;
 	}
 	
 }

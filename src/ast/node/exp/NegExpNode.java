@@ -1,9 +1,11 @@
 package ast.node.exp;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Utils.TypeValue;
 import ast.node.Node;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class NegExpNode extends ExpNode {
@@ -19,7 +21,7 @@ public class NegExpNode extends ExpNode {
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         return exp.checkSemantics(env);
     }
 
@@ -32,8 +34,8 @@ public class NegExpNode extends ExpNode {
 
     public Node typeCheck() {
         Node expType = exp.typeCheck();
-        if(!(expType.equals("int"))){
-            throw new RuntimeException("Type mismatch -> the type of the expression is not int");
+        if( ! ( expType.equals(TypeValue.INT) || expType.equals(TypeValue.ASSET) ) ) {
+            throw new RuntimeException("Type mismatch -> the type of the expression is not int or asset");
         }
         return expType;
     }
@@ -43,7 +45,11 @@ public class NegExpNode extends ExpNode {
      */
     public String toPrint(String indent){
         return "\n" + indent + "NegExpNode\t" + exp.toPrint(indent + "\t");
+    }
 
+    @Override
+    public int preEvaluation(){
+        return ((ExpNode)exp).preEvaluation();
     }
 
 }

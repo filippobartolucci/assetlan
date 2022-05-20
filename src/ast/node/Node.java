@@ -4,10 +4,10 @@ import Semantic.*;
 import java.util.ArrayList;
 
 public interface Node {
-	String toPrint(String indent);
+	// Must have function foreach node in ast
+	ArrayList<SemanticError> checkSemantics(GammaEnv env);
 	Node typeCheck();
+	SigmaEnv checkEffects(SigmaEnv env);
 	String codeGeneration();
-	ArrayList<SemanticError> checkSemantics(Environment env);
-	ArrayList<SemanticError> checkEffects();
-
+	String toPrint(String indent);
 }

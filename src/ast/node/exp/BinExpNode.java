@@ -1,7 +1,9 @@
 package ast.node.exp;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
 
@@ -29,7 +31,7 @@ public class BinExpNode extends ExpNode {
 	}
 
 	@Override
-	public ArrayList<SemanticError> checkSemantics(Environment env) {
+	public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
 		ArrayList<SemanticError> errors = new ArrayList<>();
 		errors.addAll(left.checkSemantics(env));
 		errors.addAll(right.checkSemantics(env));
@@ -57,30 +59,29 @@ public class BinExpNode extends ExpNode {
 
 		switch (this.op) {
 			case "*", "/", "+", "-", "<", "<=", ">", ">=":
-				if (! ( (leftType.equals("int") || (leftType.equals("asset") ) && ( (rightType.equals("int") || (rightType.equals("asset")) ))))){
+				if (! ( (leftType.equals(TypeValue.INT) || (leftType.equals(TypeValue.ASSET) ) && ( (rightType.equals(TypeValue.INT) || (rightType.equals(TypeValue.ASSET)) ))))){
 					throw new RuntimeException("Type mismatch -> in op " + op + " type of both expression must be int or asset");
 				}
 				break;
 			case "&&", "||":
-				if (!(leftType.equals("boolean") && rightType.equals(leftType))) {
+				if (!(leftType.equals(TypeValue.BOOL) && rightType.equals(leftType))) {
 					throw new RuntimeException("Type mismatch -> in op " + op + " type of both expression must be a boolean");
 				}
-				return new TypeNode("bool");
+				return new TypeNode(TypeValue.BOOL);
 			case "==", "!=":
 				if (!(leftType.equals(rightType)) ) {
 					throw new RuntimeException("Type mismatch -> in op " + op + " type of both expression must be the same");
 				}
-				return new TypeNode("bool");
+				return new TypeNode(TypeValue.BOOL);
 		}
-		return new TypeNode("int");
+		return new TypeNode(TypeValue.INT);
 	}
 
 	@Override
-	public ArrayList<SemanticError> checkEffects() {
-		ArrayList<SemanticError> errors = new ArrayList<>();
-		errors.addAll(left.checkEffects());
-		errors.addAll(right.checkEffects());
-		return errors;
+	public SigmaEnv checkEffects(SigmaEnv env) {
+		left.checkEffects(env);
+		right.checkEffects(env);
+		return env;
 	}
 
 	public String codeGeneration() {
@@ -139,6 +140,25 @@ public class BinExpNode extends ExpNode {
 		}
 		out.append("pop\n");
 		return out.toString();
+	}
+
+	@Override
+	public int preEvaluation(){
+		int leftValue = ((ExpNode) left).preEvaluation();
+		int rightValue = ((ExpNode)right).preEvaluation();
+		switch (op){
+			case "+":
+				return leftValue + rightValue;
+			case "-":
+				return leftValue - rightValue;
+			case "*":
+				return leftValue * rightValue;
+			case "/":
+				return leftValue / rightValue;
+
+			default :
+				throw new RuntimeException("Invalid operator for asset expression");
+		}
 	}
 }
 

@@ -1,14 +1,16 @@
 package ast.node.exp;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
 
 import java.util.ArrayList;
 
-public class DerExpNode extends ExpNode {
+public class DerExpNode extends ExpNode implements Node{
     // | ID						                        #derExp
     private final String id;
     private STentry entry;
@@ -28,7 +30,7 @@ public class DerExpNode extends ExpNode {
      * Check semantic errors for this node in a given environment
      */
     @Override
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();
         STentry entry = env.lookup(id);
         if(entry == null){
@@ -50,18 +52,15 @@ public class DerExpNode extends ExpNode {
     }
 
     public Node typeCheck(){
-        return new TypeNode("int");
+        return entry.getType().typeCheck();
     }
 
-    public ArrayList<SemanticError> checkEffects(){
-
-        ArrayList<SemanticError> errors = new ArrayList<>();
-
+    public SigmaEnv checkEffects(SigmaEnv env){
         if (!entry.getStatus()){
-            errors.add(new SemanticError("Variable " + id + " is not initialized and cannot be used in a rhs exp"));
+            env.addError(new SemanticError("Variable " + id + " is not initialized and cannot be used in a rhs exp"));
         }
 
-        return errors;
+        return env;
     }
 
     public String codeGeneration() {
@@ -74,6 +73,11 @@ public class DerExpNode extends ExpNode {
         out.append("lw $a0 ").append(offsetWithAL).append("($al) ; loads in $a0 the value in ").append(id).append("\n");
 
         return out.toString();
+    }
+
+    @Override
+    public int preEvaluation(){
+        throw new RuntimeException("Cannot use var in asset expression");
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 		4. SymTable exitScope(SymTable st) exits the current scope
  */
 
-public class Environment implements Cloneable {
+public class GammaEnv implements Cloneable {
 	private ArrayList<HashMap<String,STentry>>  symTable;
 	private int nestingLevel;
 	private int offset;
@@ -21,14 +21,14 @@ public class Environment implements Cloneable {
 	/**
 	 * Creates an empty environment
 	 */
-	public Environment() {
+	public GammaEnv() {
 		this(new ArrayList<HashMap<String,STentry>>(), -1, 0);
 	}
 
 	/**
-	 * Constructor for {@code Environment}
+	 * Constructor for {@code GammaEnv}
 	 */
-	public Environment(ArrayList<HashMap<String,STentry>> symTable, int nestingLevel, int offset) {
+	public GammaEnv(ArrayList<HashMap<String,STentry>> symTable, int nestingLevel, int offset) {
 		this.symTable = symTable;
 		this.nestingLevel = nestingLevel;
 		this.offset = offset;
@@ -37,7 +37,7 @@ public class Environment implements Cloneable {
 	/**
 	 * Deep copy constructor
 	 */
-	public Environment(Environment e) {
+	public GammaEnv(GammaEnv e) {
 		this(new ArrayList<>(), e.nestingLevel, e.offset);
 
 		for (var scope : e.symTable) {

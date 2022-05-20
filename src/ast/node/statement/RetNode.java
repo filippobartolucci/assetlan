@@ -1,7 +1,9 @@
 package ast.node.statement;
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
 import ast.node.exp.ExpNode;
@@ -20,7 +22,7 @@ public class RetNode implements Node {
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();
         if(exp != null){
             errors.addAll(exp.checkSemantics(env));
@@ -33,14 +35,15 @@ public class RetNode implements Node {
      */
     public Node typeCheck(){
         if (exp == null){
-            return new TypeNode("void");
+            return new TypeNode(TypeValue.VOID);
         }
         Node type = exp.typeCheck();
         return type;
     }
 
-    public ArrayList<SemanticError> checkEffects() {
-        return new ArrayList<>();
+    public SigmaEnv checkEffects(SigmaEnv env){
+        exp.checkEffects(env);
+        return env;
     }
 
 

@@ -1,9 +1,11 @@
 package ast.node.statement;
 
 
-import Semantic.Environment;
+import Semantic.GammaEnv;
 import Semantic.STentry;
 import Semantic.SemanticError;
+import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.TypeNode;
 
@@ -26,7 +28,7 @@ public class AssignmentNode implements Node {
     /**
      * Check semantic errors for this node in a given environment
      */
-    public ArrayList<SemanticError> checkSemantics(Environment env){
+    public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();
         STentry symbol = env.lookup(id);
         if(symbol == null) {
@@ -46,7 +48,7 @@ public class AssignmentNode implements Node {
 
         Node varType = var.typeCheck();
 
-        if(varType.equals("asset")){
+        if(varType.equals(TypeValue.ASSET)){
             throw new RuntimeException("Asset " + id + " cannot be used lhs");
         }
 
@@ -56,16 +58,14 @@ public class AssignmentNode implements Node {
             throw new RuntimeException("Type mismatch -> var " + id + " is " + varType + " and exp is " + expType);
         }
 
-        return new TypeNode("void");
+        return new TypeNode(TypeValue.VOID);
     }
 
-    public ArrayList<SemanticError> checkEffects() {
-        ArrayList<SemanticError> errors = new ArrayList<>();
-        errors.addAll(exp.checkEffects());
+    public SigmaEnv checkEffects(SigmaEnv env){
+        exp.checkEffects(env);
         // Variables in AssetLan cannot be deleted
-        entry.setStatus(true);
-
-        return errors;
+        env.lookup(id).setTrue();
+        return env;
     }
 
     /**
