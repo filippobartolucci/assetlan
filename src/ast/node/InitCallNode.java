@@ -55,7 +55,7 @@ public class InitCallNode implements Node{
      * Generate code for this node
      */
     public Node typeCheck(){
-        Node function = this.entry.getType();
+        Node function = this.entry.getEntry();
         if ((function instanceof FunctionNode f)){
             ArrayList<Node> params = f.getParams();
             if (params.size() != exp.size()){
@@ -97,25 +97,28 @@ public class InitCallNode implements Node{
         }
 
         // Same as before, but for asset expressions
+        // TODO: controllare questa parte
         for (Node e : aexp) {
             e.checkEffects(env);
-            if (e instanceof AssetNode a){
-                a.setStatus(false);
-            }
         }
 
-
+        ArrayList<Boolean> actualEffects = new ArrayList<>();
         for (Node e: aexp) {
             try{
                 ExpNode exp = (ExpNode) e;
-                System.out.println("PreEvaluating: " + exp.preEvaluation());
-
+                int preEval = exp.preEvaluation();
+                if (preEval<0){
+                    throw new RuntimeException("asset expression cannot be less than 0");
+                }else{
+                    actualEffects.add(preEval==0 ? false : true);
+                }
             }catch(RuntimeException ex){
                 System.err.println( "Effect errors found -> "+ ex.getMessage());
             }
         }
-        if (entry.getType() instanceof FunctionNode f){
-            f.checkFunctionEffects(env);
+
+        if (entry.getEntry() instanceof FunctionNode f) {
+            f.checkFunctionEffects(env,actualEffects);
         }
 
         return env;

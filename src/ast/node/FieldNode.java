@@ -32,7 +32,6 @@ public class FieldNode implements Node{
 
 		if (exp != null) {
 			errors.addAll(exp.checkSemantics(env));
-			entry.setStatus(true);
 		}
 
 		// Check if type == null

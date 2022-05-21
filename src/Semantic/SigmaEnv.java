@@ -1,5 +1,8 @@
 package Semantic;
 
+import ast.node.AssetNode;
+import ast.node.Node;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,25 +41,11 @@ public class SigmaEnv implements Cloneable {
     }
 
     // GETTER
-
-    /**
-     * return symbol table
-     */
-    public ArrayList<HashMap<String, EffectEntry>> getSymTable() {
-        return symTable;
-    }
-
-    /**
-     * return the current nesting level.
-     */
     public int getNestingLevel() {
         return nestingLevel;
     }
 
 
-    /**
-     * return list of errors
-     */
     public ArrayList<SemanticError> getErrors() { return this.errors; }
 
     public void addError(SemanticError e) {
@@ -76,10 +65,6 @@ public class SigmaEnv implements Cloneable {
         return null;
     }
 
-    /**
-     * Type lookup(SymTable st, String id) looks for the type of id in st, if any
-     * @return stentry of id
-     */
     public EffectEntry lookup(String id){
         int nl = this.getNestingLevel();
         EffectEntry tmp;
@@ -90,6 +75,42 @@ public class SigmaEnv implements Cloneable {
     public void exitScope(){
         this.symTable.remove(this.nestingLevel);
         this.nestingLevel--;
+    }
+
+    public String toPrint(){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < this.symTable.size(); i++) {
+            sb.append("Scope ").append(i).append(":\n");
+            for (var entry : this.symTable.get(i).entrySet()) {
+                sb.append("\t" + entry.getKey() + " -> " + entry.getValue()+"\n");
+            }
+        }
+        return sb.toString();
+    }
+
+
+    public void max(SigmaEnv env){
+        if (env.symTable.size() != this.symTable.size()){
+            throw new RuntimeException("Cannot call max on STs with different size");
+        }
+
+        for (int i = 0; i < this.symTable.size(); i++){
+            for (var entry: this.symTable.get(i).entrySet()){
+                entry.getValue().max(env.lookup(entry.getKey()));
+            }
+        }
+    }
+
+    public boolean fixedPoint(ArrayList<Node> assets, ArrayList<Boolean> effects){
+        if (assets.size() != effects.size()){
+            throw new RuntimeException(" fixedPoint: assets and effects must have the same size");
+        }
+
+        for (int i = 0; i < assets.size(); i++){
+            if (effects.get(i) != this.lookup(assets.get(i).toString()).getStatus()) return false;
+        }
+
+        return true;
     }
 
 }

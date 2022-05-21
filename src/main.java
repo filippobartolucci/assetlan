@@ -58,6 +58,45 @@ public class main {
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nChecking effects...");
 
 
+            /* Prova max SigmaEnv
+
+            SigmaEnv env1 = new SigmaEnv();
+            SigmaEnv env2 = new SigmaEnv();
+
+            env1.newEmptyScope();
+            env2.newEmptyScope();
+
+            env1.addDecl("x",new EffectEntry());
+            env2.addDecl("x",new EffectEntry());
+
+            env1.addDecl("y",new EffectEntry());
+            env2.addDecl("y",new EffectEntry());
+
+            env1.newEmptyScope();
+            env2.newEmptyScope();
+
+            env1.addDecl("z",new EffectEntry());
+            env2.addDecl("z",new EffectEntry());
+
+            env1.addDecl("w",new EffectEntry());
+            env2.addDecl("w",new EffectEntry());
+
+            env1.lookup("x").setTrue();
+            env2.lookup("y").setTrue();
+
+            env1.lookup("z").setTrue();
+            env2.lookup("w").setTrue();
+
+            System.out.println("Env1\n" + env1.toPrint());
+            System.out.println("\nEnv2\n" + env2.toPrint());
+
+            env1.max(env2);
+            System.out.println("\nEnv1 Max\n" + env1.toPrint());
+
+            */
+
+
+
             SigmaEnv s_env = new SigmaEnv();
             ast.checkEffects(s_env);
             s_errors = s_env.getErrors();

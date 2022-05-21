@@ -113,12 +113,20 @@ public class IteNode implements Node {
     public SigmaEnv checkEffects(SigmaEnv env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
         exp.checkEffects(env);
-        //errors.addAll(if_statement.checkEffects());
 
-        //if (else_statement != null) {
-           // errors.addAll(else_statement.checkEffects());
-        //}
-        return env;
+        SigmaEnv thenEnv = new SigmaEnv(env);
+        SigmaEnv elseEnv = new SigmaEnv(env);
+
+        for (Node n: thenb){
+            thenEnv = new SigmaEnv(n.checkEffects(thenEnv));
+        }
+        for (Node n: elseb){
+            elseEnv = new SigmaEnv(n.checkEffects(elseEnv));
+        }
+
+        thenEnv.max(elseEnv);
+
+        return thenEnv;
     }
 
     public String toPrint(String indent){

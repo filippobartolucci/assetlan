@@ -19,7 +19,7 @@ public class FunctionNode implements Node {
 	private final ArrayList<Node> body_params; // param inside function
 	private final ArrayList<Node> statements;
 
-	private ArrayList<AssetNode> assets;
+	private ArrayList<Node> assets;
 
 
 	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements) {
@@ -77,7 +77,7 @@ public class FunctionNode implements Node {
 				if (!a_type.equals(type)) {
 					throw new RuntimeException("Type mismatch -> in " + id + " return type " + a_type.toPrint("") + " does not match declaration function type " + type.toPrint(""));
 				}
-			};
+			}
 		}
 		if (!found_return && !(type.equals(TypeValue.VOID))) {
 			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
@@ -101,16 +101,14 @@ public class FunctionNode implements Node {
 
 		env.newEmptyScope();
 
-		for(Node n : params) {;
+		for(Node n : params) {
 			errors.addAll(n.checkSemantics(env));
-			((ParamNode) n).setStatusRW();
 		}
 
 		for(Node n : aparams) {
 			errors.addAll(n.checkSemantics(env));
 			AssetNode a = ((AssetNode) n);
 			assets.add(a);
-			a.setStatus(true);
 		}
 
 		for(Node n : body_params) {
@@ -126,20 +124,27 @@ public class FunctionNode implements Node {
 	}
 
 	public SigmaEnv checkEffects(SigmaEnv env) {
-		env.addDecl(id,new EffectEntry());
+		//env.addDecl(id,new EffectEntry());
 		return env;
 	}
 
-	public SigmaEnv checkFunctionEffects(SigmaEnv env){
-
+	public SigmaEnv checkFunctionEffects(SigmaEnv env,ArrayList<Boolean> actualEffects){
 		env.newEmptyScope();
 
 		for(Node n : params) {
 			n.checkEffects(env);
 		}
 
-		for(Node n : aparams) {
-			n.checkEffects(env);
+		// TODO: i parametri formali asset devono prendere lo status del parametro attuale
+
+		for(int n = 0; n < aparams.size(); n++) {
+			Node a = aparams.get(n);
+			a.checkEffects(env);
+			if(actualEffects.get(n)) {
+				env.lookup(a.toString()).setTrue();
+			}else{
+				env.lookup(a.toString()).setFalse();
+			}
 		}
 
 		for(Node n : body_params) {
@@ -147,15 +152,50 @@ public class FunctionNode implements Node {
 		}
 
 		for(Node n : statements) {
-			n.checkEffects(env);
-		}
+			StatementNode s = (StatementNode) n;
 
-		for (AssetNode a : assets) {
-			if(a.getStatus()){
-				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a+" is not empty"));
+
+			System.err.println(actualEffects);
+			for(int i = 0; i < actualEffects.size(); i++) {
+				System.err.println(env.lookup(aparams.get(i).toString()));
+			}
+
+			if (s.getChild() instanceof CallNode c) {
+				if (c.getId().equals(this.id)) {
+					System.err.println("Recursive call");
+					Boolean fixedPoint = true;
+					for(int i = 0; i < actualEffects.size(); i++) {
+						if (!env.lookup(aparams.get(i).toString()).getStatus() == actualEffects.get(i)) {
+							fixedPoint = false;
+						}
+					}
+
+
+					if (!fixedPoint){
+						n.checkEffects(env);
+						for(int i = 0; i < aparams.size(); i++) {
+							Node a = aparams.get(i);
+							a.checkEffects(env);
+							if(actualEffects.get(i)) {
+								env.lookup(a.toString()).setTrue();
+							}else{
+								env.lookup(a.toString()).setFalse();
+							}
+						}
+					}
+				}else{
+					n.checkEffects(env);
+				}
+			}else{
+				n.checkEffects(env);
 			}
 		}
 
+		for (Node a : assets) {
+			if(env.lookup(a.toString()).getStatus()){
+				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a+" is not empty"));
+			}
+		}
 		env.exitScope();
 
 		return env;

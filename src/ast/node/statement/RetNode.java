@@ -42,7 +42,7 @@ public class RetNode implements Node {
     }
 
     public SigmaEnv checkEffects(SigmaEnv env){
-        exp.checkEffects(env);
+        if (exp!=null) exp.checkEffects(env);
         return env;
     }
 

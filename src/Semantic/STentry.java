@@ -1,55 +1,31 @@
 package Semantic;
 
 import ast.node.Node;
-import Semantic.*;
 
 public class STentry {
 	private int nestingLevel;
 	private int offset;
 	private Node type;
-	private boolean status;
-
-	// Status field is used for effects valuation
-	// For a var:
-	// 		true: var is initialized
-	// 		false: var is not initialized
-	// For an asset:
-	// 		true: non empty asset
-	// 		false: empty asset
-
 
 	public STentry(){
 		this.nestingLevel = -1;
 		this.offset = -1;
 		this.type = null;
-		this.status = false;
 	}
 
 	public STentry(STentry s){
 		this.nestingLevel = s.nestingLevel;
 		this.offset = s.offset;
 		this.type = s.type;
-		this.status = s.status;
 	}
-
 
 	public STentry(int nestingLevel, int offset, Node t) {
 		this.nestingLevel = nestingLevel;
 		this.offset = offset;
 		this.type = t;
-		this.status = false;
-	}
-	public void addType(Node t){
-		this.type = t;
 	}
 
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
-	public boolean getStatus() {return this.status;}
-
-	public Node getType () {
+	public Node getEntry() {
 		return type;
 	}
 

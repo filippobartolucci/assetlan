@@ -51,11 +51,11 @@ public class MoveNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        if (!entry1.getType().typeCheck().equals(TypeValue.ASSET)) {
+        if (!entry1.getEntry().typeCheck().equals(TypeValue.ASSET)) {
             throw new RuntimeException("Type mismatch: " + id1 + " is not an asset");
         }
 
-        if (!entry2.getType().typeCheck().equals(TypeValue.ASSET)){
+        if (!entry2.getEntry().typeCheck().equals(TypeValue.ASSET)){
             throw new RuntimeException("Type mismatch: " + id2 + " is not an asset");
         }
 
@@ -63,12 +63,8 @@ public class MoveNode implements Node {
     }
 
     public SigmaEnv checkEffects(SigmaEnv env){
-        if (id1.equals(id2)) {
-            env.addError(new SemanticError("Can't move asset " + id1 + " to itself"));
-        }
-
-        env.lookup(this.id1).setTrue(); // Asset1 -> empty (0)
-        env.lookup(this.id2).setFalse(); // Asset2 -> not empty (1)
+        env.lookup(this.id1).setFalse(); // Asset1 -> empty (0)
+        env.lookup(this.id2).setTrue(); // Asset2 -> not empty (1)
 
         return env;
     }

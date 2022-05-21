@@ -44,7 +44,7 @@ public class AssignmentNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        Node var = this.entry.getType();
+        Node var = this.entry.getEntry();
 
         Node varType = var.typeCheck();
 

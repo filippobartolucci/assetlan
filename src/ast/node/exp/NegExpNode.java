@@ -10,12 +10,11 @@ import java.util.ArrayList;
 
 public class NegExpNode extends ExpNode {
     // | '-' exp					                        #negExp
-    public Node exp;
 
     /*Constructor
     */
     public NegExpNode(Node exp) {
-        this.exp = exp;
+        super(exp);
     }
 
     /**
@@ -49,7 +48,7 @@ public class NegExpNode extends ExpNode {
 
     @Override
     public int preEvaluation(){
-        return ((ExpNode)exp).preEvaluation();
+        return -exp.preEvaluation();
     }
 
 }

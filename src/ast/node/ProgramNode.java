@@ -110,7 +110,7 @@ public class ProgramNode implements Node {
 
 		for (Node n : assets) {
 			if (n instanceof AssetNode a) {
-				if (a.getStatus()) {
+				if (env.lookup(a.toString()).getStatus()) {
 					env.addError(new SemanticError("Liquidity not respected -> "+ a+" is not empty"));
 				}
 			}

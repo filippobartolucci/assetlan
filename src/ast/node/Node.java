@@ -4,7 +4,6 @@ import Semantic.*;
 import java.util.ArrayList;
 
 public interface Node {
-	// Must have function foreach node in ast
 	ArrayList<SemanticError> checkSemantics(GammaEnv env);
 	Node typeCheck();
 	SigmaEnv checkEffects(SigmaEnv env);

@@ -70,14 +70,4 @@ public class ParamNode implements Node {
         //s += indent+"\tvalue: "+value.toPrint(indent)+"\n";
         return s;
     }
-
-    public void setStatusRW(){
-        // Assetlan variables cannot be deleted,
-        // so the status can only change in RW
-        this.entry.setStatus(true);
-    }
-
-
-
-
 }

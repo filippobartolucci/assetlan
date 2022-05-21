@@ -54,13 +54,6 @@ public class AssetNode implements Node{
 		return s;
 	}
 
-	public void setStatus(boolean s){
-		entry.setStatus(s);
-	}
-	public boolean getStatus(){
-		return entry.getStatus();
-	}
-
 	@Override
 	public String toString() {
 		return id;

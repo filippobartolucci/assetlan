@@ -5,7 +5,6 @@ import Semantic.STentry;
 import Semantic.SemanticError;
 import Semantic.SigmaEnv;
 import Utils.TypeValue;
-import ast.node.AssetNode;
 import ast.node.FunctionNode;
 import ast.node.Node;
 
@@ -60,7 +59,7 @@ public class CallNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        Node symbol = this.entry.getType();
+        Node symbol = this.entry.getEntry();
 
         if ((symbol instanceof FunctionNode f)){
 
@@ -84,7 +83,7 @@ public class CallNode implements Node {
             }
 
             for (int i=0; i<aparams.size(); i++){
-                Node actual_parType = assets.get(i).getType();
+                Node actual_parType = assets.get(i).getEntry();
 
                 if (!actual_parType.typeCheck().equals(TypeValue.ASSET)){
                     throw new RuntimeException("Type mismatch -> type of asset parameter " + ids.get(i) + " in function " + id + " is not an asset");
@@ -139,23 +138,34 @@ public class CallNode implements Node {
             }
         }*/
 
-        FunctionNode called_function = (FunctionNode)this.entry.getType();
-        ArrayList<Node> aparams = called_function.getAparams();
+        FunctionNode called_function = (FunctionNode)this.entry.getEntry();
 
         // Moving values of assets in the function call
         //      def :f()[asset a]{}
         //      call :f()[b];
         //      -> value of b is moved to a
-        for (int i=0; i<aparams.size(); i++){
-            AssetNode formal  = (AssetNode)aparams.get(i); // Formal asset parameter
-            AssetNode actual = (AssetNode)assets.get(i).getType(); // Actual asset parameter
+        ArrayList<Boolean> actualEffects = new ArrayList<>();
+        for (int i=0; i<assets.size(); i++){
+            Node actual = assets.get(i).getEntry(); // Actual asset parameter
 
-            formal.setStatus(actual.getStatus()); // Formal asset parameter is now the same as the actual asset parameter
-            actual.setStatus(false); // Actual asset parameter is now empty
+            actualEffects.add(env.lookup(actual.toString()).getStatus());
+            env.lookup(actual.toString()).setFalse();
+
+            /*
+            if (env.lookup(actual.toString()).getStatus()) {
+                env.lookup(formal.toString()).setTrue();
+            } else {
+                env.lookup(formal.toString()).setFalse();
+            }
+            env.lookup(actual.toString()).setFalse();
+            */
+
+            // TODO formal.setStatus(actual.getStatus()); // Formal asset parameter is now the same as the actual asset parameter
+            // TODO actual.setStatus(false); // Actual asset parameter is now empty
         }
 
         //TODO: Da miglirare e riguardare
-        called_function.checkFunctionEffects(env);
+        called_function.checkFunctionEffects(env,actualEffects);
         return env;
 
     }
