@@ -129,73 +129,86 @@ public class FunctionNode implements Node {
 	}
 
 	public SigmaEnv checkFunctionEffects(SigmaEnv env,ArrayList<Boolean> actualEffects){
+		// Entering new scope...
 		env.newEmptyScope();
 
+		// Adding each parameter to SigmaEnv
 		for(Node n : params) {
 			n.checkEffects(env);
+			// status of n is true
 		}
 
-		// TODO: i parametri formali asset devono prendere lo status del parametro attuale
-
+		// Adding each asset parameter to SigmaEnv
 		for(int n = 0; n < aparams.size(); n++) {
 			Node a = aparams.get(n);
 			a.checkEffects(env);
+			// Setting effect of each asset according
+			// to the actual effect of called parameters
 			if(actualEffects.get(n)) {
-				env.lookup(a.toString()).setTrue();
-			}else{
-				env.lookup(a.toString()).setFalse();
-			}
+				env.lookup(a).setTrue();
+			}// Else not needed, false by default
 		}
 
+		// Adding each body parameter to SigmaEnv
 		for(Node n : body_params) {
 			n.checkEffects(env);
 		}
 
+		// checking effects of each statement
 		for(Node n : statements) {
 			StatementNode s = (StatementNode) n;
-
-
-			System.err.println(actualEffects);
-			for(int i = 0; i < actualEffects.size(); i++) {
-				System.err.println(env.lookup(aparams.get(i).toString()));
-			}
-
 			if (s.getChild() instanceof CallNode c) {
 				if (c.getId().equals(this.id)) {
-					System.err.println("Recursive call");
-					Boolean fixedPoint = true;
+					// Recursive call
+
+					/*	Debug print
+					System.err.println("\nRec Call Level"+env.getNestingLevel());
+					System.err.println("Actual old \t Actual new");
 					for(int i = 0; i < actualEffects.size(); i++) {
+						System.err.println(actualEffects.get(i) +"\t\t" + env.lookup(aparams.get(i).toString()));
+					}
+					 	End debug print */
+
+					Boolean fixedPoint = true;
+					for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
 						if (!env.lookup(aparams.get(i).toString()).getStatus() == actualEffects.get(i)) {
-							fixedPoint = false;
+							fixedPoint = false; // fixed point not reached
 						}
 					}
 
-
 					if (!fixedPoint){
-						n.checkEffects(env);
+						// Fixed point not reached...
+						n.checkEffects(env); // Recursive call
+
+						// After fixed point, updating effects after function call...
+						actualEffects = env.getFixedPointResult();
 						for(int i = 0; i < aparams.size(); i++) {
 							Node a = aparams.get(i);
-							a.checkEffects(env);
 							if(actualEffects.get(i)) {
 								env.lookup(a.toString()).setTrue();
 							}else{
 								env.lookup(a.toString()).setFalse();
 							}
 						}
+					}else{
+						// Fixed Point!
+						env.addFixedPointResult(env.getEffects(aparams)); // Updating effects...
 					}
 				}else{
-					n.checkEffects(env);
+					env = n.checkEffects(env);
 				}
 			}else{
-				n.checkEffects(env);
+				env = n.checkEffects(env);
 			}
 		}
 
+		// Every asset parameter must have status == false (empty)
 		for (Node a : assets) {
 			if(env.lookup(a.toString()).getStatus()){
-				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a+" is not empty"));
+				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a+" is not empty "));
 			}
 		}
+
 		env.exitScope();
 
 		return env;
@@ -210,6 +223,16 @@ public class FunctionNode implements Node {
 
 	public TypeNode getType(){
 		return (TypeNode) type;
+	}
+
+	public Boolean isRecursive(Node n){
+		StatementNode s = (StatementNode) n;
+		if (s.getChild() instanceof CallNode c) {
+			if (c.getId().equals(this.id)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

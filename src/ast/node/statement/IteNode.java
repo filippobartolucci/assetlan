@@ -120,10 +120,10 @@ public class IteNode implements Node {
         for (Node n: thenb){
             thenEnv = new SigmaEnv(n.checkEffects(thenEnv));
         }
+
         for (Node n: elseb){
             elseEnv = new SigmaEnv(n.checkEffects(elseEnv));
         }
-
         thenEnv.max(elseEnv);
 
         return thenEnv;

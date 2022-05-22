@@ -6,14 +6,15 @@ import ast.node.Node;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SigmaEnv implements Cloneable {
+public class SigmaEnv {
     private ArrayList<HashMap<String, EffectEntry>> symTable;
     private int nestingLevel;
     private ArrayList<SemanticError> errors;
+    private ArrayList<Boolean> fixedPointResult = new ArrayList<>();
 
 
     public SigmaEnv() {
-        this(new ArrayList<HashMap<String, EffectEntry>>(), -1,new ArrayList<SemanticError>());
+        this(new ArrayList<>(), -1, new ArrayList<>());
     }
 
     /**
@@ -23,6 +24,7 @@ public class SigmaEnv implements Cloneable {
         this.symTable = symTable;
         this.nestingLevel = nestingLevel;
         this.errors = errors;
+        this.fixedPointResult = new ArrayList<>();
     }
 
     /**
@@ -32,13 +34,14 @@ public class SigmaEnv implements Cloneable {
         this(new ArrayList<>(), e.nestingLevel,e.errors);
 
         for (var scope : e.symTable) {
-            final HashMap<String,EffectEntry> copiedScope = new HashMap<String,EffectEntry>();
+            final HashMap<String,EffectEntry> copiedScope = new HashMap<>();
             for (var id : scope.keySet()) {
                 copiedScope.put(id, new EffectEntry(scope.get(id)));
             }
             this.symTable.add(copiedScope);
         }
     }
+
 
     // GETTER
     public int getNestingLevel() {
@@ -48,21 +51,22 @@ public class SigmaEnv implements Cloneable {
 
     public ArrayList<SemanticError> getErrors() { return this.errors; }
 
+    public ArrayList<Boolean> getFixedPointResult() { return this.fixedPointResult; }
+
     public void addError(SemanticError e) {
         this.errors.add(e);
     }
+    public void addFixedPointResult(ArrayList<Boolean> l) { this.fixedPointResult = l; }
 
-    // Envinronment functions
-
+    // Environment functions
     public void newEmptyScope(){
-        HashMap<String,EffectEntry> st = new HashMap<String,EffectEntry>();
+        HashMap<String,EffectEntry> st = new HashMap<>();
         this.nestingLevel++;
         this.symTable.add(st);
     }
 
-    public SemanticError addDecl(String id, EffectEntry entry) {
+    public void addDecl(String id, EffectEntry entry) {
         this.symTable.get(this.nestingLevel).put(id, entry);
-        return null;
     }
 
     public EffectEntry lookup(String id){
@@ -71,6 +75,16 @@ public class SigmaEnv implements Cloneable {
         for(tmp = null; nl >= 0 && tmp == null; tmp = (EffectEntry) ((HashMap)this.symTable.get(nl--)).get(id)) {}
         return tmp;
     }
+
+    // Lookup for assets
+    public EffectEntry lookup(Node id){
+        if (! (id instanceof AssetNode) ) throw new RuntimeException("lookup(Node id) called on non-AssetNode");
+        int nl = this.getNestingLevel();
+        EffectEntry tmp;
+        for(tmp = null; nl >= 0 && tmp == null; tmp = (EffectEntry) ((HashMap)this.symTable.get(nl--)).get(id.toString())) {}
+        return tmp;
+    }
+
 
     public void exitScope(){
         this.symTable.remove(this.nestingLevel);
@@ -82,7 +96,7 @@ public class SigmaEnv implements Cloneable {
         for (int i = 0; i < this.symTable.size(); i++) {
             sb.append("Scope ").append(i).append(":\n");
             for (var entry : this.symTable.get(i).entrySet()) {
-                sb.append("\t" + entry.getKey() + " -> " + entry.getValue()+"\n");
+                sb.append("\t").append(entry.getKey()).append(" -> ").append(entry.getValue()).append("\n");
             }
         }
         return sb.toString();
@@ -101,16 +115,29 @@ public class SigmaEnv implements Cloneable {
         }
     }
 
-    public boolean fixedPoint(ArrayList<Node> assets, ArrayList<Boolean> effects){
-        if (assets.size() != effects.size()){
-            throw new RuntimeException(" fixedPoint: assets and effects must have the same size");
+    public Boolean fixedPoint(ArrayList<Boolean> actualEffects, ArrayList<Node> ids){
+        Boolean fixedPoint = true;
+
+        for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
+            String id = ids.get(i).toString();
+            Boolean status = this.lookup(id).getStatus();
+
+            if (!status == actualEffects.get(i)) {
+                fixedPoint = false; // fixed point not reached
+            }
         }
 
-        for (int i = 0; i < assets.size(); i++){
-            if (effects.get(i) != this.lookup(assets.get(i).toString()).getStatus()) return false;
-        }
-
-        return true;
+        return fixedPoint;
     }
 
+    public ArrayList<Boolean> getEffects(ArrayList<Node> ids){
+        ArrayList<Boolean> effects = new ArrayList<>();
+
+        for(int i = 0; i < ids.size(); i++) {
+            String id = ids.get(i).toString();
+            effects.add(this.lookup(id).getStatus());
+        }
+
+        return effects;
+    }
 }
