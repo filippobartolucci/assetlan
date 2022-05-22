@@ -18,10 +18,11 @@ public class FieldNode implements Node{
 		this.exp = exp;
 	}
 
-	// Node interface to implement
 
 	/**
 	 * Check semantic errors for this node in a given environment
+	 * @param env the environment
+	 * @return the semantic errors
 	 */
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 

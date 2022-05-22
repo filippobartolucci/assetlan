@@ -19,8 +19,8 @@ public class PrintNode implements Node {
 
 	/**
 	 * Check semantic errors for this node in a given environment
-	 * @param env
-	 * @return errors
+	 * @param env the environment
+	 * @return the semantic errors
 	 */
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 		return exp.checkSemantics(env);

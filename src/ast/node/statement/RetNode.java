@@ -21,6 +21,8 @@ public class RetNode implements Node {
 
     /**
      * Check semantic errors for this node in a given environment
+     * @param env the environment
+     * @return the semantic errors
      */
     public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();

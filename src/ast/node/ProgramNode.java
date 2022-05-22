@@ -68,6 +68,11 @@ public class ProgramNode implements Node {
 		return out.toString();
 	}
 
+	/**
+	 * Check semantic errors for this node in a given environment
+	 * @param env the environment
+	 * @return the semantic errors
+	 */
 	@Override
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 		ArrayList<SemanticError> errors = new ArrayList<>();

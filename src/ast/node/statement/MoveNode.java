@@ -26,8 +26,11 @@ public class MoveNode implements Node {
         this.entry1 = null;
         this.entry2 = null;
     }
+
     /**
      * Check semantic errors for this node in a given environment
+     * @param env the environment
+     * @return the semantic errors
      */
     public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<>();

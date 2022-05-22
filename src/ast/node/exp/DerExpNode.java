@@ -4,7 +4,9 @@ import Semantic.GammaEnv;
 import Semantic.STentry;
 import Semantic.SemanticError;
 import Semantic.SigmaEnv;
+import Utils.TypeValue;
 import ast.node.Node;
+import ast.node.TypeNode;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,8 @@ public class DerExpNode extends ExpNode implements Node{
 
     /**
      * Check semantic errors for this node in a given environment
+     * @param env the environment
+     * @return the semantic errors
      */
     @Override
     public ArrayList<SemanticError> checkSemantics(GammaEnv env){
@@ -54,8 +58,10 @@ public class DerExpNode extends ExpNode implements Node{
     }
 
     public SigmaEnv checkEffects(SigmaEnv env){
-        if (!env.lookup(id).getStatus()){
-            env.addError(new SemanticError("Variable " + id + " is not initialized and cannot be used in a rhs exp"));
+        if (this.entry.getEntry().typeCheck().equals(new TypeNode(TypeValue.INT))){
+            if (!env.lookup(id).getStatus()){
+                env.addError(new SemanticError("Variable " + id + " is not initialized and cannot be used in a rhs exp"));
+            }
         }
         return env;
     }

@@ -17,6 +17,11 @@ public class ExpNode implements Node {
         this.exp = null;
     }
 
+    /**
+     * Check semantic errors for this node in a given environment
+     * @param env the environment
+     * @return the semantic errors
+     */
     public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
         ArrayList<SemanticError> errors = new ArrayList<>();
         if (exp != null) {

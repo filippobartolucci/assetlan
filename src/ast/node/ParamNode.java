@@ -18,8 +18,11 @@ public class ParamNode implements Node {
         this.type = type;
         this.entry = null;
     }
+
     /**
      * Check semantic errors for this node in a given environment
+     * @param env the environment
+     * @return the semantic errors
      */
     public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
@@ -39,6 +42,11 @@ public class ParamNode implements Node {
         return errors;
     }
 
+    /**
+     * Check semantic errors for this node in a given environment
+     * @param env the environment
+     * @return the semantic errors
+     */
     public SigmaEnv checkEffects(SigmaEnv env){
         EffectEntry entry = new EffectEntry();
         entry.setTrue();

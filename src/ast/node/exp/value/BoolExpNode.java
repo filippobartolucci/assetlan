@@ -26,9 +26,11 @@ public class BoolExpNode extends ExpNode {
 
 	/**
      * Check semantic errors for this node in a given environment
+     * @param env the environment
+     * @return the semantic errors
      */
-    public SigmaEnv checkSemantics(SigmaEnv env){
-        return env;
+    public ArrayList<SemanticError> checkSemantics(SigmaEnv env){
+        return new ArrayList<>();
     }
 
     /**

@@ -71,14 +71,16 @@ public class FunctionNode implements Node {
 		boolean found_return = false;
 		for (Node n : statements) {
 			Node a_type = n.typeCheck();
-			if (!a_type.equals(TypeValue.VOID)) {
 
+			if (!a_type.equals(TypeValue.VOID)) {
 				found_return = true;
+				// Check if return type is equals to function type
 				if (!a_type.equals(type)) {
 					throw new RuntimeException("Type mismatch -> in " + id + " return type " + a_type.toPrint("") + " does not match declaration function type " + type.toPrint(""));
 				}
 			}
 		}
+
 		if (!found_return && !(type.equals(TypeValue.VOID))) {
 			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
 		}
@@ -89,6 +91,11 @@ public class FunctionNode implements Node {
 		return null;
 	}
 
+	/**
+	 * Check semantic errors for this node in a given environment
+	 * @param env the environment
+	 * @return the semantic errors
+	 */
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
 		STentry entry = new STentry(env.getNestingLevel(),-1,this);
 		ArrayList<SemanticError> errors = new ArrayList<>();
@@ -123,11 +130,17 @@ public class FunctionNode implements Node {
 		return errors;
 	}
 
+	/**
+	 * Function declaration has no effects
+	 */
 	public SigmaEnv checkEffects(SigmaEnv env) {
 		//env.addDecl(id,new EffectEntry());
 		return env;
 	}
 
+	/**
+	 *  Check effect of the function body
+	 */
 	public SigmaEnv checkFunctionEffects(SigmaEnv env,ArrayList<Boolean> actualEffects){
 		// Entering new scope...
 		env.newEmptyScope();
@@ -214,9 +227,16 @@ public class FunctionNode implements Node {
 		return env;
 	}
 
+	/**
+	 * Returns the list of param of this function
+	 */
 	public ArrayList<Node> getParams(){
 		return params;
 	}
+
+	/**
+	 * Returns the list of asset of this function
+	 */
 	public ArrayList<Node> getAparams(){
 		return aparams;
 	}
@@ -225,6 +245,11 @@ public class FunctionNode implements Node {
 		return (TypeNode) type;
 	}
 
+	/**
+	 * Check if the statement is a recursive call
+	 * @param n :  statement node
+	 * @return true if the statement is a recursive call
+	 */
 	public Boolean isRecursive(Node n){
 		StatementNode s = (StatementNode) n;
 		if (s.getChild() instanceof CallNode c) {

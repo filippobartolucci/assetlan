@@ -30,6 +30,11 @@ public class BinExpNode extends ExpNode {
 		this.right = right;
 	}
 
+	/**
+	 * Check semantic errors for this node in a given environment
+	 * @param env the environment
+	 * @return the semantic errors
+	 */
 	@Override
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
 		ArrayList<SemanticError> errors = new ArrayList<>();
