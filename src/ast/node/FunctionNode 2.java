@@ -42,6 +42,55 @@ public class FunctionNode implements Node {
 		this.assets = f.assets;
 	}
 
+	public String toPrint(String indent) {
+		StringBuilder s = new StringBuilder(indent + "FunctionNode\n");
+
+		s.append(indent).append("\tid: ").append(id).append("\n");
+		s.append(indent).append("\ttype: ").append(type.toPrint(" ")).append("\n");
+		s.append(indent).append("\tParams: \n");
+
+		for (Node n : params) s.append(n.toPrint(indent + "\t\t"));
+		s.append(indent).append("\tAparams: \n");
+
+		for (Node n : aparams) s.append(n.toPrint(indent + "\t\t"));
+		s.append(indent).append("\tBody Params: \n");
+
+		for (Node n : body_params) s.append(n.toPrint(indent + "\t\t"));
+		s.append(indent).append("\tStatements: \n");
+
+		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
+
+		return s.toString();
+	}
+
+	public Node typeCheck() {
+		for (Node n : body_params) {
+			n.typeCheck();
+		}
+
+		boolean found_return = false;
+		for (Node n : statements) {
+			Node a_type = n.typeCheck();
+
+			if (!a_type.equals(TypeValue.VOID)) {
+				found_return = true;
+				// Check if return type is equals to function type
+				if (!a_type.equals(type)) {
+					throw new RuntimeException("Type mismatch -> in " + id + " return type " + a_type.toPrint("") + " does not match declaration function type " + type.toPrint(""));
+				}
+			}
+		}
+
+		if (!found_return && !(type.equals(TypeValue.VOID))) {
+			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
+		}
+		return type;
+	}
+
+	public String codeGeneration() {
+		return null;
+	}
+
 	/**
 	 * Check semantic errors for this node in a given environment
 	 * @param env the environment
@@ -81,61 +130,12 @@ public class FunctionNode implements Node {
 		return errors;
 	}
 
-	public Node typeCheck() {
-		for (Node n : body_params) {
-			n.typeCheck();
-		}
-
-		boolean found_return = false;
-		for (Node n : statements) {
-			Node a_type = n.typeCheck();
-
-			if (!a_type.equals(TypeValue.VOID)) {
-				found_return = true;
-				// Check if return type is equals to function type
-				if (!a_type.equals(type)) {
-					throw new RuntimeException("Type mismatch -> in " + id + " return type " + a_type.toPrint("") + " does not match declaration function type " + type.toPrint(""));
-				}
-			}
-		}
-
-		if (!found_return && !(type.equals(TypeValue.VOID))) {
-			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
-		}
-		return type;
-	}
-
 	/**
 	 * Function declaration has no effects
 	 */
 	public SigmaEnv checkEffects(SigmaEnv env) {
 		//env.addDecl(id,new EffectEntry());
 		return env;
-	}
-
-	public String codeGeneration() {
-		return null;
-	}
-
-	public String toPrint(String indent) {
-		StringBuilder s = new StringBuilder(indent + "FunctionNode\n");
-
-		s.append(indent).append("\tid: ").append(id).append("\n");
-		s.append(indent).append("\ttype: ").append(type.toPrint(" ")).append("\n");
-		s.append(indent).append("\tParams: \n");
-
-		for (Node n : params) s.append(n.toPrint(indent + "\t\t"));
-		s.append(indent).append("\tAparams: \n");
-
-		for (Node n : aparams) s.append(n.toPrint(indent + "\t\t"));
-		s.append(indent).append("\tBody Params: \n");
-
-		for (Node n : body_params) s.append(n.toPrint(indent + "\t\t"));
-		s.append(indent).append("\tStatements: \n");
-
-		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
-
-		return s.toString();
 	}
 
 	/**
@@ -170,44 +170,45 @@ public class FunctionNode implements Node {
 		// checking effects of each statement
 		for(Node n : statements) {
 			StatementNode s = (StatementNode) n;
-			if (this.isRecursive(n)) {
-				// Recursive call
+			if (s.getChild() instanceof CallNode c) {
+				if (c.getId().equals(this.id)) {
+					// Recursive call
 
-				/*	Debug print
-				System.err.println("\nRec Call Level"+env.getNestingLevel());
-				System.err.println("Actual old \t Actual new");
-				for(int i = 0; i < actualEffects.size(); i++) {
-					System.err.println(actualEffects.get(i) +"\t\t" + env.lookup(aparams.get(i).toString()));
-				}
-				End debug print */
-
-				/*
-				Boolean fixedPoint = true;
-				for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
-					if (!env.lookup(aparams.get(i).toString()).getStatus() == actualEffects.get(i)) {
-						fixedPoint = false; // fixed point not reached
+					/*	Debug print
+					System.err.println("\nRec Call Level"+env.getNestingLevel());
+					System.err.println("Actual old \t Actual new");
+					for(int i = 0; i < actualEffects.size(); i++) {
+						System.err.println(actualEffects.get(i) +"\t\t" + env.lookup(aparams.get(i).toString()));
 					}
-				}
-				*/
-				Boolean fixedPoint = env.fixedPoint(actualEffects,aparams);
+					 	End debug print */
 
-				if (!fixedPoint){
-					// Fixed point not reached...
-					n.checkEffects(env); // Recursive call
-
-					// After fixed point, updating effects after function call...
-					actualEffects = env.getFixedPointResult();
-					for(int i = 0; i < aparams.size(); i++) {
-						Node a = aparams.get(i);
-						if(actualEffects.get(i)) {
-							env.lookup(a).setTrue();
-						}else{
-							env.lookup(a).setFalse();
+					Boolean fixedPoint = true;
+					for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
+						if (!env.lookup(aparams.get(i).toString()).getStatus() == actualEffects.get(i)) {
+							fixedPoint = false; // fixed point not reached
 						}
 					}
+
+					if (!fixedPoint){
+						// Fixed point not reached...
+						n.checkEffects(env); // Recursive call
+
+						// After fixed point, updating effects after function call...
+						actualEffects = env.getFixedPointResult();
+						for(int i = 0; i < aparams.size(); i++) {
+							Node a = aparams.get(i);
+							if(actualEffects.get(i)) {
+								env.lookup(a.toString()).setTrue();
+							}else{
+								env.lookup(a.toString()).setFalse();
+							}
+						}
+					}else{
+						// Fixed Point!
+						env.addFixedPointResult(env.getEffects(aparams)); // Updating effects...
+					}
 				}else{
-					// Fixed Point!
-					env.addFixedPointResult(env.getEffects(aparams)); // Updating effects...
+					env = n.checkEffects(env);
 				}
 			}else{
 				env = n.checkEffects(env);
@@ -217,28 +218,13 @@ public class FunctionNode implements Node {
 		// Every asset parameter must have status == false (empty)
 		for (Node a : assets) {
 			if(env.lookup(a.toString()).getStatus()){
-				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a +" is not empty "));
+				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a+" is not empty "));
 			}
 		}
 
 		env.exitScope();
 
 		return env;
-	}
-
-	/**
-	 * Check if the statement is a recursive call
-	 * @param n :  statement node
-	 * @return true if the statement is a recursive call
-	 */
-	public Boolean isRecursive(Node n){
-		StatementNode s = (StatementNode) n;
-		if (s.getChild() instanceof CallNode c) {
-			if (c.getId().equals(this.id)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -257,6 +243,21 @@ public class FunctionNode implements Node {
 
 	public TypeNode getType(){
 		return (TypeNode) type;
+	}
+
+	/**
+	 * Check if the statement is a recursive call
+	 * @param n :  statement node
+	 * @return true if the statement is a recursive call
+	 */
+	public Boolean isRecursive(Node n){
+		StatementNode s = (StatementNode) n;
+		if (s.getChild() instanceof CallNode c) {
+			if (c.getId().equals(this.id)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

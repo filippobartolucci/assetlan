@@ -115,7 +115,6 @@ public class InitCallNode implements Node{
                 }
             }catch(RuntimeException ex){
                 System.err.println( "Effect errors found -> "+ ex.getMessage());
-                return env;
             }
         }
 
