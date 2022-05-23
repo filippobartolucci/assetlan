@@ -242,19 +242,22 @@ public class FunctionNode implements Node {
 	}
 
 	/**
-	 * Returns the list of param of this function
+	 * @return the list of param of this function
 	 */
 	public ArrayList<Node> getParams(){
 		return params;
 	}
 
 	/**
-	 * Returns the list of asset of this function
+	 * @return the list of asset of this function
 	 */
 	public ArrayList<Node> getAparams(){
 		return aparams;
 	}
 
+	/**
+	 * @return the type of the function
+	 */
 	public TypeNode getType(){
 		return (TypeNode) type;
 	}
