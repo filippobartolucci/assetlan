@@ -109,7 +109,7 @@ public class FunctionNode implements Node {
 	 * Function declaration has no effects
 	 */
 	public SigmaEnv checkEffects(SigmaEnv env) {
-		//env.addDecl(id,new EffectEntry());
+		env.addDecl(id,new EffectEntry());
 		return env;
 	}
 
@@ -149,14 +149,14 @@ public class FunctionNode implements Node {
 
 		// Adding each parameter to SigmaEnv
 		for(Node n : params) {
-			n.checkEffects(env);
+			env = n.checkEffects(env);
 			// status of n is true
 		}
 
 		// Adding each asset parameter to SigmaEnv
 		for(int n = 0; n < aparams.size(); n++) {
 			Node a = aparams.get(n);
-			a.checkEffects(env);
+			env = a.checkEffects(env);
 			// Setting effect of each asset according
 			// to the actual effect of called parameters
 			if(actualEffects.get(n)) {
@@ -166,7 +166,7 @@ public class FunctionNode implements Node {
 
 		// Adding each body parameter to SigmaEnv
 		for(Node n : body_params) {
-			n.checkEffects(env);
+			env = n.checkEffects(env);
 		}
 
 		// checking effects of each statement

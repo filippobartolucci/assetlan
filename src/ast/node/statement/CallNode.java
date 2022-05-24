@@ -126,7 +126,7 @@ public class CallNode implements Node {
     public SigmaEnv checkEffects(SigmaEnv env) {
         // Checking effects for each expression used as actual parameter
         for (Node e : expressions) {
-            e.checkEffects(env);
+            env = e.checkEffects(env);
         }
 
         FunctionNode called_function = (FunctionNode)this.entry.getEntry();
@@ -143,12 +143,13 @@ public class CallNode implements Node {
             env.lookup(actual).setFalse();
         }
 
+        System.err.println("AAAAAAAAAA" + env.isRecursive(this.id));
         if (env.isRecursive(this.id)){
             Boolean fixedPoint = env.fixedPoint(actualEffects,ids);
 
             if (!fixedPoint){
                 // Fixed point not reached...
-                called_function.checkFunctionEffects(env,actualEffects);
+                env = called_function.checkFunctionEffects(env,actualEffects);
 
                 // After fixed point, updating effects after function call...
                 actualEffects = env.getFixedPointResult();
@@ -165,12 +166,10 @@ public class CallNode implements Node {
                 env.addFixedPointResult(env.getEffects(ids)); // Updating effects...
             }
         }else{
-            called_function.checkFunctionEffects(env,actualEffects);
+           env = called_function.checkFunctionEffects(env,actualEffects);
         }
 
-
         return env;
-
     }
 
     public String getId() {

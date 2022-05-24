@@ -98,5 +98,3 @@ LINECOMMENTS 	: '//' (~('\n'|'\r'))* -> channel(HIDDEN);
 BLOCKCOMMENTS   : '/*'( ~('/'|'*')|'/'~'*'|'*'~'/'|BLOCKCOMMENTS)* '*/' -> channel(HIDDEN);
 
 ERR   	 : . { System.err.println("Invalid char: "+ getText()); lexicalErrors++;  } -> channel(HIDDEN);
-
-MADONNATROIA : . { System.err.println("Invalid madonna: "+ getText()); lexicalError++; } -> channel(HIDDEN);

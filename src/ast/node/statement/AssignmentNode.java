@@ -74,7 +74,24 @@ public class AssignmentNode implements Node {
      * Generate code for this node
      */
     public String codeGeneration(){
-        return "";
+
+        /*
+        * cgen(\Gamma, id = exp)
+        *       cgen(\Gamma, exp)
+        *       lw $al 0($fp)
+        *       sw $a0 Offset($al)
+        * */
+        StringBuilder out = new StringBuilder();
+
+
+        out.append(exp.codeGeneration());
+        out.append("lw $al 0($fp) //loads in $al value of $fp");
+        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.entry.getNestinglevel() - this.entry.getNestinglevel())));
+
+        int offsetWithAL = entry.getOffset();
+        out.append("sw $a0 ").append(offsetWithAL).append("($al) ; //loads in $a0 the value in ").append(id).append("\n");
+
+        return out.toString();
     }
 
     /**

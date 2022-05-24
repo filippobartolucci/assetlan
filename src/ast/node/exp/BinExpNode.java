@@ -90,61 +90,93 @@ public class BinExpNode extends ExpNode {
 	}
 
 	public String codeGeneration() {
-		StringBuilder out = new StringBuilder();
-		out.append(left.codeGeneration());
-		out.append("push $a0\n");
-		out.append(right.codeGeneration());
-		out.append("lw $t0 $sp\n");
+		StringBuilder codeGenerated = new StringBuilder();
+
+		//codeGenerated.append("//Start codegen of ").append(left.getClass().getName()).append(op).append(right.getClass().getName()).append("\n");
+		/**
+		 * Code generation for lhs and rhs to push them on the stack
+		 */
+		String left_generated = left.codeGeneration();
+		codeGenerated.append(left_generated);
+
+		codeGenerated.append("push $a0 // push e1\n");
+		String right_generated = right.codeGeneration();
+
+		codeGenerated.append(right_generated);
+
+		codeGenerated.append("lw $a2 0($sp) //take e2 and $a2 take e1\n");
+		codeGenerated.append("pop // remove e1 from the stack to preserve stack\n");
+
+		/**
+		 * $a2(=e1) operation $a0(=e2)
+		 */
 
 		switch (op) {
-			case "+":
-				out.append("add $t0 $a0 $a0\n");
+			case "+":{
+				codeGenerated.append("add $a0 $a2 $a0 // a0 = t1+a0\n");
+
 				break;
-			case "-":
-				out.append("sub $t0 $a0 $a0\n");
+			}
+			case "-": {
+				codeGenerated.append("sub $a0 $a2 $a0 // a0 = t1-a0\n");
 				break;
-			case "/":
-				out.append("div $t0 $a0 $a0\n");
+			}
+			case "*": {
+				codeGenerated.append("mult $a0 $a2 $a0 // a0 = t1+a0\n");
 				break;
-			case "*":
-				out.append("mult $t0 $a0 $a0\n");
+			}
+			case "/": {
+				codeGenerated.append("div $a0 $a2 $a0 // a0 = t1/a0\n");
 				break;
-			case "<":
-				// $a0 < $t0
-				out.append("less $t0 $a0 $a0\n");
+			}
+			/*
+			 * le
+			 * lt
+			 * gt
+			 * ge
+			 * eq
+			 * */
+			case "<=":{
+				codeGenerated.append("le $a0 $a2 $a0 // $a0 = $a2 <= $a0\n");
 				break;
-			case "<=":
-				// $a0 <= $t0
-				out.append("leq $t0 $a0 $a0\n");
+			}
+			case "<":{
+				codeGenerated.append("lt $a0 $a2 $a0 // $a0 = $a2 < $a0\n");
 				break;
-			case ">":
-				// $t0 < $a0
-				out.append("less $a0 $t0 $a0\n");
+			}
+			case ">":{
+				codeGenerated.append("gt $a0 $a2 $a0 // $a0 = $a2 > $a0\n");
 				break;
-			case ">=":
-				// $t0 <= $a0
-				out.append("leq $a0 $t0 $a0\n");
+			}
+			case ">=":{
+				codeGenerated.append("ge $a0 $a2 $a0 // $a0 = $a2 >= $a0\n");
 				break;
-			case "==":
-				// $a0 == $t0
-				out.append("eq $t0 $a0 $a0\n");
+			}
+			case "==":{
+				codeGenerated.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
 				break;
-			case "!=":
-				// $a0 == $t0
-				out.append("neq $t0 $a0 $a0\n");
+			}
+			case "!=":{
+				codeGenerated.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
+				codeGenerated.append("not $a0 $a0 // $a0 = !$a0\n");
 				break;
-			case "&&":
-				// $a0 && $t0
-				out.append("and $t0 $a0 $a0\n");
+			}
+			case "&&":{
+				codeGenerated.append("and $a0 $a2 $a0 // $a0 = $a2 && $a0\n");
+				//codeGenerated.append("mult $a0 $a2 $a0 // $a0 = $a2 && $a0 aka $a0 = $a2 * $a0\n");
 				break;
-			case "||":
-				// $a0 || $t0
-				out.append("or $t0 $a0 $a0\n");
+			}
+
+			case "||":{
+				codeGenerated.append("or $a0 $a2 $a0 // $a0 = $a2 || $a0\n");
 				break;
-			default:
+			}
+
+			/**
+			 * Case of == and != to implement on boolean expression
+			 */
 		}
-		out.append("pop\n");
-		return out.toString();
+		return codeGenerated.toString();
 	}
 
 	@Override

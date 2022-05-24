@@ -110,6 +110,7 @@ public class main {
             System.out.println("Effects analysis successful! -> Liquidity is respected.\n\nCode generation...");
 
             String bytecode = ast.codeGeneration();
+            System.out.println("Code generation successful!\n\nBytecode:\n" + bytecode);
 
 
             System.exit(ExitCode.SUCCESS.ordinal());

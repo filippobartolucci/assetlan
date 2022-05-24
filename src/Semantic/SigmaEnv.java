@@ -11,11 +11,15 @@ public class SigmaEnv {
     private int nestingLevel;
     private ArrayList<SemanticError> errors;
     private ArrayList<Boolean> fixedPointResult = new ArrayList<>();
-    private String lastFunctionCall = "";
+    private String lastFunctionCall;
 
 
     public SigmaEnv() {
-        this(new ArrayList<>(), -1, new ArrayList<>());
+        this.symTable = new ArrayList<HashMap<String, EffectEntry>>();
+        this.nestingLevel = -1;
+        this.errors = new ArrayList<SemanticError>();
+        this.fixedPointResult = new ArrayList<>();
+        this.lastFunctionCall = "";
     }
 
     /**
@@ -59,7 +63,7 @@ public class SigmaEnv {
     public void addFixedPointResult(ArrayList<Boolean> l) { this.fixedPointResult = l; }
 
     public void addFunctionCall(String id){
-        this.lastFunctionCall = id;
+        this.lastFunctionCall = new String(id);
     }
 
     public Boolean isRecursive(String id){

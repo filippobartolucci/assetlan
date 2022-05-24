@@ -38,7 +38,7 @@ public class CallExpNode extends ExpNode {
      */
     @Override
     public String codeGeneration(){
-        return "";
+        return this.call.codeGeneration();
     }
 
     /**
