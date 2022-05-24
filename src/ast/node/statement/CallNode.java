@@ -143,26 +143,31 @@ public class CallNode implements Node {
             env.lookup(actual).setFalse();
         }
 
-        Boolean fixedPoint = env.fixedPoint(actualEffects,ids);
+        if (env.isRecursive(this.id)){
+            Boolean fixedPoint = env.fixedPoint(actualEffects,ids);
 
-        if (!fixedPoint){
-            // Fixed point not reached...
-            called_function.checkFunctionEffects(env,actualEffects);
+            if (!fixedPoint){
+                // Fixed point not reached...
+                called_function.checkFunctionEffects(env,actualEffects);
 
-            // After fixed point, updating effects after function call...
-            actualEffects = env.getFixedPointResult();
-            for(int i = 0; i < assets.size(); i++) {
-                Node a = assets.get(i).getEntry();
-                if(actualEffects.get(i)) {
-                    env.lookup(a).setTrue();
-                }else{
-                    env.lookup(a).setFalse();
+                // After fixed point, updating effects after function call...
+                actualEffects = env.getFixedPointResult();
+                for(int i = 0; i < assets.size(); i++) {
+                    Node a = assets.get(i).getEntry();
+                    if(actualEffects.get(i)) {
+                        env.lookup(a).setTrue();
+                    }else{
+                        env.lookup(a).setFalse();
+                    }
                 }
+            }else{
+                // Fixed Point!
+                env.addFixedPointResult(env.getEffects(ids)); // Updating effects...
             }
         }else{
-            // Fixed Point!
-            env.addFixedPointResult(env.getEffects(ids)); // Updating effects...
+            called_function.checkFunctionEffects(env,actualEffects);
         }
+
 
         return env;
 

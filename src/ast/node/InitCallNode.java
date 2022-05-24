@@ -98,7 +98,6 @@ public class InitCallNode implements Node{
         }
 
         // Same as before, but for asset expressions
-        // TODO: controllare questa parte
         for (Node e : aexp) {
             e.checkEffects(env);
         }

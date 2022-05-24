@@ -124,7 +124,6 @@ public class IteNode implements Node {
 
         for (Node n: elseb){
             elseEnv = new SigmaEnv(n.checkEffects(elseEnv));
-            System.out.println(elseEnv.toPrint());
         }
         thenEnv.max(elseEnv);
 

@@ -145,6 +145,8 @@ public class FunctionNode implements Node {
 		// Entering new scope...
 		env.newEmptyScope();
 
+		env.addFunctionCall(this.id);
+
 		// Adding each parameter to SigmaEnv
 		for(Node n : params) {
 			n.checkEffects(env);

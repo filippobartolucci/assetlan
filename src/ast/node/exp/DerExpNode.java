@@ -54,7 +54,11 @@ public class DerExpNode extends ExpNode implements Node{
     }
 
     public Node typeCheck(){
-        return entry.getEntry().typeCheck();
+        Node type = entry.getEntry().typeCheck();
+        if (type.equals(TypeValue.ASSET)){
+            type = new TypeNode("int");
+        }
+        return type;
     }
 
     public SigmaEnv checkEffects(SigmaEnv env){
