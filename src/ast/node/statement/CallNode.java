@@ -129,17 +129,6 @@ public class CallNode implements Node {
             e.checkEffects(env);
         }
 
-        // Checking effects for each asset  used as actual parameter
-        /*for (STentry a_entry : assets) {
-            // Empty asset cannot be used in a function call as an actual parameter
-            if (!a_entry.getStatus()){
-                errors.add( new SemanticError("Asset " + a_entry.getType() + " is empty -> " + a_entry.getType()  + " can't be used in a function call"));
-            }else{
-                // Asset must be emptied during the function call
-                a_entry.setStatus(false);
-            }
-        }*/
-
         FunctionNode called_function = (FunctionNode)this.entry.getEntry();
 
         // Moving values of assets in the function call
@@ -150,24 +139,31 @@ public class CallNode implements Node {
         for (int i=0; i<assets.size(); i++){
             Node actual = assets.get(i).getEntry(); // Actual asset parameter
 
-            actualEffects.add(env.lookup(actual.toString()).getStatus());
-            env.lookup(actual.toString()).setFalse();
-
-            /*
-            if (env.lookup(actual.toString()).getStatus()) {
-                env.lookup(formal.toString()).setTrue();
-            } else {
-                env.lookup(formal.toString()).setFalse();
-            }
-            env.lookup(actual.toString()).setFalse();
-            */
-
-            // TODO formal.setStatus(actual.getStatus()); // Formal asset parameter is now the same as the actual asset parameter
-            // TODO actual.setStatus(false); // Actual asset parameter is now empty
+            actualEffects.add(env.lookup(actual).getStatus());
+            env.lookup(actual).setFalse();
         }
 
-        //TODO: Da miglirare e riguardare
-        called_function.checkFunctionEffects(env,actualEffects);
+        Boolean fixedPoint = env.fixedPoint(actualEffects,ids);
+
+        if (!fixedPoint){
+            // Fixed point not reached...
+            called_function.checkFunctionEffects(env,actualEffects);
+
+            // After fixed point, updating effects after function call...
+            actualEffects = env.getFixedPointResult();
+            for(int i = 0; i < assets.size(); i++) {
+                Node a = assets.get(i).getEntry();
+                if(actualEffects.get(i)) {
+                    env.lookup(a).setTrue();
+                }else{
+                    env.lookup(a).setFalse();
+                }
+            }
+        }else{
+            // Fixed Point!
+            env.addFixedPointResult(env.getEffects(ids)); // Updating effects...
+        }
+
         return env;
 
     }

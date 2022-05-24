@@ -115,11 +115,13 @@ public class SigmaEnv {
         }
     }
 
-    public Boolean fixedPoint(ArrayList<Boolean> actualEffects, ArrayList<Node> ids){
+
+
+    public Boolean fixedPoint(ArrayList<Boolean> actualEffects, ArrayList<String> ids){
         Boolean fixedPoint = true;
 
         for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
-            String id = ids.get(i).toString();
+            String id = ids.get(i);
             Boolean status = this.lookup(id).getStatus();
 
             if (!status == actualEffects.get(i)) {
@@ -130,7 +132,8 @@ public class SigmaEnv {
         return fixedPoint;
     }
 
-    public ArrayList<Boolean> getEffects(ArrayList<Node> ids){
+
+    public ArrayList<Boolean> getEffects(ArrayList<String> ids){
         ArrayList<Boolean> effects = new ArrayList<>();
 
         for(int i = 0; i < ids.size(); i++) {

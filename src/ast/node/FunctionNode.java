@@ -169,49 +169,7 @@ public class FunctionNode implements Node {
 
 		// checking effects of each statement
 		for(Node n : statements) {
-			StatementNode s = (StatementNode) n;
-			if (this.isRecursive(n)) {
-				// Recursive call
-
-				/*	Debug print
-				System.err.println("\nRec Call Level"+env.getNestingLevel());
-				System.err.println("Actual old \t Actual new");
-				for(int i = 0; i < actualEffects.size(); i++) {
-					System.err.println(actualEffects.get(i) +"\t\t" + env.lookup(aparams.get(i).toString()));
-				}
-				End debug print */
-
-				/*
-				Boolean fixedPoint = true;
-				for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
-					if (!env.lookup(aparams.get(i).toString()).getStatus() == actualEffects.get(i)) {
-						fixedPoint = false; // fixed point not reached
-					}
-				}
-				*/
-				Boolean fixedPoint = env.fixedPoint(actualEffects,aparams);
-
-				if (!fixedPoint){
-					// Fixed point not reached...
-					n.checkEffects(env); // Recursive call
-
-					// After fixed point, updating effects after function call...
-					actualEffects = env.getFixedPointResult();
-					for(int i = 0; i < aparams.size(); i++) {
-						Node a = aparams.get(i);
-						if(actualEffects.get(i)) {
-							env.lookup(a).setTrue();
-						}else{
-							env.lookup(a).setFalse();
-						}
-					}
-				}else{
-					// Fixed Point!
-					env.addFixedPointResult(env.getEffects(aparams)); // Updating effects...
-				}
-			}else{
-				env = n.checkEffects(env);
-			}
+			env = n.checkEffects(env);
 		}
 
 		// Every asset parameter must have status == false (empty)
@@ -224,21 +182,6 @@ public class FunctionNode implements Node {
 		env.exitScope();
 
 		return env;
-	}
-
-	/**
-	 * Check if the statement is a recursive call
-	 * @param n :  statement node
-	 * @return true if the statement is a recursive call
-	 */
-	public Boolean isRecursive(Node n){
-		StatementNode s = (StatementNode) n;
-		if (s.getChild() instanceof CallNode c) {
-			if (c.getId().equals(this.id)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**

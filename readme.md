@@ -1,4 +1,4 @@
-sssssssssssssssssssssssssssssssssssssssssssssssssssssss# Progetto Compilatori e Interpreti AA 2021-22 -- AssetLan
+# Progetto Compilatori e Interpreti AA 2021-22 -- AssetLan
 AssetLan è un semplice linguaggio imperativo con ASSET, in cui i parametri possono essere sia standard che asset, con RICORSIONE e senza MUTUA RICORSIONE.
 
 ## Progetto Completo
@@ -21,11 +21,11 @@ Il codice sviluppato deve controllare:
 Sviluppare un'analisi semantica che verifica:
 - [x] la correttezza dei tipi (in particolare numero e tipo dei parametri attuali
   se conformi al numero e tipo dei parametri formali)
-* Liquidity, ovvero:  
-     - [ ] per ogni funzione, i parametri formali asset devono essere 0 alla fine della
+* [x] Liquidity, ovvero:  
+     - [x] per ogni funzione, i parametri formali asset devono essere 0 alla fine della
 	    sua esecuzione (i valori sono stati spostati nei campi asset oppure trasferiti
 	    con una transfer)
-     - [ ] alla fine del programma i campi asset sono 0. 
+     - [x] alla fine del programma i campi asset sono 0. 
 
 Il report deve contenere TUTTE le regole semantiche utilizzate e relativa discussione.
 Si faccia attenzione all'aliasing.
