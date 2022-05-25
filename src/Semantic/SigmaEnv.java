@@ -38,6 +38,9 @@ public class SigmaEnv {
     public SigmaEnv(SigmaEnv e) {
         this(new ArrayList<>(), e.nestingLevel,e.errors);
 
+        this.fixedPointResult = e.fixedPointResult;
+        this.lastFunctionCall = e.lastFunctionCall;
+
         for (var scope : e.symTable) {
             final HashMap<String,EffectEntry> copiedScope = new HashMap<>();
             for (var id : scope.keySet()) {
@@ -63,12 +66,13 @@ public class SigmaEnv {
     public void addFixedPointResult(ArrayList<Boolean> l) { this.fixedPointResult = l; }
 
     public void addFunctionCall(String id){
-        this.lastFunctionCall = new String(id);
+        this.lastFunctionCall = id;
     }
 
     public Boolean isRecursive(String id){
         return this.lastFunctionCall.equals(id);
     }
+
 
     // Environment functions
     public void newEmptyScope(){
@@ -120,8 +124,8 @@ public class SigmaEnv {
             throw new RuntimeException("Cannot call max on STs with different size");
         }
 
-        for (int i = 0; i < this.symTable.size(); i++){
-            for (var entry: this.symTable.get(i).entrySet()){
+        for (HashMap<String, EffectEntry> stringEffectEntryHashMap : this.symTable) {
+            for (var entry : stringEffectEntryHashMap.entrySet()) {
                 entry.getValue().max(env.lookup(entry.getKey()));
             }
         }
@@ -134,7 +138,7 @@ public class SigmaEnv {
 
         for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
             String id = ids.get(i);
-            Boolean status = this.lookup(id).getStatus();
+            boolean status = this.lookup(id).getStatus();
 
             if (!status == actualEffects.get(i)) {
                 fixedPoint = false; // fixed point not reached
@@ -148,8 +152,7 @@ public class SigmaEnv {
     public ArrayList<Boolean> getEffects(ArrayList<String> ids){
         ArrayList<Boolean> effects = new ArrayList<>();
 
-        for(int i = 0; i < ids.size(); i++) {
-            String id = ids.get(i);
+        for (String id : ids) {
             effects.add(this.lookup(id).getStatus());
         }
 

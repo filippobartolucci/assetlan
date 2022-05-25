@@ -119,6 +119,7 @@ public class InitCallNode implements Node{
         }
 
         if (entry.getEntry() instanceof FunctionNode f) {
+            env.addFunctionCall(this.id);
             f.checkFunctionEffects(env,actualEffects);
         }
 

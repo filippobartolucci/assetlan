@@ -143,7 +143,6 @@ public class CallNode implements Node {
             env.lookup(actual).setFalse();
         }
 
-        System.err.println("AAAAAAAAAA" + env.isRecursive(this.id));
         if (env.isRecursive(this.id)){
             Boolean fixedPoint = env.fixedPoint(actualEffects,ids);
 
@@ -166,7 +165,8 @@ public class CallNode implements Node {
                 env.addFixedPointResult(env.getEffects(ids)); // Updating effects...
             }
         }else{
-           env = called_function.checkFunctionEffects(env,actualEffects);
+            env.addFunctionCall(this.id);
+            env = called_function.checkFunctionEffects(env,actualEffects);
         }
 
         return env;
