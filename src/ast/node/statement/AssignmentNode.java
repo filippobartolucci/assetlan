@@ -12,9 +12,9 @@ import ast.node.TypeNode;
 import java.util.ArrayList;
 
 public class AssignmentNode implements Node {
-    private final String id;
-    private final Node exp;
-    private STentry entry;
+    private final String id; // LHS
+    private final Node exp; // RHS
+    private STentry entry; // Var STentry
 
     /**
      * Construtor

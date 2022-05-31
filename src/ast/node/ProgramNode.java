@@ -107,9 +107,11 @@ public class ProgramNode implements Node {
 			env = a.checkEffects(env);
 		}
 
+		/* Nothing to do here...
 		for (Node f : functions){
 			env = f.checkEffects(env);
 		}
+		*/
 
 		initcallnode.checkEffects(env);
 

@@ -5,7 +5,7 @@ import ast.node.Node;
 public class STentry {
 	private int nestingLevel;
 	private int offset;
-	private Node type;
+	private final Node type;
 
 	public STentry(){
 		this.nestingLevel = -1;

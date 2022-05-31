@@ -57,11 +57,6 @@ public class BinExpNode extends ExpNode {
 		Node rightType = right.typeCheck();
 
 
-		/* Asset and int can be used in the same expression
-		if (!leftType.equals(rightType)) {
-			throw new RuntimeException("Type mismatch -> In binary expression, left exp is" + leftType.toPrint("") + "while right ext is " + rightType.toPrint(""));
-		}*/
-
 		switch (this.op) {
 			case "*", "/", "+", "-", "<", "<=", ">", ">=":
 				if (! ( (leftType.equals(TypeValue.INT) || (leftType.equals(TypeValue.ASSET) ) && ( (rightType.equals(TypeValue.INT) || (rightType.equals(TypeValue.ASSET)) ))))){
@@ -92,24 +87,13 @@ public class BinExpNode extends ExpNode {
 	public String codeGeneration() {
 		StringBuilder codeGenerated = new StringBuilder();
 
-		//codeGenerated.append("//Start codegen of ").append(left.getClass().getName()).append(op).append(right.getClass().getName()).append("\n");
-		/**
-		 * Code generation for lhs and rhs to push them on the stack
-		 */
 		String left_generated = left.codeGeneration();
 		codeGenerated.append(left_generated);
-
 		codeGenerated.append("push $a0 // push e1\n");
 		String right_generated = right.codeGeneration();
-
 		codeGenerated.append(right_generated);
-
 		codeGenerated.append("lw $a2 0($sp) //take e2 and $a2 take e1\n");
 		codeGenerated.append("pop // remove e1 from the stack to preserve stack\n");
-
-		/**
-		 * $a2(=e1) operation $a0(=e2)
-		 */
 
 		switch (op) {
 			case "+":{
@@ -171,10 +155,6 @@ public class BinExpNode extends ExpNode {
 				codeGenerated.append("or $a0 $a2 $a0 // $a0 = $a2 || $a0\n");
 				break;
 			}
-
-			/**
-			 * Case of == and != to implement on boolean expression
-			 */
 		}
 		return codeGenerated.toString();
 	}

@@ -5,8 +5,8 @@ import Semantic.*;
 import java.util.ArrayList;
 
 public class ParamNode implements Node {
-    private String id;
-    private Node type;
+    private final String id;
+    private final Node type;
     public STentry entry;
 
 

@@ -39,8 +39,7 @@ public class RetNode implements Node {
         if (exp == null){
             return new TypeNode(TypeValue.VOID);
         }
-        Node type = exp.typeCheck();
-        return type;
+        return exp.typeCheck();
     }
 
     public SigmaEnv checkEffects(SigmaEnv env){

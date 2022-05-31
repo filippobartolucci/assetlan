@@ -120,7 +120,12 @@ public class InitCallNode implements Node{
 
         if (entry.getEntry() instanceof FunctionNode f) {
             env.addFunctionCall(this.id);
-            f.checkFunctionEffects(env,actualEffects);
+            try {
+                f.checkFunctionEffects(env,actualEffects);
+            }catch(StackOverflowError ex){
+                env.addError(new SemanticError("Cannot reach fixed point in effect analysis"));
+            }
+
         }
 
         return env;

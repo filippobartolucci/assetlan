@@ -12,7 +12,7 @@ import ast.node.TypeNode;
 import java.util.ArrayList;
 
 public class TransferNode implements Node {
-    private String id;
+    private final String id;
     private STentry entry;
 
 

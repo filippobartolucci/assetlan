@@ -81,7 +81,7 @@ public class TypeNode implements Node{
     public boolean equals(Object obj) {
         if (obj instanceof TypeNode){
             TypeNode other = (TypeNode) obj;
-            if (this.toString().equals(other.toString())){
+            if (this.type.equals(other.type)){
                 return true;
             }
         }

@@ -7,14 +7,12 @@ import Utils.TypeValue;
 import ast.node.Node;
 import ast.node.StatementNode;
 import ast.node.TypeNode;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class IteNode implements Node {
-    private final Node exp;
-    private ArrayList<Node> thenb;
-    private ArrayList<Node> elseb;
+    private final Node exp; // Conditional guard
+    private final ArrayList<Node> thenb; // Then branch
+    private final ArrayList<Node> elseb; // Else branch
 
     /**
      * Constructor
@@ -50,12 +48,15 @@ public class IteNode implements Node {
 
 
     public Node typeCheck() {
+
+        // \Gamma |- (e) : Bool
         if (!exp.typeCheck().equals(TypeValue.BOOL)) {
             throw new RuntimeException("Type mismatch -> Condition of If statement must be of type bool");
         }
 
         Node thenb_type = new TypeNode(TypeValue.VOID); // Type for then branch, assuming void as default
 
+        // \Gamma |- then : T1
         for (Node s : thenb) {  // for each statement in then branch
             Node n = ((StatementNode) s).getChild(); // getting the type of the statement
             // Looking for return statement
@@ -77,6 +78,7 @@ public class IteNode implements Node {
         }
 
         // same as above for else branch
+        // \Gamma |- else : T2
         Node elseb_type = new TypeNode(TypeValue.VOID);
 
         for (Node s : elseb) {
@@ -96,14 +98,16 @@ public class IteNode implements Node {
             }
         }
 
+        // Checking if there is an else branch
         if (elseb.size() == 0) {
+            // then branch might be empty too
             return thenb_type == null ? new TypeNode(TypeValue.VOID) : thenb_type;
         }
 
-        if (!thenb_type.equals(thenb_type)) {
-            new RuntimeException("Type mismatch -> If statement must have the same type");
+        // T1 == T2
+        if (!thenb_type.equals(elseb_type)) {
+            throw new RuntimeException("Type mismatch -> If statement must have the same type");
         }
-
         return thenb_type;
     }
 
@@ -112,7 +116,6 @@ public class IteNode implements Node {
     }
 
     public SigmaEnv checkEffects(SigmaEnv env) {
-        ArrayList<SemanticError> errors = new ArrayList<>();
         exp.checkEffects(env);
 
         SigmaEnv thenEnv = new SigmaEnv(env);

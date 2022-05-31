@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class AssetNode implements Node{
 	private final String id;
-	private int value;
+	private final int value;
 	private STentry entry;
 
 	public AssetNode(String id){

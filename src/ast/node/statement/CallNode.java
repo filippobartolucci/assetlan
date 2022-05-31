@@ -12,10 +12,10 @@ import ast.node.Node;
 import java.util.ArrayList;
 
 public class CallNode implements Node {
-    private final String  id;
-    private final ArrayList<Node> expressions; // formal parameters
-    private final ArrayList<String> ids;  // assets parameters
-    private final ArrayList<STentry> assets; // assets entry in the symbol table
+    private final String  id; // Called Function
+    private final ArrayList<Node> expressions; // Formal parameters
+    private final ArrayList<String> ids;  // Assets parameters
+    private final ArrayList<STentry> assets; // Assets entry in the symbol table
     private STentry entry; // entry in the symbol table
 
     /**

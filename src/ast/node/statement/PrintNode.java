@@ -10,7 +10,7 @@ import ast.node.TypeNode;
 import java.util.ArrayList;
 
 public class PrintNode implements Node {
-	private Node exp;
+	private final Node exp;
 
 	/*Constructor*/
 	public PrintNode(Node exp) {
@@ -28,8 +28,7 @@ public class PrintNode implements Node {
 
 	/**
 	 * Generate code for this node
-	 * @param
-	 * @return
+	 * @return Void Type
 	 */
 	public Node typeCheck(){
 		exp.typeCheck();
@@ -53,12 +52,10 @@ public class PrintNode implements Node {
 	 * @returns
 	 */
 	public String toPrint(String indent){
-		StringBuilder sb = new StringBuilder();
-		sb.append(indent + "PrintNode\n");
-		sb.append(indent + "  exp:");
-		sb.append(exp.toPrint(indent + "\t"));
-		sb.append("\n");
-		return sb.toString();
+		return indent + "PrintNode\n" +
+				indent + "  exp:" +
+				exp.toPrint(indent + "\t") +
+				"\n";
 	}
 
 
