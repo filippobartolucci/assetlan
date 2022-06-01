@@ -1,5 +1,7 @@
 package Semantic;
 
+import ast.node.FunctionNode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,6 +17,8 @@ public class GammaEnv implements Cloneable {
 	private ArrayList<HashMap<String,STentry>>  symTable;
 	private int nestingLevel;
 	private int offset;
+
+	private FunctionNode lastFunction = null;
 
 	// CONSTRUCTORS
 
@@ -139,5 +143,13 @@ public class GammaEnv implements Cloneable {
 			}
 		}
 		return sb.toString();
+	}
+
+	public void setLastFunction(FunctionNode n) {
+		this.lastFunction = n;
+	}
+
+	public FunctionNode getLastFunction() {
+		return this.lastFunction;
 	}
 }

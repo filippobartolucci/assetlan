@@ -125,7 +125,6 @@ public class InitCallNode implements Node{
             }catch(StackOverflowError ex){
                 env.addError(new SemanticError("Cannot reach fixed point in effect analysis"));
             }
-
         }
 
         return env;

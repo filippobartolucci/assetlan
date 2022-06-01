@@ -3,7 +3,7 @@ package ast.node.statement;
 import Semantic.GammaEnv;
 import Semantic.SemanticError;
 import Semantic.SigmaEnv;
-import Utils.TypeValue;
+import Utils.*;
 import ast.node.Node;
 import ast.node.StatementNode;
 import ast.node.TypeNode;
@@ -111,8 +111,28 @@ public class IteNode implements Node {
         return thenb_type;
     }
 
-    public String codeGeneration(){
-        return "";
+    public String codeGeneration() {
+        StringBuilder out = new StringBuilder();
+        // TODO LABEL
+        String lFalse = LabelManager.getFreshLabel("false");
+        String lEnd = LabelManager.getFreshLabel("end");
+        out.append(exp.codeGeneration());
+        out.append("push 0\n");
+        out.append("bc $a0 false\n");
+        // True
+        for (Node s : thenb) {
+            out.append(s.codeGeneration());
+        }
+        out.append("b end\n");
+        out.append("false:\n");
+        // Else Branch
+        for (Node s : elseb) {
+            out.append(s.codeGeneration());
+        }
+        // End
+        out.append(lEnd);
+        out.append("pop\n");
+        return out.toString();
     }
 
     public SigmaEnv checkEffects(SigmaEnv env) {

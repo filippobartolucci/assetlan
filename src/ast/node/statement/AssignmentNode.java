@@ -15,6 +15,7 @@ public class AssignmentNode implements Node {
     private final String id; // LHS
     private final Node exp; // RHS
     private STentry entry; // Var STentry
+    private int currentNL;
 
     /**
      * Construtor
@@ -23,6 +24,7 @@ public class AssignmentNode implements Node {
         this.id = id;
         this.exp = exp;
         this.entry = null;
+        this.currentNL = 0;
     }
 
     /**
@@ -38,6 +40,8 @@ public class AssignmentNode implements Node {
         }
         errors.addAll(exp.checkSemantics(env));
         this.entry= symbol;
+
+        this.currentNL = env.getNestingLevel();
 
         return errors;
     }
@@ -86,7 +90,7 @@ public class AssignmentNode implements Node {
 
         out.append(exp.codeGeneration());
         out.append("lw $al 0($fp) //loads in $al value of $fp");
-        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.entry.getNestinglevel() - this.entry.getNestinglevel())));
+        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL - this.entry.getNestinglevel())));
 
         int offsetWithAL = entry.getOffset();
         out.append("sw $a0 ").append(offsetWithAL).append("($al) ; //loads in $a0 the value in ").append(id).append("\n");

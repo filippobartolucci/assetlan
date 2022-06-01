@@ -85,78 +85,69 @@ public class BinExpNode extends ExpNode {
 	}
 
 	public String codeGeneration() {
-		StringBuilder codeGenerated = new StringBuilder();
+		StringBuilder out = new StringBuilder();
 
 		String left_generated = left.codeGeneration();
-		codeGenerated.append(left_generated);
-		codeGenerated.append("push $a0 // push e1\n");
+		out.append(left_generated);
+		out.append("push $a0 // push e1\n");
 		String right_generated = right.codeGeneration();
-		codeGenerated.append(right_generated);
-		codeGenerated.append("lw $a2 0($sp) //take e2 and $a2 take e1\n");
-		codeGenerated.append("pop // remove e1 from the stack to preserve stack\n");
+		out.append(right_generated);
+		out.append("lw $a2 0($sp) //take e2 and $a2 take e1\n");
+		out.append("pop // remove e1 from the stack to preserve stack\n");
 
 		switch (op) {
 			case "+":{
-				codeGenerated.append("add $a0 $a2 $a0 // a0 = t1+a0\n");
+				out.append("add $a0 $a2 $a0 // a0 = t1+a0\n");
 
 				break;
 			}
 			case "-": {
-				codeGenerated.append("sub $a0 $a2 $a0 // a0 = t1-a0\n");
+				out.append("sub $a0 $a2 $a0 // a0 = t1-a0\n");
 				break;
 			}
 			case "*": {
-				codeGenerated.append("mult $a0 $a2 $a0 // a0 = t1+a0\n");
+				out.append("mult $a0 $a2 $a0 // a0 = t1+a0\n");
 				break;
 			}
 			case "/": {
-				codeGenerated.append("div $a0 $a2 $a0 // a0 = t1/a0\n");
+				out.append("div $a0 $a2 $a0 // a0 = t1/a0\n");
 				break;
 			}
-			/*
-			 * le
-			 * lt
-			 * gt
-			 * ge
-			 * eq
-			 * */
 			case "<=":{
-				codeGenerated.append("le $a0 $a2 $a0 // $a0 = $a2 <= $a0\n");
+				out.append("le $a0 $a2 $a0 // $a0 = $a2 <= $a0\n");
 				break;
 			}
 			case "<":{
-				codeGenerated.append("lt $a0 $a2 $a0 // $a0 = $a2 < $a0\n");
+				out.append("lt $a0 $a2 $a0 // $a0 = $a2 < $a0\n");
 				break;
 			}
 			case ">":{
-				codeGenerated.append("gt $a0 $a2 $a0 // $a0 = $a2 > $a0\n");
+				out.append("gt $a0 $a2 $a0 // $a0 = $a2 > $a0\n");
 				break;
 			}
 			case ">=":{
-				codeGenerated.append("ge $a0 $a2 $a0 // $a0 = $a2 >= $a0\n");
+				out.append("ge $a0 $a2 $a0 // $a0 = $a2 >= $a0\n");
 				break;
 			}
 			case "==":{
-				codeGenerated.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
+				out.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
 				break;
 			}
 			case "!=":{
-				codeGenerated.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
-				codeGenerated.append("not $a0 $a0 // $a0 = !$a0\n");
+				out.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
+				out.append("not $a0 $a0 // $a0 = !$a0\n");
 				break;
 			}
 			case "&&":{
-				codeGenerated.append("and $a0 $a2 $a0 // $a0 = $a2 && $a0\n");
-				//codeGenerated.append("mult $a0 $a2 $a0 // $a0 = $a2 && $a0 aka $a0 = $a2 * $a0\n");
+				out.append("and $a0 $a2 $a0 // $a0 = $a2 && $a0\n");
 				break;
 			}
-
 			case "||":{
-				codeGenerated.append("or $a0 $a2 $a0 // $a0 = $a2 || $a0\n");
+				out.append("or $a0 $a2 $a0 // $a0 = $a2 || $a0\n");
 				break;
 			}
 		}
-		return codeGenerated.toString();
+		return out.toString();
 	}
 
 	@Override

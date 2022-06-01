@@ -148,18 +148,15 @@ public class SVM {
                         case SVMParser.GT:
                             regStore(arg1, regRead(arg2)>regRead(arg3)?1:0);
                             break;
-
                         case SVMParser.NOT:
                             regStore(arg1, regRead(arg2) != 0 ? 0 : 1);
                             break;
                         case SVMParser.OR:
                             regStore(arg1, (regRead(arg2)>0 || regRead(arg3)>0) ?1:0);
                             break;
-
                         case SVMParser.AND:
                             regStore(arg1, (regRead(arg2)>0 && regRead(arg3)>0) ?1:0);
                             break;
-
                         case SVMParser.PRINT:
                             if (arg1==null)
                                 System.out.println((sp < MEMORY_SIZE) ? memory.read(sp) : "Empty stack!");
@@ -167,7 +164,6 @@ public class SVM {
                                 System.out.println( "Print: "+ regRead(arg1));
                             }
                             break;
-
                         case SVMParser.HALT:
                             System.out.println("Halting program...");
                             //printStack(20);

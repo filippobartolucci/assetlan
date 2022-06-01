@@ -22,6 +22,7 @@ public class FunctionNode implements Node {
 	private ArrayList<Node> assets;
 
 
+
 	public FunctionNode(String id, Node typenode, ArrayList<Node> params, ArrayList<Node> aparams, ArrayList<Node> body_params, ArrayList<Node> statements) {
 		this.id = id;
 		this.type = typenode;
@@ -72,6 +73,8 @@ public class FunctionNode implements Node {
 		for(Node n : body_params) {
 			errors.addAll(n.checkSemantics(env));
 		}
+
+		env.setLastFunction(this);
 
 		for(Node n : statements) {
 			errors.addAll(n.checkSemantics(env));

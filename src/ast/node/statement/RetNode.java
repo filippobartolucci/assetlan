@@ -4,14 +4,17 @@ import Semantic.GammaEnv;
 import Semantic.SemanticError;
 import Semantic.SigmaEnv;
 import Utils.TypeValue;
+import ast.node.FunctionNode;
 import ast.node.Node;
 import ast.node.TypeNode;
 import ast.node.exp.ExpNode;
 import java.util.ArrayList;
+import Utils.LabelManager;
 
 public class RetNode implements Node {
     private final ExpNode exp;
-
+    private int currentNL;
+    private FunctionNode parent_f;
     /*
      *Constructor
     */
@@ -28,7 +31,9 @@ public class RetNode implements Node {
         ArrayList<SemanticError> errors = new ArrayList<>();
         if(exp != null){
             errors.addAll(exp.checkSemantics(env));
+            currentNL = env.getNestingLevel();
         }
+        this.parent_f = env.getLastFunction();
         return errors;
     }
 
@@ -52,7 +57,13 @@ public class RetNode implements Node {
      * Generate code for this node
      */
     public String codeGeneration(){
-        return "";
+
+        StringBuilder out = new StringBuilder();
+        if( exp != null){
+            out.append(exp.codeGeneration()).append("\n");
+        }
+        // TODO to do
+        return out.toString();
     }
 
     /**

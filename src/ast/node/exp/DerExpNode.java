@@ -75,8 +75,7 @@ public class DerExpNode extends ExpNode implements Node{
 
         out.append("lw $al 0($fp) //put in $al actual fp\n");
 
-        for (int i = this.entry.getNestinglevel(); i > this.entry.getNestinglevel(); i--)
-            out.append("lw $al 0($al)\n");
+        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry.getNestinglevel()));
 
         int offsetWithAL = entry.getOffset();
         out.append("lw $a0 ").append(offsetWithAL).append("($al) ; loads in $a0 the value in ").append(id).append("\n");

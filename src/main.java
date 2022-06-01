@@ -96,7 +96,6 @@ public class main {
             */
 
 
-
             SigmaEnv s_env = new SigmaEnv();
             ast.checkEffects(s_env);
             s_errors = s_env.getErrors();

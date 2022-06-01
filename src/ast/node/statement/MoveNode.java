@@ -15,6 +15,7 @@ public class MoveNode implements Node {
     private final String id2;
     private STentry entry1;
     private STentry entry2;
+    private int currentNL;
 
 
     /**
@@ -25,6 +26,7 @@ public class MoveNode implements Node {
         this.id2 = id2;
         this.entry1 = null;
         this.entry2 = null;
+        this.currentNL = 0;
     }
 
     /**
@@ -46,6 +48,7 @@ public class MoveNode implements Node {
             errors.add(new SemanticError("Undeclared asset: " + id2));
         }
         this.entry2 = entry2;
+        this.currentNL = env.getNestingLevel();
 
         return errors;
     }
@@ -76,6 +79,30 @@ public class MoveNode implements Node {
      * Generate code for this node
      */
     public String codeGeneration(){
+        StringBuilder out = new StringBuilder();
+        // a -o b
+
+        // Loading in stack the asset a
+        out.append("lw $al 0($fp)");
+        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry1.getNestinglevel()));
+        int offsetWithAL = entry1.getOffset();
+        out.append("lw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+        out.append("push $a0");
+
+        // Emptying the asset...
+        out.append("li $a0 0\n");
+        out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+
+        // Moving the asset...
+        out.append("lw $al 0($fp)");
+        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry2.getNestinglevel()));
+        offsetWithAL = entry2.getOffset();
+        out.append("lw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+        out.append("lw $a2 0($sp)");
+        out.append("add $a0 $a2 $a0 \n");
+        out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+
+
         return "";
     }
 

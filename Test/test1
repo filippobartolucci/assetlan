@@ -1,10 +1,8 @@
 int a;
 
-bool f()[]{
-    if (true){
-        return true;
-    }else{
-        return 1;
-    }
+void f()[asset a, asset b]{
+    a -o b;
+    f()[b,a];
 }
-f()[]
+f()[1,1]
+
