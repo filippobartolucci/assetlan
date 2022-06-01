@@ -1,8 +1,8 @@
-int a;
-
-void f()[asset a, asset b]{
-    a -o b;
-    f()[b,a];
+void main()[asset x]{
+print x;
+transfer x;
 }
-f()[1,1]
+main()[9]
+
+
 

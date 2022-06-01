@@ -2,6 +2,7 @@ package Utils;
 
 public enum ExitCode{
 	SUCCESS,
+	LEXER_ERROR,
 	PARSER_ERROR,
 	SEMANTIC_ERROR,
 	RUNTIME_ERROR,

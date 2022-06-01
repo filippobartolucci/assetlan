@@ -61,10 +61,22 @@ public class ProgramNode implements Node {
 	@Override
 	public String codeGeneration() {
 		StringBuilder out = new StringBuilder();
+
+		out.append("push 0 \n");
+		out.append("mv $sp $fp //Load new $fp\n");
+
 		for (Node f : fields) out.append(f.codeGeneration());
 		for (Node a : assets) out.append(a.codeGeneration());
+
+		out.append(initcallnode.codeGeneration());
+
+		out.append("halt\n");
+
+
 		for (Node f : functions) out.append(f.codeGeneration());
-		if (initcallnode != null) out.append(initcallnode.codeGeneration());
+
+
+
 		return out.toString();
 	}
 

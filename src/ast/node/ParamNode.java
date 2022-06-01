@@ -26,7 +26,7 @@ public class ParamNode implements Node {
      */
     public ArrayList<SemanticError> checkSemantics(GammaEnv env){
         ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
-        STentry entry = new STentry(env.getNestingLevel(),-1,this);
+        STentry entry = new STentry(env.getNestingLevel(), env.decOffset(1), this);
         SemanticError error=env.addDecl(id, entry);
 
         // Check if type == null

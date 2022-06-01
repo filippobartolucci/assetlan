@@ -1,8 +1,15 @@
+import Interpreter.Lexer.SVMLexer;
+import Interpreter.Parser.SVMParser;
+import Interpreter.SVM;
+import Interpreter.ast.Instruction;
+import Interpreter.ast.SVMVisitorImpl;
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
 import Semantic.SemanticError;
 import ast.AssetLanVisitorImpl;
 import ast.node.Node;
+import org.antlr.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import java.io.*;
@@ -10,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import Semantic.*;
 import Utils.*;
+import Interpreter.*;
 
 
 public class main {
@@ -58,44 +66,6 @@ public class main {
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nChecking effects...");
 
 
-            /* Prova max SigmaEnv
-
-            SigmaEnv env1 = new SigmaEnv();
-            SigmaEnv env2 = new SigmaEnv();
-
-            env1.newEmptyScope();
-            env2.newEmptyScope();
-
-            env1.addDecl("x",new EffectEntry());
-            env2.addDecl("x",new EffectEntry());
-
-            env1.addDecl("y",new EffectEntry());
-            env2.addDecl("y",new EffectEntry());
-
-            env1.newEmptyScope();
-            env2.newEmptyScope();
-
-            env1.addDecl("z",new EffectEntry());
-            env2.addDecl("z",new EffectEntry());
-
-            env1.addDecl("w",new EffectEntry());
-            env2.addDecl("w",new EffectEntry());
-
-            env1.lookup("x").setTrue();
-            env2.lookup("y").setTrue();
-
-            env1.lookup("z").setTrue();
-            env2.lookup("w").setTrue();
-
-            System.out.println("Env1\n" + env1.toPrint());
-            System.out.println("\nEnv2\n" + env2.toPrint());
-
-            env1.max(env2);
-            System.out.println("\nEnv1 Max\n" + env1.toPrint());
-
-            */
-
-
             SigmaEnv s_env = new SigmaEnv();
             ast.checkEffects(s_env);
             s_errors = s_env.getErrors();
@@ -109,11 +79,10 @@ public class main {
             System.out.println("Effects analysis successful! -> Liquidity is respected.\n\nCode generation...");
 
             String bytecode = ast.codeGeneration();
-            System.out.println("Code generation successful!\n\nBytecode:\n" + bytecode);
+            System.out.println("Code generation successful!\n");
 
-
+            Interpreter.run(bytecode);
             System.exit(ExitCode.SUCCESS.ordinal());
-
 
         }catch (Exception exc) {
             System.err.println(exc.getMessage());

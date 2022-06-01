@@ -31,7 +31,7 @@ public class AssetNode implements Node{
 	 * @return the semantic errors
 	 */
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
-		STentry entry = new STentry(env.getNestingLevel(), -1, this);
+		STentry entry = new STentry(env.getNestingLevel(), env.decOffset(1), this);
 		ArrayList<SemanticError> errors;
 		errors = new ArrayList<SemanticError>();
 

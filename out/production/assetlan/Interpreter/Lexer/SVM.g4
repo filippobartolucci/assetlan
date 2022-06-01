@@ -46,6 +46,7 @@ instruction:
       | JR r1=REGISTER
 	  | PRINT r1=REGISTER
 	  | PRINT
+	  | TRANSFER r1=REGISTER
 	  | HALT
 	  | ADDRESS // fake production that allows us to work with addresses as instructions while resolving labels
 	  | l=LABEL COL
@@ -86,7 +87,7 @@ JR	     : 'jr' ;	// jump to ra
 PRINT	 : 'print' ;	// print top of stack
 LOAD	 : 'li' ;	// loads an integer in the register
 HALT	 : 'halt' ;	// stop execution
-
+TRANSFER : 'transfer' ;	// transfer control to another process
 COL	     : ':' ;
 LPAR	 : '(' ;
 RPAR	 : ')' ;

@@ -1,9 +1,8 @@
 package ast.node;
 
 import Semantic.*;
+import Utils.LabelManager;
 import Utils.TypeValue;
-import ast.node.statement.CallNode;
-
 import java.util.ArrayList;
 
 
@@ -18,8 +17,9 @@ public class FunctionNode implements Node {
 	private final ArrayList<Node> aparams;
 	private final ArrayList<Node> body_params; // param inside function
 	private final ArrayList<Node> statements;
-
-	private ArrayList<Node> assets;
+	private final ArrayList<Node> assets;
+	private final String f_label;
+	private final String end_label;
 
 
 
@@ -31,6 +31,8 @@ public class FunctionNode implements Node {
 		this.body_params = body_params;
 		this.statements = statements;
 		this.assets = new ArrayList<>();
+		this.f_label = LabelManager.getFreshFunLabel();
+		this.end_label = LabelManager.getEndFreshFunLabel();
 	}
 
 	public FunctionNode(FunctionNode f){
@@ -41,6 +43,8 @@ public class FunctionNode implements Node {
 		this.body_params = f.body_params;
 		this.statements = f.statements;
 		this.assets = f.assets;
+		this.f_label = f.f_label;
+		this.end_label = f.end_label;
 	}
 
 	/**
@@ -49,7 +53,7 @@ public class FunctionNode implements Node {
 	 * @return the semantic errors
 	 */
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
-		STentry entry = new STentry(env.getNestingLevel(),-1,this);
+		STentry entry = new STentry(env.getNestingLevel(), env.decOffset(1), this);
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 		SemanticError f_error = env.addDecl(id,entry);
@@ -112,33 +116,8 @@ public class FunctionNode implements Node {
 	 * Function declaration has no effects
 	 */
 	public SigmaEnv checkEffects(SigmaEnv env) {
-		env.addDecl(id,new EffectEntry());
+		//env.addDecl(id,new EffectEntry());
 		return env;
-	}
-
-	public String codeGeneration() {
-		return null;
-	}
-
-	public String toPrint(String indent) {
-		StringBuilder s = new StringBuilder(indent + "FunctionNode\n");
-
-		s.append(indent).append("\tid: ").append(id).append("\n");
-		s.append(indent).append("\ttype: ").append(type.toPrint(" ")).append("\n");
-		s.append(indent).append("\tParams: \n");
-
-		for (Node n : params) s.append(n.toPrint(indent + "\t\t"));
-		s.append(indent).append("\tAparams: \n");
-
-		for (Node n : aparams) s.append(n.toPrint(indent + "\t\t"));
-		s.append(indent).append("\tBody Params: \n");
-
-		for (Node n : body_params) s.append(n.toPrint(indent + "\t\t"));
-		s.append(indent).append("\tStatements: \n");
-
-		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
-
-		return s.toString();
 	}
 
 	/**
@@ -189,6 +168,54 @@ public class FunctionNode implements Node {
 		return env;
 	}
 
+	public String codeGeneration() {
+		StringBuilder out = new StringBuilder();
+
+
+		out.append(f_label).append(": //" + this.id + "\n");
+		out.append("mv $sp $fp\n");
+		out.append("push $ra\n");
+
+		for (Node f:body_params) {
+			out.append(f.codeGeneration());
+		}
+
+		for (Node s:statements) {
+			out.append(s.codeGeneration());
+		}
+
+		int parameter_size = params.size() + assets.size();
+
+		out.append("lw $a0 0($sp)\n");
+		out.append("addi $sp $sp ").append(parameter_size).append("\n");
+		out.append("lw $fp 0($fp)\n");
+		out.append("pop\n");
+		out.append("jr $ra\n");
+
+		return out.toString();
+	}
+
+	public String toPrint(String indent) {
+		StringBuilder s = new StringBuilder(indent + "FunctionNode\n");
+
+		s.append(indent).append("\tid: ").append(id).append("\n");
+		s.append(indent).append("\ttype: ").append(type.toPrint(" ")).append("\n");
+		s.append(indent).append("\tParams: \n");
+
+		for (Node n : params) s.append(n.toPrint(indent + "\t\t"));
+		s.append(indent).append("\tAparams: \n");
+
+		for (Node n : aparams) s.append(n.toPrint(indent + "\t\t"));
+		s.append(indent).append("\tBody Params: \n");
+
+		for (Node n : body_params) s.append(n.toPrint(indent + "\t\t"));
+		s.append(indent).append("\tStatements: \n");
+
+		for (Node n : statements) s.append(n.toPrint(indent + "\t\t"));
+
+		return s.toString();
+	}
+
 	/**
 	 * @return the list of param of this function
 	 */
@@ -208,6 +235,10 @@ public class FunctionNode implements Node {
 	 */
 	public TypeNode getType(){
 		return (TypeNode) type;
+	}
+
+	public String getLabel(){
+		return this.f_label;
 	}
 
 }

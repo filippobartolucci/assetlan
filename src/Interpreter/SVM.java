@@ -23,6 +23,8 @@ public class SVM {
     private int al;
     private int bsp = MEMORY_SIZE;
 
+    private int wallet = 0;
+
     private final int[] a = new int[10];
     //private final int[] r = new int[10];
 
@@ -53,6 +55,7 @@ public class SVM {
                             else
                                 push(Integer.parseInt(arg1));
                             break;
+
                         case SVMParser.POP:
                             if (arg1 != null && isRegister(arg1))
                                 regStore(arg1, pop());
@@ -63,6 +66,7 @@ public class SVM {
                         case SVMParser.ADD:
                             sum(arg1, regRead(arg2), regRead(arg3));
                             break;
+
                         case SVMParser.ADDI:
                             value = Integer.parseInt(arg3);
                             sum(arg1, regRead(arg2), value);
@@ -71,6 +75,7 @@ public class SVM {
                         case SVMParser.SUB:
                             sub(arg1, regRead(arg2), regRead(arg3));
                             break;
+
                         case SVMParser.SUBI:
                             value = Integer.parseInt(arg3);
                             sub(arg1, regRead(arg2), value);
@@ -79,6 +84,7 @@ public class SVM {
                         case SVMParser.MULT:
                             multiplication(arg1, regRead(arg2), regRead(arg3));
                             break;
+
                         case SVMParser.MULTI: //Also used for negate (*-1)
                             value = Integer.parseInt(arg3);
                             multiplication(arg1, regRead(arg2), value);
@@ -88,6 +94,7 @@ public class SVM {
                             value = regRead(arg3);
                             division(arg1,regRead(arg2),value);
                             break;
+
                         case SVMParser.DIVI:
                             value = Integer.parseInt(arg3);
                             division(arg1,regRead(arg2),value);
@@ -98,15 +105,18 @@ public class SVM {
                             int addressStoreWord = offset + regRead(arg3);
                             memory.write(addressStoreWord, regRead(arg1));
                             break;
+
                         case SVMParser.LOAD:
                             value = Integer.parseInt(arg2);
                             regStore(arg1,value);
                             break;
+
                         case SVMParser.LOADW:
                             offset = Integer.parseInt(arg2);
                             address = offset + regRead(arg3);
                             regStore(arg1, memory.read(address));
                             break;
+
                         case SVMParser.MOVE:
                             value = regRead(arg1);
                             regStore(arg2, value);
@@ -116,13 +126,13 @@ public class SVM {
                             address = Integer.parseInt(code[ip].getArg1());
                             ip = address;
                             break;
+
                         case SVMParser.BCOND:
                             address = Integer.parseInt(code[ip].getArg1());
                             ip++;
                             value = regRead(bytecode.getArg1());
                             if (value!=0) ip = address;
                             break;
-
                         case SVMParser.JAL:
                             regStore("$ra", ip);
                             address = Integer.parseInt(code[ip].getArg1());
@@ -131,11 +141,9 @@ public class SVM {
                         case SVMParser.JR:
                             ip = regRead(arg1);
                             break;
-
                         case SVMParser.EQ:
                             regStore(arg1, regRead(arg2)==regRead(arg3)?1:0);
                             break;
-
                         case SVMParser.LE:
                             regStore(arg1, regRead(arg2)<=regRead(arg3)?1:0);
                             break;
@@ -164,7 +172,13 @@ public class SVM {
                                 System.out.println( "Print: "+ regRead(arg1));
                             }
                             break;
+
+                        case SVMParser.TRANSFER:
+                            wallet += regRead(arg1);
+                            break;
+
                         case SVMParser.HALT:
+                            System.out.println("Transfer value: " + wallet);
                             System.out.println("Halting program...");
                             //printStack(20);
                             //System.out.println("\nResult: " + memory.read(sp) + "\n");
@@ -173,7 +187,7 @@ public class SVM {
                     }
                 } catch (Exception e) {
                     System.out.println("Program stopped at program counter: "+ip);
-                    /*
+
                     String toPrint = "";
                     int cont = 0;
                     for (Instruction ins:code){
@@ -193,7 +207,8 @@ public class SVM {
                         }
                         cont++;
                     }
-                    */
+                    System.err.println(toPrint);
+
 
                     e.printStackTrace();
                     //printStack(30);

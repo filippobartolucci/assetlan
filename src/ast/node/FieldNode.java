@@ -8,6 +8,8 @@ public class FieldNode implements Node{
 	private final String id;
 	private final Node type;
 	private final Node exp;
+	private STentry entry = null;
+	private int currentNL = 0;
 
 	/**
 	 * Constructor
@@ -26,7 +28,7 @@ public class FieldNode implements Node{
 	 */
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 
-		int offset = env.decOffset(2);
+		int offset = env.decOffset(1);
 		STentry entry = new STentry(env.getNestingLevel(), offset, this);
 
 		ArrayList<SemanticError> errors = new ArrayList<>();
@@ -41,6 +43,8 @@ public class FieldNode implements Node{
 		}
 
 		SemanticError error=env.addDecl(id, entry);
+		this.entry = entry;
+		this.currentNL = env.getNestingLevel();
 
 		if(error!=null) {
 			errors.add(error);
@@ -82,15 +86,16 @@ public class FieldNode implements Node{
 	 * Generate code for this node
 	 */
 	public String codeGeneration(){
-		StringBuilder builder = new StringBuilder();
-		if (exp != null) {
-			builder.append(exp.codeGeneration());
-			builder.append("push $a0\n");
-		} else {
-			builder.append("addi $sp -1\n");
-		}
+		StringBuilder out = new StringBuilder();
 
-		return builder.toString();
+		out.append(exp.codeGeneration());
+		out.append("lw $al 0($fp) //loads in $al value of $fp");
+		out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL - this.entry.getNestinglevel())));
+
+		int offsetWithAL = entry.getOffset();
+		out.append("sw $a0 ").append(offsetWithAL).append("($al) ; //loads in $a0 the value in ").append(id).append("\n");
+
+		return out.toString();
 	}
 
 	/**

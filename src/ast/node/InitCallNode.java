@@ -15,6 +15,8 @@ public class InitCallNode implements Node{
     ArrayList<Node> aexp;
     private STentry entry;
 
+    private int currentNL;
+
     /**
      * Contstructor
      */
@@ -23,6 +25,11 @@ public class InitCallNode implements Node{
         this.exp = expnodes;
         this.aexp = aexpnodes;
         this.entry = null;
+        this.currentNL = 0;
+    }
+
+    public InitCallNode() {
+        this.id = "";
     }
 
 
@@ -48,6 +55,7 @@ public class InitCallNode implements Node{
         }
 
         this.entry = f_entry;
+        this.currentNL = env.getNestingLevel();
 
         return errors;
     }
@@ -135,7 +143,26 @@ public class InitCallNode implements Node{
      * Generate code for this node
      */
     public String codeGeneration(){
-        return "";
+        StringBuilder out = new StringBuilder();
+        out.append("push $fp\n");
+
+        for (Node n:exp){
+            out.append(n.codeGeneration());
+            out.append("push $a0\n");
+        }
+
+        for (Node a:aexp){
+            out.append(a.codeGeneration());
+            out.append("push $a0\n");
+        }
+
+        out.append("mv $fp $al //put in $al actual fp\n");
+        out.append("push $al\n");
+        out.append("jal ").append(getLabel()).append(" //jump to start of function and put in $ra next instruction\n");
+        // TODO mettere hashmap label se c'è tempo
+
+        return out.toString();
+
     }
 
     /**
@@ -158,6 +185,11 @@ public class InitCallNode implements Node{
         }else s.append(indent).append("\tAExp: no aexp\n");
 
         return s.toString();
+    }
+
+    public String getLabel(){
+        Node f = entry.getEntry();
+        return ((FunctionNode) f).getLabel();
     }
 }
 

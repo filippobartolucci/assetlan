@@ -15,6 +15,8 @@ public class TransferNode implements Node {
     private final String id;
     private STentry entry;
 
+    private int currentNL;
+
 
     /*
     Constructor
@@ -22,6 +24,7 @@ public class TransferNode implements Node {
     public TransferNode(String id) {
         this.id = id;
         this.entry = null;
+        this.currentNL=0;
     }
 
     /**
@@ -36,6 +39,7 @@ public class TransferNode implements Node {
             errors.add(new SemanticError("Asset " + id + " not declared"));
         }
         this.entry = entry;
+        this.currentNL = env.getNestingLevel();
 
         return errors;
     }
@@ -59,7 +63,22 @@ public class TransferNode implements Node {
      * Generate code for this node
      */
     public String codeGeneration(){
-        return "";
+        StringBuilder out = new StringBuilder();
+
+        // Loading in $a0 the value of asset
+        out.append("lw $al 0($fp) //put in $al actual fp\n");
+        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry.getNestinglevel()));
+        int offsetWithAL = entry.getOffset();
+        out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(id).append("\n");
+
+        // Transferring value to the wallet
+        out.append("transfer $a0\n");
+
+        // Emptying the asset...
+        out.append("li $a0 0\n");
+        out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+
+        return out.toString();
     }
 
     /**

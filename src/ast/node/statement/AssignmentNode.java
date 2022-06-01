@@ -87,7 +87,6 @@ public class AssignmentNode implements Node {
         * */
         StringBuilder out = new StringBuilder();
 
-
         out.append(exp.codeGeneration());
         out.append("lw $al 0($fp) //loads in $al value of $fp");
         out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL - this.entry.getNestinglevel())));
