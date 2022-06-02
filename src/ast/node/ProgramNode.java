@@ -20,71 +20,6 @@ public class ProgramNode implements Node {
 		this.initcallnode = initcallnode;
 	}
 
-	@Override
-	public String toPrint(String indent) {
-		StringBuilder s = new StringBuilder();
-		s.append("------------------------------------\n");
-		for (Node f : fields) s.append(f.toPrint(indent + "\t"));
-		s.append("------------------------------------\n");
-		for (Node a : assets) s.append(a.toPrint(indent + "\t"));
-		s.append("------------------------------------\n");
-		for (Node f : functions) s.append(f.toPrint(indent + "\t"));
-		s.append("------------------------------------\n");
-		if (initcallnode != null) {
-			s.append(initcallnode.toPrint(indent + "\t"));
-		}
-
-		return "\n---BEGINNING AST---\nProgram\n" + s +"---ENDING AST---";
-	}
-
-	@Override
-	public Node typeCheck() {
-		Node type = null;
-		try{
-			for (Node f : fields){
-				f.typeCheck();
-			}
-			for (Node a : assets){
-				a.typeCheck();
-			}
-			for (Node f : functions){
-				f.typeCheck();
-			}
-			type = initcallnode.typeCheck();
-		}catch (Exception e){
-			System.err.println(e.getMessage());
-			System.exit(ExitCode.SEMANTIC_ERROR.ordinal());
-		}
-		return type;
-	}
-
-	@Override
-	public String codeGeneration() {
-		StringBuilder out = new StringBuilder();
-
-		for (int i = assets.size()-1; i>=0; i--){
-			out.append(assets.get(i).codeGeneration());
-		}
-
-		for (int i = fields.size()-1; i>=0; i--){
-			out.append(fields.get(i).codeGeneration());
-		}
-
-		out.append("push 0\n");
-		out.append("mv $sp $fp //Load new $fp\n");
-
-		out.append(initcallnode.codeGeneration());
-
-		out.append("halt\n\n");
-
-		out.append("//Functions\n\n");
-		for (Node f : functions) out.append(f.codeGeneration());
-
-
-
-		return out.toString();
-	}
-
 	/**
 	 * Check semantic errors for this node in a given environment
 	 * @param env the environment
@@ -106,10 +41,31 @@ public class ProgramNode implements Node {
 		for (Node f : functions) // Func Dec
 			errors.addAll(f.checkSemantics(env)); // \gamma' = \gamma U {f: t, x1: t1, ..., xn: t1, a1: asset, ..., an: asset}
 
-		errors.addAll(initcallnode.checkSemantics(env)); 
+		errors.addAll(initcallnode.checkSemantics(env));
 		env.exitScope(); //  [ ]
 
 		return errors;
+	}
+
+	@Override
+	public Node typeCheck() {
+		Node type = null;
+		try{
+			for (Node f : fields){
+				f.typeCheck();
+			}
+			for (Node a : assets){
+				a.typeCheck();
+			}
+			for (Node f : functions){
+				f.typeCheck();
+			}
+			type = initcallnode.typeCheck();
+		}catch (Exception e){ // catch for type error
+			System.err.println(e.getMessage());
+			System.exit(ExitCode.SEMANTIC_ERROR.ordinal());
+		}
+		return type;
 	}
 
 	@Override
@@ -124,23 +80,62 @@ public class ProgramNode implements Node {
 			env = a.checkEffects(env);
 		}
 
-		/* Nothing to do here...
-		for (Node f : functions){
-			env = f.checkEffects(env);
-		}
-		*/
+		// checkEffects of functions is empty, function effects are evaluated in the function call
 
+		// Init...
 		initcallnode.checkEffects(env);
 
-		for (Node n : assets) {
-			if (n instanceof AssetNode a) {
-				if (env.lookup(a.toString()).getStatus()) {
-					env.addError(new SemanticError("Liquidity not respected -> "+ a+" is not empty"));
-				}
+		// Checking liquidity, every global asset must be equal to 0;
+		for (Node a : assets) { // lookup for each asset
+			if (env.lookup(a.toString()).getStatus()) {
+				env.addError(new SemanticError("Liquidity not respected -> "+ a+" is not empty"));
 			}
 		}
 		env.exitScope(); //  [ ]
 		return env;
+	}
+
+	@Override
+	public String codeGeneration() {
+		StringBuilder out = new StringBuilder();
+
+		out.append("//BEGIN PROGRAM\n");
+		for (int i = assets.size()-1; i>=0; i--){
+			out.append(assets.get(i).codeGeneration());
+		}
+
+		for (int i = fields.size()-1; i>=0; i--){
+			out.append(fields.get(i).codeGeneration());
+		}
+
+		out.append("push 0\n");
+		out.append("mv $sp $fp //Load new $fp\n");
+		out.append(initcallnode.codeGeneration());
+		out.append("halt\n\n");
+
+		out.append("//Functions\n");
+		for (Node f : functions) out.append(f.codeGeneration());
+
+
+
+		return out.toString();
+	}
+
+	@Override
+	public String toPrint(String indent) {
+		StringBuilder s = new StringBuilder();
+		s.append("------------------------------------\n");
+		for (Node f : fields) s.append(f.toPrint(indent + "\t"));
+		s.append("------------------------------------\n");
+		for (Node a : assets) s.append(a.toPrint(indent + "\t"));
+		s.append("------------------------------------\n");
+		for (Node f : functions) s.append(f.toPrint(indent + "\t"));
+		s.append("------------------------------------\n");
+		if (initcallnode != null) {
+			s.append(initcallnode.toPrint(indent + "\t"));
+		}
+
+		return "\n---BEGINNING AST---\nProgram\n" + s +"---ENDING AST---";
 	}
 	
 }

@@ -18,11 +18,13 @@ public class BinExpNode extends ExpNode {
 	| left=exp op='&&'                      right=exp   #binExp
 	| left=exp op='||'                      right=exp   #binExp
 	*/
-
 	private final Node left;
 	private final String op;
 	private final Node right;
 
+	/*
+	 * Constructor
+	 */
 	public BinExpNode(Node left, String op, Node right) {
 		super();
 		this.left = left;
@@ -41,15 +43,6 @@ public class BinExpNode extends ExpNode {
 		errors.addAll(left.checkSemantics(env));
 		errors.addAll(right.checkSemantics(env));
 		return errors;
-	}
-
-	@Override
-	public String toPrint(String indent) {
-		String res = indent + "BinExpNode\t";
-		res += left.toPrint(indent + "\t\t");
-		res += "\n" + indent + "\t\tOP: " + op + "\t";
-		res += right.toPrint(indent + "\t\t");
-		return res;
 	}
 
 	public Node typeCheck() {
@@ -77,23 +70,17 @@ public class BinExpNode extends ExpNode {
 		return new TypeNode(TypeValue.INT);
 	}
 
-	@Override
-	public SigmaEnv checkEffects(SigmaEnv env) {
-		left.checkEffects(env);
-		right.checkEffects(env);
-		return env;
-	}
-
 	public String codeGeneration() {
 		StringBuilder out = new StringBuilder();
 
-		String left_generated = left.codeGeneration();
+		String left_generated = left.codeGeneration(); // Generating code for exp1
 		out.append(left_generated);
-		out.append("push $a0 // push e1\n");
-		String right_generated = right.codeGeneration();
+		out.append("push $a0\n");
+		String right_generated = right.codeGeneration(); // Generating code for exp2
 		out.append(right_generated);
-		out.append("lw $a2 0($sp) //take e2 and $a2 take e1\n");
-		out.append("pop // remove e1 from the stack to preserve stack\n");
+		// $a2 is used as a temporary register
+		out.append("lw $a2 0($sp)\n"); // $a2 <- top
+		out.append("pop\n"); // pop e1 to preserve stack
 
 		switch (op) {
 			case "+":{
@@ -148,6 +135,22 @@ public class BinExpNode extends ExpNode {
 			}
 		}
 		return out.toString();
+	}
+
+	@Override
+	public String toPrint(String indent) {
+		String res = indent + "BinExpNode\t";
+		res += left.toPrint(indent + "\t\t");
+		res += "\n" + indent + "\t\tOP: " + op + "\t";
+		res += right.toPrint(indent + "\t\t");
+		return res;
+	}
+
+	@Override
+	public SigmaEnv checkEffects(SigmaEnv env) {
+		left.checkEffects(env);
+		right.checkEffects(env);
+		return env;
 	}
 
 	@Override

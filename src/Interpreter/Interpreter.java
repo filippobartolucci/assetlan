@@ -42,12 +42,9 @@ public class Interpreter{
     }
 
     public static void saveCode(String bytecode) throws IOException {
-        String fileAsm = "generatedCode.asm";
+        String fileAsm = "./Test/bytecode.asm";
         BufferedWriter out = new BufferedWriter(new FileWriter(fileAsm));
         out.write(bytecode);
         out.close();
-
-        SVMLexer lexerASM = new SVMLexer(CharStreams.fromFileName(fileAsm));
-
     }
 }

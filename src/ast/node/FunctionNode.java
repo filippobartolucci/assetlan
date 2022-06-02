@@ -35,18 +35,6 @@ public class FunctionNode implements Node {
 		this.end_label = LabelManager.getEndFreshFunLabel();
 	}
 
-	public FunctionNode(FunctionNode f){
-		this.id = f.id;
-		this.type = f.type;
-		this.params = f.params;
-		this.aparams = f.aparams;
-		this.body_params = f.body_params;
-		this.statements = f.statements;
-		this.assets = f.assets;
-		this.f_label = f.f_label;
-		this.end_label = f.end_label;
-	}
-
 	/**
 	 * Check semantic errors for this node in a given environment
 	 * @param env the environment
@@ -118,7 +106,8 @@ public class FunctionNode implements Node {
 	 * Function declaration has no effects
 	 */
 	public SigmaEnv checkEffects(SigmaEnv env) {
-		//env.addDecl(id,new EffectEntry());
+		// Function for effect is valuated in the call
+		// Never called.
 		return env;
 	}
 
@@ -129,6 +118,8 @@ public class FunctionNode implements Node {
 		// Entering new scope...
 		env.newEmptyScope();
 
+		// Saving last function called name
+		// Used to check recursive calls
 		env.addFunctionCall(this.id);
 
 		// Adding each parameter to SigmaEnv
@@ -173,13 +164,9 @@ public class FunctionNode implements Node {
 	public String codeGeneration() {
 		StringBuilder out = new StringBuilder();
 
-		out.append(f_label).append(": //" + this.id + "\n");
+		out.append(f_label).append(": //").append(this.id).append("\n");
 		out.append("mv $sp $fp\n");
 		out.append("push $ra\n");
-
-		for (Node f:body_params) {
-			//out.append(f.codeGeneration());
-		}
 
 		for (Node s:statements) {
 			out.append(s.codeGeneration());
@@ -223,40 +210,15 @@ public class FunctionNode implements Node {
 		return s.toString();
 	}
 
-	/**
-	 * @return the list of param of this function
+	/*
+		Getters
 	 */
-	public ArrayList<Node> getParams(){
-		return params;
-	}
-
-	/**
-	 * @return the list of asset of this function
-	 */
-	public ArrayList<Node> getAparams(){
-		return aparams;
-	}
-
-	public ArrayList<Node> getBody_params(){
-		return body_params;
-	}
-
-	/**
-	 * @return the type of the function
-	 */
-	public TypeNode getType(){
-		return (TypeNode) type;
-	}
-
-	public String getLabel(){
-		return this.f_label;
-	}
-
-	public String getEndLabel(){
-		return this.end_label;
-	}
-
-
+	public ArrayList<Node> getParams(){return params;}
+	public ArrayList<Node> getAparams(){return aparams;}
+	public ArrayList<Node> getBodyParams(){return body_params;}
+	public TypeNode getType(){return (TypeNode) type;}
+	public String getLabel(){return this.f_label;}
+	public String getEndLabel(){return this.end_label;}
 
 }
 

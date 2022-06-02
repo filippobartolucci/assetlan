@@ -9,11 +9,9 @@ import ast.node.Node;
 import ast.node.TypeNode;
 import ast.node.exp.ExpNode;
 import java.util.ArrayList;
-import Utils.LabelManager;
 
 public class RetNode implements Node {
     private final ExpNode exp;
-    private int currentNL;
     private FunctionNode parent_f;
     /*
      *Constructor
@@ -31,7 +29,6 @@ public class RetNode implements Node {
         ArrayList<SemanticError> errors = new ArrayList<>();
         if(exp != null){
             errors.addAll(exp.checkSemantics(env));
-            currentNL = env.getNestingLevel();
         }
         this.parent_f = env.getLastFunction();
         return errors;

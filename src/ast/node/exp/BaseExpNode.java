@@ -1,7 +1,5 @@
 package ast.node.exp;
 
-import ast.node.Node;
-
 public class BaseExpNode extends ExpNode{
     /*
      * Constructor

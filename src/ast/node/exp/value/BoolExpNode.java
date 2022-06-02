@@ -1,6 +1,4 @@
 package ast.node.exp.value;
-
-import Semantic.GammaEnv;
 import Semantic.SemanticError;
 import Semantic.SigmaEnv;
 import Utils.TypeValue;
@@ -26,10 +24,9 @@ public class BoolExpNode extends ExpNode {
 
 	/**
      * Check semantic errors for this node in a given environment
-     * @param env the environment
      * @return the semantic errors
      */
-    public ArrayList<SemanticError> checkSemantics(SigmaEnv env){
+    public ArrayList<SemanticError> checkSemantics(){
         return new ArrayList<>();
     }
 
@@ -38,10 +35,6 @@ public class BoolExpNode extends ExpNode {
      */
     public Node typeCheck(){
         return new TypeNode(TypeValue.BOOL);
-    }
-
-    public SigmaEnv checkEffects(SigmaEnv env){
-        return env;
     }
 
     /**
@@ -56,6 +49,10 @@ public class BoolExpNode extends ExpNode {
      */
     public String toPrint(String indent) {
         return "\n"+indent + "Bool " + bool;
+    }
+
+    public SigmaEnv checkEffects(SigmaEnv env){
+        return env;
     }
 
     @Override

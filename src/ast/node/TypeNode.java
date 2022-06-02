@@ -5,10 +5,7 @@ import Semantic.SemanticError;
 import Semantic.SigmaEnv;
 import Utils.TypeValue;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-import static Utils.TypeValue.INT;
 
 public class TypeNode implements Node{
     private final TypeValue type;
@@ -18,16 +15,11 @@ public class TypeNode implements Node{
     */
     public TypeNode(String type){
 
-        if (type.equals("int")){
-            this.type = TypeValue.INT;
-        }
-        else if (type.equals("bool")){
-            this.type = TypeValue.BOOL;
-        }
-        else if (type.equals("asset")){
-            this.type = TypeValue.ASSET;
-        }else {
-            this.type = TypeValue.VOID;
+        switch (type) {
+            case "int" -> this.type = TypeValue.INT;
+            case "bool" -> this.type = TypeValue.BOOL;
+            case "asset" -> this.type = TypeValue.ASSET;
+            default -> this.type = TypeValue.VOID;
         }
     }
 

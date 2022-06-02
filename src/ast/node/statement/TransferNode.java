@@ -75,7 +75,7 @@ public class TransferNode implements Node {
         out.append("transfer $a0\n");
 
         // Emptying the asset...
-        out.append("li $a0 0\n");
+        out.append("li $a0 0 // Emptying the asset...\n");
         out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
 
         return out.toString();

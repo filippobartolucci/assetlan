@@ -1,6 +1,7 @@
 package ast.node;
 
 import Semantic.*;
+import Utils.TypeValue;
 
 import java.util.ArrayList;
 
@@ -25,12 +26,12 @@ public class ParamNode implements Node {
      * @return the semantic errors
      */
     public ArrayList<SemanticError> checkSemantics(GammaEnv env){
-        ArrayList<SemanticError> errors = new ArrayList<SemanticError>();
+        ArrayList<SemanticError> errors = new ArrayList<>();
         STentry entry = new STentry(env.getNestingLevel(), env.decOffset(1), this);
         SemanticError error=env.addDecl(id, entry);
 
         // Check if type == null
-        if("void".equals(((TypeNode)type).getType())){
+        if((new TypeNode(TypeValue.VOID)).equals((type))){
             errors.add(new SemanticError("Variable " + id + " can't have void type"));
         }
 

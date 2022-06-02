@@ -8,13 +8,9 @@ import java.util.ArrayList;
 
 public class AssetNode implements Node{
 	private final String id;
-	private final int value;
-	private STentry entry;
 
 	public AssetNode(String id){
 		this.id = id;
-		this.value = 0;
-		this.entry = null;
 	}
 
 	public Node typeCheck(){
@@ -22,12 +18,11 @@ public class AssetNode implements Node{
 	}
 
 	public String codeGeneration(){
-		StringBuilder out = new StringBuilder();
 
-		out.append("li $a0 0\n");
-		out.append("push $a0 \n");
-
-		return out.toString();
+		return """
+				li $a0 0
+				push $a0\s
+				""";
 	}
 
 	/**
@@ -38,13 +33,12 @@ public class AssetNode implements Node{
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env) {
 		STentry entry = new STentry(env.getNestingLevel(), env.decOffset(1), this);
 		ArrayList<SemanticError> errors;
-		errors = new ArrayList<SemanticError>();
+		errors = new ArrayList<>();
 
 		SemanticError err = env.addDecl(id, entry);
 		if (err != null) {
 			errors.add(err);
 		}
-		this.entry = entry;
 
 		return errors;
 

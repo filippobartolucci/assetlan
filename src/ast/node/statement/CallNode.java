@@ -105,19 +105,22 @@ public class CallNode implements Node {
      */
     public String codeGeneration(){
         StringBuilder out = new StringBuilder();
+
+        out.append("//Function ").append(id).append(" call\n");
         out.append("push $fp\n");
 
         ArrayList<Node> bodyParams = this.getBodyParams();
-
         // Push for body params
+        out.append("//Allocating space for ").append(bodyParams.size()).append(" body params\n");
         for (int i = bodyParams.size()-1; i>=0; i--){
             out.append(bodyParams.get(i).codeGeneration());
             out.append("push $a0 \n");
         }
 
+        out.append("//Allocating space for ").append(assets.size()).append(" assets\n");
         for (int i = assets.size()-1; i>=0; i--){
             STentry entry = assets.get(i);
-            out.append("mv $fp $al //put in $al actual fp\n");
+            out.append("mv $fp $al\n");
             out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry.getNestinglevel()));
             int offsetWithAL = entry.getOffset();
             out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(ids.get(i)).append("\n");
@@ -127,12 +130,13 @@ public class CallNode implements Node {
             out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
         }
 
+        out.append("//Allocating space for ").append(expressions.size()).append(" actual parameters\n");
         for (int i = expressions.size()-1; i>=0; i--){
             out.append(expressions.get(i).codeGeneration());
             out.append("push $a0 \n");
         }
 
-        out.append("mv $fp $al //put in $al actual fp\n");
+        out.append("mv $fp $al // calling function...\n");
         out.append("lw $al 0($al) //go up to chain\n".repeat(Math.max(0, currentNL - entry.getNestinglevel())));
         out.append("push $al\n");
         out.append("jal ").append(this.getLabel()).append("//jump to start of function and put in $ra next instruction\n");
@@ -165,7 +169,6 @@ public class CallNode implements Node {
         }
 
         FunctionNode called_function = (FunctionNode)this.entry.getEntry();
-
         // Moving values of assets in the function call
         //      def :f()[asset a]{}
         //      call :f()[b];
@@ -217,6 +220,6 @@ public class CallNode implements Node {
 
     public ArrayList<Node> getBodyParams(){
         Node f = entry.getEntry();
-        return ((FunctionNode) f).getBody_params();
+        return ((FunctionNode) f).getBodyParams();
     }
 }

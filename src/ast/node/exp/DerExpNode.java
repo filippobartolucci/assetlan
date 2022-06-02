@@ -73,7 +73,7 @@ public class DerExpNode extends ExpNode implements Node{
     public String codeGeneration() {
         StringBuilder out = new StringBuilder();
 
-        out.append("mv $fp $al //put in $al actual fp\n");
+        out.append("mv $fp $al // DerExpNode ").append(id).append("\n");
         out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry.getNestinglevel()));
         int offsetWithAL = entry.getOffset();
         out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(id).append("\n");

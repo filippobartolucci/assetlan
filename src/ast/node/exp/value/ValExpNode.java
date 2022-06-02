@@ -27,13 +27,9 @@ public class ValExpNode extends ExpNode {
 	}
 
 	/**
-	 * Generate code for this node
+	 * Type check
 	 */
 	public Node typeCheck() {return new TypeNode(TypeValue.INT);}
-
-	public SigmaEnv checkEffects(SigmaEnv env){
-		return env;
-	}
 
 	/**
 	 * Generate code for this node
@@ -46,6 +42,10 @@ public class ValExpNode extends ExpNode {
 	 * Print this node
 	 */
 	public String toPrint(String indent) {return "\n"+indent + "Value " + val;}
+
+	public SigmaEnv checkEffects(SigmaEnv env){
+		return env;
+	}
 
 	@Override
 	public int preEvaluation(){

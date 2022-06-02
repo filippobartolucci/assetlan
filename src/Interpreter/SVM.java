@@ -17,7 +17,7 @@ public class SVM {
 
     private int ip = 0;                 // instruction pointer, internal register, no write nor read
     private int sp = MEMORY_SIZE;       // stack pointer
-    private int hp = 0;                 // heap pointer read-only
+    private int hp = 0;                 // heap pointer read-only //TODO eliminabile
     private int fp = MEMORY_SIZE -1;    // frame pointer
     private int ra;
     private int al;
@@ -176,11 +176,8 @@ public class SVM {
                             wallet += regRead(arg1);
                             break;
                         case SVMParser.HALT:
-                            System.out.println("Wallet: " + wallet + "€");
+                            System.out.println("\nWallet: +" + wallet);
                             System.out.println("Halting program...");
-                            //printStack(20);
-                            //System.out.println("\nResult: " + memory.read(sp) + "\n");
-
                             return;
                     }
                 } catch (Exception e) {

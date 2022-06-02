@@ -5,7 +5,7 @@ public class LabelManager {
     private static int funLabelCount = 0;
 
     public static String getFreshLabel(String label_name) {
-        return "LABEL" + label_name + labelCount++;
+        return label_name + labelCount++;
     }
 
     public static String getFreshFunLabel() {

@@ -20,7 +20,7 @@ public class NotExpNode extends ExpNode {
 	}
 
 	public String codeGeneration() {
-		return exp.codeGeneration() + "not $a0 $a0\n";
+		return exp.codeGeneration() + "not $a0 $a0 //not\n";
 	}
 
 

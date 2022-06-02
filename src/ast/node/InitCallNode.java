@@ -15,17 +15,14 @@ public class InitCallNode implements Node{
     ArrayList<Node> aexp;
     private STentry entry;
 
-    private int currentNL;
-
     /**
-     * Contstructor
+     * Constructor
      */
     public InitCallNode(String id, ArrayList<Node> expnodes, ArrayList<Node> aexpnodes) {
         this.id = id;
         this.exp = expnodes;
         this.aexp = aexpnodes;
         this.entry = null;
-        this.currentNL = 0;
     }
 
     public InitCallNode() {
@@ -55,7 +52,6 @@ public class InitCallNode implements Node{
         }
 
         this.entry = f_entry;
-        this.currentNL = env.getNestingLevel();
 
         return errors;
     }
@@ -118,10 +114,10 @@ public class InitCallNode implements Node{
                 if (preEval<0){
                     throw new RuntimeException("asset expression cannot be less than 0");
                 }else{
-                    actualEffects.add(preEval==0 ? false : true);
+                    actualEffects.add(preEval != 0);
                 }
             }catch(RuntimeException ex){
-                System.err.println( "Effect errors found -> "+ ex.getMessage());
+                env.addError(new SemanticError( "Pre Evaluation in InitCall -> "+ ex.getMessage()));
                 return env;
             }
         }
@@ -168,7 +164,7 @@ public class InitCallNode implements Node{
 
         out.append("mv $fp $al //put in $al actual fp\n");
         out.append("push $al\n");
-        out.append("jal ").append(this.getLabel()).append(" //Initcall: jump to start of " + id +"\n");
+        out.append("jal ").append(this.getLabel()).append(" //Initcall: jump to start of ").append(id).append("\n");
 
         return out.toString();
 
@@ -203,7 +199,7 @@ public class InitCallNode implements Node{
 
     public ArrayList<Node> getBodyParams(){
         Node f = entry.getEntry();
-        return ((FunctionNode) f).getBody_params();
+        return ((FunctionNode) f).getBodyParams();
     }
 
 

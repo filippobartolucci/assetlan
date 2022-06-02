@@ -8,8 +8,6 @@ public class FieldNode implements Node{
 	private final String id;
 	private final Node type;
 	private final Node exp;
-	private STentry entry = null;
-	private int currentNL = 0;
 
 	/**
 	 * Constructor
@@ -43,8 +41,6 @@ public class FieldNode implements Node{
 		}
 
 		SemanticError error=env.addDecl(id, entry);
-		this.entry = entry;
-		this.currentNL = env.getNestingLevel();
 
 		if(error!=null) {
 			errors.add(error);
@@ -91,7 +87,7 @@ public class FieldNode implements Node{
 		if (exp!=null){
 			out.append(exp.codeGeneration());
 		}else{
-			out.append("li $a0 0");
+			out.append("li $a0 0\n");
 		}
 
 		out.append("push $a0 \n");

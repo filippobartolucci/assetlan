@@ -31,24 +31,27 @@ public class main {
 
             String file = args[0];
             if(!Paths.get(file).toFile().exists()) throw new FileNotFoundException("File: " + file + " not found.");
+
             // File found, continue with lexer and parser...
             System.out.println("File: \"" + file + "\" found.\n\nParsing...");
 
+            // Lexer and parser
             AssetLanLexer lexer = new AssetLanLexer(CharStreams.fromFileName(file));
             CommonTokenStream cts = new CommonTokenStream(lexer);
             AssetLanParser parser = new AssetLanParser(cts);
 
+            // Visiting the parse tree...
             AssetLanVisitorImpl visitor = new AssetLanVisitorImpl();
             Node ast = visitor.visitInit(parser.init());
 
             if (parser.getNumberOfSyntaxErrors()>0) {
                 System.err.println("\n" + parser.getNumberOfSyntaxErrors() + " Syntax errors found -> Compilation failed.");
-                // PARSER ERROR EXIT CODE
                 System.exit(ExitCode.PARSER_ERROR.ordinal());
             }
 
             System.out.println("Parsing successful!\n\nSemantic analysis...");
 
+            // Check errors for scope and undeclared variables
             GammaEnv env = new GammaEnv();
             ArrayList<SemanticError> s_errors;
             s_errors = ast.checkSemantics(env);
@@ -65,7 +68,6 @@ public class main {
             Node program_type = ast.typeCheck();;
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nChecking effects...");
 
-
             SigmaEnv s_env = new SigmaEnv();
             ast.checkEffects(s_env);
             s_errors = s_env.getErrors();
@@ -79,7 +81,7 @@ public class main {
             System.out.println("Effects analysis successful! -> Liquidity is respected.\n\nCode generation...");
 
             String bytecode = ast.codeGeneration();
-            System.out.println("Code generation successful!\n");
+            System.out.println("Code generation successful!\n\nLaunching interpreter...\n");
 
             Interpreter.run(bytecode);
             System.exit(ExitCode.SUCCESS.ordinal());

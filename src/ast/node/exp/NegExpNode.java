@@ -4,8 +4,6 @@ import Semantic.GammaEnv;
 import Semantic.SemanticError;
 import Utils.TypeValue;
 import ast.node.Node;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class NegExpNode extends ExpNode {
@@ -35,7 +33,7 @@ public class NegExpNode extends ExpNode {
      * Generate code for this node
      */
     public String codeGeneration(){
-        return exp.codeGeneration() + "multi $a0 $a0 -1\n";
+        return exp.codeGeneration() + "multi $a0 $a0 -1 //negate\n";
     }
 
     /**
@@ -47,7 +45,7 @@ public class NegExpNode extends ExpNode {
 
     @Override
     public int preEvaluation(){
-        return -((ExpNode)exp).preEvaluation();
+        return -(exp).preEvaluation();
     }
 
 }

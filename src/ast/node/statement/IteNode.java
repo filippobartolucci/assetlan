@@ -113,9 +113,11 @@ public class IteNode implements Node {
 
     public String codeGeneration() {
         StringBuilder out = new StringBuilder();
-        // TODO LABEL
+
         String lFalse = LabelManager.getFreshLabel("false");
         String lEnd = LabelManager.getFreshLabel("end");
+
+        out.append("//ite\n");
         out.append(exp.codeGeneration());
 
         out.append("bc $a0 ").append(lFalse).append("\n");
@@ -123,7 +125,7 @@ public class IteNode implements Node {
         for (Node s : thenb) {
             out.append(s.codeGeneration());
         }
-        out.append("b").append(" "+lEnd+"\n");
+        out.append("b").append(" ").append(lEnd).append("\n");
         out.append(lFalse).append(":\n");
         // Else Branch
         for (Node s : elseb) {

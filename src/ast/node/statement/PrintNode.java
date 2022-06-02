@@ -46,11 +46,6 @@ public class PrintNode implements Node {
 		return this.exp.codeGeneration() + "print $a0\n";
 	}
 
-	/**
-	 *
-	 * @param indent
-	 * @returns
-	 */
 	public String toPrint(String indent){
 		return indent + "PrintNode\n" +
 				indent + "  exp:" +
