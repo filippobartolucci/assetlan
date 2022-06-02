@@ -7,24 +7,14 @@ import Interpreter.ast.SVMVisitorImpl;
 import Utils.ExitCode;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Interpreter {
+public class Interpreter{
     public static void run(String bytecode) throws IOException {
 
-        /*
-        String fileAsm = "generatedCode.asm";
-        BufferedWriter out = new BufferedWriter(new FileWriter(fileAsm));
-        out.write(bytecode);
-        out.close();
-
-        SVMLexer lexerASM = new SVMLexer(CharStreams.fromFileName(fileAsm));
-        */
-
-        System.out.println(bytecode);
+        //saveCode(bytecode);
 
         SVMLexer lexerASM = new SVMLexer(CharStreams.fromString(bytecode));
 
@@ -49,6 +39,15 @@ public class Interpreter {
 
         SVM vm = new SVM(generatedCode);
         vm.cpu();
+    }
+
+    public static void saveCode(String bytecode) throws IOException {
+        String fileAsm = "generatedCode.asm";
+        BufferedWriter out = new BufferedWriter(new FileWriter(fileAsm));
+        out.write(bytecode);
+        out.close();
+
+        SVMLexer lexerASM = new SVMLexer(CharStreams.fromFileName(fileAsm));
 
     }
 }

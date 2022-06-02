@@ -1,8 +1,10 @@
-void main()[asset x]{
-print x;
-transfer x;
+int x = 1;
+void f(int n)[]{
+	if (n == 0) {
+	    print x ;
+	}else{
+	    x = x * n ;
+	    f(n-1)[] ;
+	}
 }
-main()[9]
-
-
-
+f(10)[];

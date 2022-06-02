@@ -63,6 +63,8 @@ public class FunctionNode implements Node {
 		}
 
 		env.newEmptyScope();
+		env.decOffset(1);
+
 
 		for(Node n : params) {
 			errors.addAll(n.checkSemantics(env));
@@ -171,26 +173,31 @@ public class FunctionNode implements Node {
 	public String codeGeneration() {
 		StringBuilder out = new StringBuilder();
 
-
 		out.append(f_label).append(": //" + this.id + "\n");
 		out.append("mv $sp $fp\n");
 		out.append("push $ra\n");
 
 		for (Node f:body_params) {
-			out.append(f.codeGeneration());
+			//out.append(f.codeGeneration());
 		}
 
 		for (Node s:statements) {
 			out.append(s.codeGeneration());
 		}
 
+		out.append(end_label).append(":\n");
 		int parameter_size = params.size() + assets.size();
+		out.append("subi $sp $fp 1 //Restore stack pointer as before block creation in a void function without return \n");
+		out.append("lw $fp 0($fp) //Load old $fp pushed \n");
 
-		out.append("lw $a0 0($sp)\n");
+		out.append("lw $ra 0($sp)\n");
+		out.append("pop\n");
 		out.append("addi $sp $sp ").append(parameter_size).append("\n");
-		out.append("lw $fp 0($fp)\n");
+		out.append("pop\n");
+		out.append("lw $fp 0($sp)\n");
 		out.append("pop\n");
 		out.append("jr $ra\n");
+		out.append("//END OF ").append(f_label).append("\n");
 
 		return out.toString();
 	}
@@ -230,6 +237,10 @@ public class FunctionNode implements Node {
 		return aparams;
 	}
 
+	public ArrayList<Node> getBody_params(){
+		return body_params;
+	}
+
 	/**
 	 * @return the type of the function
 	 */
@@ -241,4 +252,13 @@ public class FunctionNode implements Node {
 		return this.f_label;
 	}
 
+	public String getEndLabel(){
+		return this.end_label;
+	}
+
+
+
 }
+
+
+

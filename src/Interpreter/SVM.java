@@ -85,7 +85,7 @@ public class SVM {
                             multiplication(arg1, regRead(arg2), regRead(arg3));
                             break;
 
-                        case SVMParser.MULTI: //Also used for negate (*-1)
+                        case SVMParser.MULTI:
                             value = Integer.parseInt(arg3);
                             multiplication(arg1, regRead(arg2), value);
                             break;
@@ -131,7 +131,7 @@ public class SVM {
                             address = Integer.parseInt(code[ip].getArg1());
                             ip++;
                             value = regRead(bytecode.getArg1());
-                            if (value!=0) ip = address;
+                            if (value == 0) ip = address;
                             break;
                         case SVMParser.JAL:
                             regStore("$ra", ip);
@@ -172,13 +172,11 @@ public class SVM {
                                 System.out.println( "Print: "+ regRead(arg1));
                             }
                             break;
-
                         case SVMParser.TRANSFER:
                             wallet += regRead(arg1);
                             break;
-
                         case SVMParser.HALT:
-                            System.out.println("Transfer value: " + wallet);
+                            System.out.println("Wallet: " + wallet + "€");
                             System.out.println("Halting program...");
                             //printStack(20);
                             //System.out.println("\nResult: " + memory.read(sp) + "\n");
@@ -208,10 +206,8 @@ public class SVM {
                         cont++;
                     }
                     System.err.println(toPrint);
-
-
                     e.printStackTrace();
-                    //printStack(30);
+
                     return;
                 }
             }
@@ -249,23 +245,6 @@ public class SVM {
             System.exit(0);
         }
         regStore(lhs, numerator / denominator);
-    }
-
-    void allocatePointer(String lhs) throws Exception {
-        int address = memory.allocate();
-
-        if (address >= hp) hp = address + 1;
-        if (address == -1 || hp > sp) {
-            System.out.println("Memory is full!!");
-            return;
-        }
-        regStore(lhs, address);
-    }
-    void deallocatePointer(String lhs){
-        int address = regRead(lhs);
-        if (address == hp - 1)
-            hp--;
-        memory.free(address);
     }
 
     private int regRead(String reg) {

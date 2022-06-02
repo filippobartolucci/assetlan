@@ -132,6 +132,10 @@ public class SVMVisitorImpl extends SVMBaseVisitor<Void> {
                 else
                     code[i++] = new Instruction(SVMParser.PRINT, ctx.r1.getText());
                 break;
+            case SVMLexer.TRANSFER:
+                code[i++] = new Instruction(SVMParser.TRANSFER, ctx.r1.getText());
+                break;
+
             case SVMLexer.HALT:
                 code[i++] = new Instruction(SVMParser.HALT);
                 break;

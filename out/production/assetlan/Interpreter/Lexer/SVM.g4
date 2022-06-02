@@ -48,7 +48,7 @@ instruction:
 	  | PRINT
 	  | TRANSFER r1=REGISTER
 	  | HALT
-	  | ADDRESS // fake production that allows us to work with addresses as instructions while resolving labels
+	  | ADDRESS
 	  | l=LABEL COL
 	  ) ;
 

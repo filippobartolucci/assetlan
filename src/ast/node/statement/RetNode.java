@@ -57,12 +57,11 @@ public class RetNode implements Node {
      * Generate code for this node
      */
     public String codeGeneration(){
-
         StringBuilder out = new StringBuilder();
         if( exp != null){
             out.append(exp.codeGeneration()).append("\n");
         }
-        // TODO to do
+        out.append("b ").append(parent_f.getEndLabel()).append("\n");
         return out.toString();
     }
 

@@ -7,7 +7,7 @@ public class Instruction {
     private final String arg3;
 
     public Instruction(int c){
-        code=c;
+        code = c;
         arg1 = arg2 = arg3 = null;
     }
     public Instruction(int c, String a1){

@@ -87,7 +87,7 @@ public class GammaEnv implements Cloneable {
 	 */
 	public int decOffset(int s) {
 		int tmp = this.offset;
-		this.offset -= s;
+		this.offset += s;
 		return tmp;
 	}
 
@@ -98,6 +98,7 @@ public class GammaEnv implements Cloneable {
 	public void newEmptyScope(){
 		HashMap<String,STentry> st = new HashMap<String,STentry>();
 		this.nestingLevel++;
+		this.offset = 0;
 		this.symTable.add(st);
 	}
 

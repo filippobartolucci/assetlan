@@ -22,7 +22,12 @@ public class AssetNode implements Node{
 	}
 
 	public String codeGeneration(){
-		return null;
+		StringBuilder out = new StringBuilder();
+
+		out.append("li $a0 0\n");
+		out.append("push $a0 \n");
+
+		return out.toString();
 	}
 
 	/**

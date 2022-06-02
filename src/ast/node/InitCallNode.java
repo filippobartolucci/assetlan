@@ -146,20 +146,29 @@ public class InitCallNode implements Node{
         StringBuilder out = new StringBuilder();
         out.append("push $fp\n");
 
-        for (Node n:exp){
-            out.append(n.codeGeneration());
-            out.append("push $a0\n");
+        ArrayList<Node> bodyParams = this.getBodyParams();
+
+        // Push for body params
+        for (int i = bodyParams.size()-1; i>=0; i--){
+            out.append(bodyParams.get(i).codeGeneration());
+            out.append("push $a0 \n");
         }
 
-        for (Node a:aexp){
-            out.append(a.codeGeneration());
-            out.append("push $a0\n");
+        // Push for assets
+        for (int i = aexp.size()-1; i>=0; i--){
+            out.append(aexp.get(i).codeGeneration());
+            out.append("push $a0 \n");
+        }
+
+        // Push for vars
+        for (int i = exp.size()-1; i>=0; i--){
+            out.append(exp.get(i).codeGeneration());
+            out.append("push $a0 \n");
         }
 
         out.append("mv $fp $al //put in $al actual fp\n");
         out.append("push $al\n");
-        out.append("jal ").append(getLabel()).append(" //jump to start of function and put in $ra next instruction\n");
-        // TODO mettere hashmap label se c'è tempo
+        out.append("jal ").append(this.getLabel()).append(" //Initcall: jump to start of " + id +"\n");
 
         return out.toString();
 
@@ -191,5 +200,12 @@ public class InitCallNode implements Node{
         Node f = entry.getEntry();
         return ((FunctionNode) f).getLabel();
     }
+
+    public ArrayList<Node> getBodyParams(){
+        Node f = entry.getEntry();
+        return ((FunctionNode) f).getBody_params();
+    }
+
+
 }
 

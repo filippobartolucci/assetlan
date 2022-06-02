@@ -5,10 +5,6 @@ public class LabelManager {
     private static int funLabelCount = 0;
 
     public static String getFreshLabel(String label_name) {
-        // TODO no spazio, due punti quando si mette le label, quando si salta no
-        // Es.
-        // LABELPIPPO:
-        // b LABELPIPPO
         return "LABEL" + label_name + labelCount++;
     }
 

@@ -117,21 +117,21 @@ public class IteNode implements Node {
         String lFalse = LabelManager.getFreshLabel("false");
         String lEnd = LabelManager.getFreshLabel("end");
         out.append(exp.codeGeneration());
-        out.append("push 0\n");
-        out.append("bc $a0 false\n");
+
+        out.append("bc $a0 ").append(lFalse).append("\n");
         // True
         for (Node s : thenb) {
             out.append(s.codeGeneration());
         }
-        out.append("b end\n");
-        out.append("false:\n");
+        out.append("b").append(" "+lEnd+"\n");
+        out.append(lFalse).append(":\n");
         // Else Branch
         for (Node s : elseb) {
             out.append(s.codeGeneration());
         }
         // End
-        out.append(lEnd);
-        out.append("pop\n");
+        out.append(lEnd).append(":\n");
+
         return out.toString();
     }
 

@@ -62,17 +62,22 @@ public class ProgramNode implements Node {
 	public String codeGeneration() {
 		StringBuilder out = new StringBuilder();
 
-		out.append("push 0 \n");
-		out.append("mv $sp $fp //Load new $fp\n");
+		for (int i = assets.size()-1; i>=0; i--){
+			out.append(assets.get(i).codeGeneration());
+		}
 
-		for (Node f : fields) out.append(f.codeGeneration());
-		for (Node a : assets) out.append(a.codeGeneration());
+		for (int i = fields.size()-1; i>=0; i--){
+			out.append(fields.get(i).codeGeneration());
+		}
+
+		out.append("push 0\n");
+		out.append("mv $sp $fp //Load new $fp\n");
 
 		out.append(initcallnode.codeGeneration());
 
-		out.append("halt\n");
+		out.append("halt\n\n");
 
-
+		out.append("//Functions\n\n");
 		for (Node f : functions) out.append(f.codeGeneration());
 
 
@@ -90,7 +95,7 @@ public class ProgramNode implements Node {
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 		env.newEmptyScope();	// Initial Empy Scope [ ]
-		env.decOffset(2);	// Reserving space for the transfer of assets
+		env.decOffset(1);
 
 		for (Node f : fields) // Var Dec
 			errors.addAll(f.checkSemantics(env)); // \gamma' = \gamma U {x: t}

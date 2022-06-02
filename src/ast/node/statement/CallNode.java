@@ -107,23 +107,35 @@ public class CallNode implements Node {
         StringBuilder out = new StringBuilder();
         out.append("push $fp\n");
 
-        for (Node n:expressions){
-            out.append(n.codeGeneration());
+        ArrayList<Node> bodyParams = this.getBodyParams();
+
+        // Push for body params
+        for (int i = bodyParams.size()-1; i>=0; i--){
+            out.append(bodyParams.get(i).codeGeneration());
             out.append("push $a0 \n");
         }
 
-        for (STentry e:assets){
-            out.append("lw $al 0($fp) //put in $al actual fp\n");
+        for (int i = assets.size()-1; i>=0; i--){
+            STentry entry = assets.get(i);
+            out.append("mv $fp $al //put in $al actual fp\n");
             out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry.getNestinglevel()));
             int offsetWithAL = entry.getOffset();
-            out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(id).append("\n");
+            out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(ids.get(i)).append("\n");
+            out.append("push $a0 \n");
+            // Emptying the asset...
+            out.append("li $a0 0\n");
+            out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+        }
+
+        for (int i = expressions.size()-1; i>=0; i--){
+            out.append(expressions.get(i).codeGeneration());
             out.append("push $a0 \n");
         }
+
         out.append("mv $fp $al //put in $al actual fp\n");
         out.append("lw $al 0($al) //go up to chain\n".repeat(Math.max(0, currentNL - entry.getNestinglevel())));
         out.append("push $al\n");
-        out.append("jal ").append(getLabel()).append("// jump to start of function and put in $ra next instruction\n");
-        // TODO mettere hashmap label se c'è tempo
+        out.append("jal ").append(this.getLabel()).append("//jump to start of function and put in $ra next instruction\n");
 
         return out.toString();
     }
@@ -201,5 +213,10 @@ public class CallNode implements Node {
     public String getLabel(){
         Node f = entry.getEntry();
         return ((FunctionNode) f).getLabel();
+    }
+
+    public ArrayList<Node> getBodyParams(){
+        Node f = entry.getEntry();
+        return ((FunctionNode) f).getBody_params();
     }
 }
