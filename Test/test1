@@ -1,12 +1,5 @@
-int x = 2;
-
-asset y;
-
-void f()[asset z]{
+int x = 3;
+void f()[]{
     print x;
-    z -o y;
-    print y;
-    transfer y;
-
 }
-f()[10]
+f()[]

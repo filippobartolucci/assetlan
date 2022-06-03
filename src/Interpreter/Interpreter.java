@@ -14,7 +14,7 @@ import java.io.IOException;
 public class Interpreter{
     public static void run(String bytecode) throws IOException {
 
-        //saveCode(bytecode);
+        saveCode(bytecode);
 
         SVMLexer lexerASM = new SVMLexer(CharStreams.fromString(bytecode));
 

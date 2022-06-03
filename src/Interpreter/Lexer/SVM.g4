@@ -45,7 +45,6 @@ instruction:
       | JAL l=LABEL
       | JR r1=REGISTER
 	  | PRINT r1=REGISTER
-	  | PRINT
 	  | TRANSFER r1=REGISTER
 	  | HALT
 	  | ADDRESS
@@ -76,7 +75,7 @@ STOREW	 : 'sw' ; 	// stores the value of a register at offset n from the address
 LOADW	 : 'lw' ;	// loads the value at offset n from the address in a register and stores it in a second register
 MOVE	 : 'mv' ;	// move value from first register to second register
 BRANCH	 : 'b' ;	// jump to label
-BCOND    : 'bc' ;	// jump to label if $r1 == top
+BCOND    : 'bc' ;	// jump to label if $r1 == 0
 LE       : 'le' ;	// r1 = r2 <= r3
 LT       : 'lt' ;	//
 EQ       : 'eq' ;	//
@@ -87,7 +86,7 @@ JR	     : 'jr' ;	// jump to ra
 PRINT	 : 'print' ;	// print top of stack
 LOAD	 : 'li' ;	// loads an integer in the register
 HALT	 : 'halt' ;	// stop execution
-TRANSFER : 'transfer' ;	// transfer control to another process
+TRANSFER : 'transfer' ;	// transfer $a0 value to the wallet
 COL	     : ':' ;
 LPAR	 : '(' ;
 RPAR	 : ')' ;

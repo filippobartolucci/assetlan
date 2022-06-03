@@ -30,7 +30,7 @@ public class ProgramNode implements Node {
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
 		env.newEmptyScope();	// Initial Empy Scope [ ]
-		env.decOffset(1);
+		env.decOffset(0);
 
 		for (Node f : fields) // Var Dec
 			errors.addAll(f.checkSemantics(env)); // \gamma' = \gamma U {x: t}
@@ -108,7 +108,7 @@ public class ProgramNode implements Node {
 			out.append(fields.get(i).codeGeneration());
 		}
 
-		out.append("push 0\n");
+		//out.append("push 0\n");
 		out.append("mv $sp $fp //Load new $fp\n");
 		out.append(initcallnode.codeGeneration());
 		out.append("halt\n\n");

@@ -164,21 +164,26 @@ public class FunctionNode implements Node {
 	public String codeGeneration() {
 		StringBuilder out = new StringBuilder();
 
+		// Enter function
 		out.append(f_label).append(": //").append(this.id).append("\n");
 		out.append("mv $sp $fp\n");
 		out.append("push $ra\n");
 
+		// Body Function
 		for (Node s:statements) {
 			out.append(s.codeGeneration());
 		}
 
+		// Exit function
 		out.append(end_label).append(":\n");
-		int parameter_size = params.size() + assets.size();
+
 		out.append("subi $sp $fp 1 //Restore stack pointer as before block creation in a void function without return \n");
 		out.append("lw $fp 0($fp) //Load old $fp pushed \n");
 
 		out.append("lw $ra 0($sp)\n");
 		out.append("pop\n");
+
+		int parameter_size = params.size() + assets.size();
 		out.append("addi $sp $sp ").append(parameter_size).append("\n");
 		out.append("pop\n");
 		out.append("lw $fp 0($sp)\n");

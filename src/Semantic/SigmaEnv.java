@@ -64,11 +64,9 @@ public class SigmaEnv {
         this.errors.add(e);
     }
     public void addFixedPointResult(ArrayList<Boolean> l) { this.fixedPointResult = l; }
-
     public void addFunctionCall(String id){
         this.lastFunctionCall = id;
     }
-
     public Boolean isRecursive(String id){
         return this.lastFunctionCall.equals(id);
     }
@@ -144,7 +142,6 @@ public class SigmaEnv {
                 fixedPoint = false; // fixed point not reached
             }
         }
-
         return fixedPoint;
     }
 
