@@ -19,10 +19,7 @@ public class AssetNode implements Node{
 
 	public String codeGeneration(){
 
-		return """
-				li $a0 0
-				push $a0\s
-				""";
+		return "push 0\s";
 	}
 
 	/**

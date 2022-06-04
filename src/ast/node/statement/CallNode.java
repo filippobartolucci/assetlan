@@ -7,6 +7,7 @@ import Semantic.SigmaEnv;
 import Utils.TypeValue;
 import ast.node.FunctionNode;
 import ast.node.Node;
+import ast.node.TypeNode;
 
 
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class CallNode implements Node {
             for (int i=0; i<aparams.size(); i++){
                 Node actual_parType = assets.get(i).getEntry();
 
-                if (!actual_parType.typeCheck().equals(TypeValue.ASSET)){
+                if (!actual_parType.typeCheck().equals(new TypeNode(TypeValue.ASSET))){
                     throw new RuntimeException("Type mismatch -> type of asset parameter " + ids.get(i) + " in function " + id + " is not an asset");
                 }
             }
@@ -106,16 +107,13 @@ public class CallNode implements Node {
     public String codeGeneration(){
         StringBuilder out = new StringBuilder();
 
-        out.append("//Function ").append(id).append(" call\n");
+        out.append("//Call ").append(id).append(" call\n");
         out.append("push $fp\n");
 
         ArrayList<Node> bodyParams = this.getBodyParams();
         // Push for body params
         out.append("//Allocating space for ").append(bodyParams.size()).append(" body params\n");
-        for (int i = bodyParams.size()-1; i>=0; i--){
-            out.append(bodyParams.get(i).codeGeneration());
-            out.append("push $a0 \n");
-        }
+        out.append("push 0 \n".repeat(bodyParams.size()));
 
         out.append("//Allocating space for ").append(assets.size()).append(" assets\n");
         for (int i = assets.size()-1; i>=0; i--){

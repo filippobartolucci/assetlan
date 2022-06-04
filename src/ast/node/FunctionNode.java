@@ -11,15 +11,16 @@ public class FunctionNode implements Node {
 	//              '(' (param (',' param)* )? ')'
 	//              '[' (aparam (',' aparam)* )? ']'
 	//	          '{' field* statement* '}' ;
-	private final Node type;
-	private final String id;
-	private final ArrayList<Node> params;
-	private final ArrayList<Node> aparams;
+	private final Node type; // f type
+	private final String id; // f name
+	private final ArrayList<Node> params; // formal par
+	private final ArrayList<Node> aparams; // asset par
+	private final ArrayList<Node> assets; // asset nodes
 	private final ArrayList<Node> body_params; // param inside function
-	private final ArrayList<Node> statements;
-	private final ArrayList<Node> assets;
-	private final String f_label;
-	private final String end_label;
+	private final ArrayList<Node> statements; // function body
+
+	private final String f_label; // f entry point for codegen
+	private final String end_label; // f end for return in codegen
 
 
 
@@ -52,7 +53,6 @@ public class FunctionNode implements Node {
 
 		env.newEmptyScope();
 		env.decOffset(1);
-
 
 		for(Node n : params) {
 			errors.addAll(n.checkSemantics(env));
@@ -87,7 +87,7 @@ public class FunctionNode implements Node {
 		for (Node n : statements) {
 			Node a_type = n.typeCheck();
 
-			if (!a_type.equals(TypeValue.VOID)) {
+			if (!a_type.equals(new TypeNode(TypeValue.VOID))) {
 				found_return = true;
 				// Check if return type is equals to function type
 				if (!a_type.equals(type)) {
@@ -96,7 +96,7 @@ public class FunctionNode implements Node {
 			}
 		}
 
-		if (!found_return && !(type.equals(TypeValue.VOID))) {
+		if (!found_return && !(type.equals(new TypeNode(TypeValue.VOID)))) {
 			throw new RuntimeException("Type mismatch -> Function " + id + " has return type " + type + " but no return statement");
 		}
 		return type;
@@ -169,16 +169,19 @@ public class FunctionNode implements Node {
 		out.append("mv $sp $fp\n");
 		out.append("push $ra\n");
 
+		for (Node n : body_params) {
+			out.append(n.codeGeneration());
+		}
+
 		// Body Function
 		for (Node s:statements) {
 			out.append(s.codeGeneration());
 		}
 
 		// Exit function
-		out.append(end_label).append(":\n");
-
-		out.append("subi $sp $fp 1 //Restore stack pointer as before block creation in a void function without return \n");
-		out.append("lw $fp 0($fp) //Load old $fp pushed \n");
+		out.append("\n").append(end_label).append(":\n");
+		out.append("subi $sp $fp 1 \n");
+		out.append("lw $fp 0($fp) \n");
 		out.append("lw $ra 0($sp)\n");
 		out.append("pop\n");
 
@@ -189,7 +192,7 @@ public class FunctionNode implements Node {
 		out.append("lw $fp 0($sp)\n");
 		out.append("pop\n");
 		out.append("jr $ra\n");
-		out.append("//END OF ").append(f_label).append("\n");
+		out.append("//END OF ").append(f_label).append("\n\n");
 
 		return out.toString();
 	}

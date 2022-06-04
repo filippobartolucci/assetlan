@@ -52,12 +52,12 @@ public class BinExpNode extends ExpNode {
 
 		switch (this.op) {
 			case "*", "/", "+", "-", "<", "<=", ">", ">=":
-				if (! ( (leftType.equals(TypeValue.INT) || (leftType.equals(TypeValue.ASSET) ) && ( (rightType.equals(TypeValue.INT) || (rightType.equals(TypeValue.ASSET)) ))))){
+				if (! ( (leftType.equals(new TypeNode(TypeValue.INT)) || (leftType.equals(new TypeNode(TypeValue.ASSET)) ) && ( (rightType.equals(new TypeNode(TypeValue.INT)) || (rightType.equals(new TypeNode(TypeValue.ASSET))) ))))){
 					throw new RuntimeException("Type mismatch -> in op " + op + " type of both expression must be int or asset");
 				}
 				break;
 			case "&&", "||":
-				if (!(leftType.equals(TypeValue.BOOL) && rightType.equals(leftType))) {
+				if (!(leftType.equals(new TypeNode(TypeValue.BOOL)) && rightType.equals(leftType))) {
 					throw new RuntimeException("Type mismatch -> in op " + op + " type of both expression must be a boolean");
 				}
 				return new TypeNode(TypeValue.BOOL);
@@ -83,56 +83,21 @@ public class BinExpNode extends ExpNode {
 		out.append("pop\n"); // pop e1 to preserve stack
 
 		switch (op) {
-			case "+":{
-				out.append("add $a0 $a2 $a0 // a0 = t1+a0\n");
-
-				break;
-			}
-			case "-": {
-				out.append("sub $a0 $a2 $a0 // a0 = t1-a0\n");
-				break;
-			}
-			case "*": {
-				out.append("mult $a0 $a2 $a0 // a0 = t1+a0\n");
-				break;
-			}
-			case "/": {
-				out.append("div $a0 $a2 $a0 // a0 = t1/a0\n");
-				break;
-			}
-			case "<=":{
-				out.append("le $a0 $a2 $a0 // $a0 = $a2 <= $a0\n");
-				break;
-			}
-			case "<":{
-				out.append("lt $a0 $a2 $a0 // $a0 = $a2 < $a0\n");
-				break;
-			}
-			case ">":{
-				out.append("gt $a0 $a2 $a0 // $a0 = $a2 > $a0\n");
-				break;
-			}
-			case ">=":{
-				out.append("ge $a0 $a2 $a0 // $a0 = $a2 >= $a0\n");
-				break;
-			}
-			case "==":{
-				out.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
-				break;
-			}
-			case "!=":{
+			case "+" -> out.append("add $a0 $a2 $a0 // a0 = t1+a0\n");
+			case "-" -> out.append("sub $a0 $a2 $a0 // a0 = t1-a0\n");
+			case "*" -> out.append("mult $a0 $a2 $a0 // a0 = t1+a0\n");
+			case "/" -> out.append("div $a0 $a2 $a0 // a0 = t1/a0\n");
+			case "<=" -> out.append("le $a0 $a2 $a0 // $a0 = $a2 <= $a0\n");
+			case "<" -> out.append("lt $a0 $a2 $a0 // $a0 = $a2 < $a0\n");
+			case ">" -> out.append("gt $a0 $a2 $a0 // $a0 = $a2 > $a0\n");
+			case ">=" -> out.append("ge $a0 $a2 $a0 // $a0 = $a2 >= $a0\n");
+			case "==" -> out.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
+			case "!=" -> {
 				out.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
 				out.append("not $a0 $a0 // $a0 = !$a0\n");
-				break;
 			}
-			case "&&":{
-				out.append("and $a0 $a2 $a0 // $a0 = $a2 && $a0\n");
-				break;
-			}
-			case "||":{
-				out.append("or $a0 $a2 $a0 // $a0 = $a2 || $a0\n");
-				break;
-			}
+			case "&&" -> out.append("and $a0 $a2 $a0 // $a0 = $a2 && $a0\n");
+			case "||" -> out.append("or $a0 $a2 $a0 // $a0 = $a2 || $a0\n");
 		}
 		return out.toString();
 	}
@@ -157,19 +122,13 @@ public class BinExpNode extends ExpNode {
 	public int preEvaluation(){
 		int leftValue = ((ExpNode) left).preEvaluation();
 		int rightValue = ((ExpNode)right).preEvaluation();
-		switch (op){
-			case "+":
-				return leftValue + rightValue;
-			case "-":
-				return leftValue - rightValue;
-			case "*":
-				return leftValue * rightValue;
-			case "/":
-				return leftValue / rightValue;
-
-			default :
-				throw new RuntimeException("Invalid operator for asset expression");
-		}
+		return switch (op) {
+			case "+" -> leftValue + rightValue;
+			case "-" -> leftValue - rightValue;
+			case "*" -> leftValue * rightValue;
+			case "/" -> leftValue / rightValue;
+			default -> throw new RuntimeException("Invalid operator for asset expression");
+		};
 	}
 }
 

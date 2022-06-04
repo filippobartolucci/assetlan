@@ -17,14 +17,12 @@ public class Interpreter{
         saveCode(bytecode);
 
         SVMLexer lexerASM = new SVMLexer(CharStreams.fromString(bytecode));
-
         CommonTokenStream tokensASM = new CommonTokenStream(lexerASM);
 
         if (lexerASM.lexicalErrors>0 ){
             System.out.println("You had: "+lexerASM.lexicalErrors+" lexical errors in SVM.");
             System.exit(ExitCode.LEXER_ERROR.ordinal());
         }
-
         SVMParser parserASM = new SVMParser(tokensASM);
 
         SVMVisitorImpl visitorSVM = new SVMVisitorImpl();
@@ -36,7 +34,6 @@ public class Interpreter{
         }
 
         Instruction[] generatedCode = visitorSVM.getCode();
-
         SVM vm = new SVM(generatedCode);
         vm.cpu();
     }

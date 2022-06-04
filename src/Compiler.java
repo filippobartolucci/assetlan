@@ -1,15 +1,10 @@
-import Interpreter.Lexer.SVMLexer;
-import Interpreter.Parser.SVMParser;
-import Interpreter.SVM;
-import Interpreter.ast.Instruction;
-import Interpreter.ast.SVMVisitorImpl;
+
 import Parser.AssetLanLexer;
 import Parser.AssetLanParser;
 import Semantic.SemanticError;
 import ast.AssetLanVisitorImpl;
 import ast.node.Node;
-import org.antlr.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
+
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import java.io.*;
@@ -20,7 +15,7 @@ import Utils.*;
 import Interpreter.*;
 
 
-public class main {
+public class Compiler {
     public static void main(String[] args){
         System.out.println("\nAssetLan Compiler" );
         try{
@@ -65,10 +60,10 @@ public class main {
             }
             System.out.println("Semantic analysis successful!\n\nType checking...");
 
-            Node program_type = ast.typeCheck();;
+            Node program_type = ast.typeCheck();
             System.out.println("Type checking successful!\n\nProgram type is: " + program_type + "\n\nChecking effects...");
 
-            SigmaEnv s_env = new SigmaEnv();
+            SigmaEnv s_env = new SigmaEnv(); // Used to check effects
             ast.checkEffects(s_env);
             s_errors = s_env.getErrors();
             if(s_errors.size() > 0){

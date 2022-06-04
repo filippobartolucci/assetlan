@@ -29,7 +29,7 @@ public class ProgramNode implements Node {
 	public ArrayList<SemanticError> checkSemantics(GammaEnv env){
 		ArrayList<SemanticError> errors = new ArrayList<>();
 
-		env.newEmptyScope();	// Initial Empy Scope [ ]
+		env.newEmptyScope();	// Initial Empty Scope [ ]
 		env.decOffset(0);
 
 		for (Node f : fields) // Var Dec
@@ -70,7 +70,7 @@ public class ProgramNode implements Node {
 
 	@Override
 	public SigmaEnv checkEffects(SigmaEnv env){
-		env.newEmptyScope();	// Initial Empy Scope [ ]
+		env.newEmptyScope();	// Initial Empty Scope [ ]
 
 		for (Node f : fields){
 			env = f.checkEffects(env);
@@ -99,24 +99,31 @@ public class ProgramNode implements Node {
 	public String codeGeneration() {
 		StringBuilder out = new StringBuilder();
 
-		out.append("//BEGIN PROGRAM\n");
+		out.append("//BEGIN PROGRAM\n\n");
+		out.append("//BLOCK \n");
+
 		for (int i = assets.size()-1; i>=0; i--){
 			out.append(assets.get(i).codeGeneration());
 		}
 
 		for (int i = fields.size()-1; i>=0; i--){
-			out.append(fields.get(i).codeGeneration());
+			out.append("li $a0 0\n");
+			out.append("push 0\n");
 		}
 
-		//out.append("push 0\n");
-		out.append("mv $sp $fp //Load new $fp\n");
+		out.append("mv $sp $fp //Load $fp for initial block\n");
+		out.append("// GLOBAL FIELDS ASG\n");
+
+		for (Node f : fields){
+			out.append(f.codeGeneration());
+		}
+		out.append("push 0\n");
+		out.append("\n//INITCALL\n");
 		out.append(initcallnode.codeGeneration());
-		out.append("halt\n\n");
+		out.append("\nhalt //exit program...\n\n");
 
-		out.append("//Functions\n");
+		out.append("//FUNCTIONS\n\n");
 		for (Node f : functions) out.append(f.codeGeneration());
-
-
 
 		return out.toString();
 	}

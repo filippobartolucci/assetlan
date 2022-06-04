@@ -71,17 +71,10 @@ public class TypeNode implements Node{
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof TypeNode){
-            TypeNode other = (TypeNode) obj;
-            if (this.type.equals(other.type)){
-                return true;
-            }
+        if (obj instanceof TypeNode other){
+            return this.type.equals(other.type);
         }
-        if (obj instanceof TypeValue){
-            if(this.type.equals(obj)){
-                return true;
-            }
-        }
+
         return false;
     }
 

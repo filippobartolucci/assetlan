@@ -4,6 +4,8 @@ import Semantic.GammaEnv;
 import Semantic.SemanticError;
 import Utils.TypeValue;
 import ast.node.Node;
+import ast.node.TypeNode;
+
 import java.util.ArrayList;
 
 public class NegExpNode extends ExpNode {
@@ -23,7 +25,7 @@ public class NegExpNode extends ExpNode {
 
     public Node typeCheck() {
         Node expType = exp.typeCheck();
-        if( ! ( expType.equals(TypeValue.INT) || expType.equals(TypeValue.ASSET) ) ) {
+        if( ! ( expType.equals(new TypeNode(TypeValue.INT)) || expType.equals(new TypeNode(TypeValue.ASSET)) ) ) {
             throw new RuntimeException("Type mismatch -> the type of the expression is not int or asset");
         }
         return expType;

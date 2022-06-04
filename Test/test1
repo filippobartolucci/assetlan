@@ -1,9 +1,2 @@
-int f(int x)[]{
-    return 1;
-}
-
-void g()[]{
-    int x ;
-    x = f(x)[];
-}
-g()[];
+int x;
+f()[]

@@ -53,7 +53,7 @@ public class TransferNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        if (!(entry.getEntry().typeCheck().equals(TypeValue.ASSET))) {
+        if (!(entry.getEntry().typeCheck().equals(new TypeNode(TypeValue.ASSET)))) {
             throw new RuntimeException("Type mismatch: " + id + " is not an asset");
         }
         return new TypeNode(TypeValue.VOID);

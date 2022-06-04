@@ -18,19 +18,6 @@ public class Memory {
         mem[add].write(val);
     }
 
-    public void free(int add){
-        mem[add].free();
-    }
-
-    public int allocate(){
-        for (int i=0; i< mem.length; i++){
-            if (!mem[i].isPointed()){
-                mem[i].allocate();
-                return i;
-            }
-        }
-        return -1;
-    }
 
     public void cleanMemory(int start, int end) {
         for (int indexStack = start;indexStack < end; indexStack++){

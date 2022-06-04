@@ -1,6 +1,7 @@
 package ast.node.exp;
 import Utils.TypeValue;
 import ast.node.Node;
+import ast.node.TypeNode;
 
 public class NotExpNode extends ExpNode {
 	public NotExpNode(Node exp) {
@@ -13,7 +14,7 @@ public class NotExpNode extends ExpNode {
 
 	public Node typeCheck() {
 		Node type = exp.typeCheck();
-		if (!type.equals(TypeValue.BOOL)) {
+		if (!type.equals(new TypeNode(TypeValue.BOOL))) {
 			throw new RuntimeException("Type mismatch -> expression type "+ type.toPrint("") +" is not bool");
 		}
 		return type;

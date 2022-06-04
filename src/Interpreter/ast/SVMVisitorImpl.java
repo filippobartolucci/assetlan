@@ -12,8 +12,8 @@ public class SVMVisitorImpl extends SVMBaseVisitor<Void> {
 
     private Instruction[] code = new Instruction[SVM.CODE_SIZE];
     private int i = 0;
-    private HashMap<String,Integer> labelAdd = new HashMap<String,Integer>();
-    private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();
+    private HashMap<String,Integer> labelAdd = new HashMap<>();
+    private HashMap<Integer,String> labelRef = new HashMap<>();
 
     public Instruction[] getCode() {
         return code;

@@ -3,7 +3,6 @@ package Interpreter;
 import Interpreter.ast.Instruction;
 import Interpreter.memory.Memory;
 import Interpreter.Parser.SVMParser;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,12 +11,11 @@ public class SVM {
     public static final int CODE_SIZE = 10000;
     public static final int MEMORY_SIZE = 10000;
 
-    private final Instruction[] code;
-    private final Memory memory = new Memory(MEMORY_SIZE);
+    private final Instruction[] code; // array of instructions
+    private final Memory memory = new Memory(MEMORY_SIZE); // stack of memory
 
     private int ip = 0;                 // instruction pointer, internal register, no write nor read
     private int sp = MEMORY_SIZE;       // stack pointer
-    private int hp = 0;                 // heap pointer read-only //TODO eliminabile
     private int fp = MEMORY_SIZE -1;    // frame pointer
     private int ra;
     private int al;
@@ -26,7 +24,7 @@ public class SVM {
     private int wallet = 0;
 
     private final int[] a = new int[10];
-    //private final int[] r = new int[10];
+
 
     public SVM(Instruction[] code) {
         this.code = code;
@@ -34,11 +32,11 @@ public class SVM {
 
     public void cpu() {
         while (true) {
-            if (hp + 1 >= sp) {
-                System.out.println("\nError: Out of memory");
+            if (1 >= sp) {
+                System.out.println("\nSVM Error -> Stack out of memory\nHalting...");
                 return;
             } else {
-                Instruction bytecode = code[ip++]; // fetch
+                Instruction bytecode = code[ip++]; // fetch instruction
                 String arg1 = bytecode.getArg1();
                 String arg2 = bytecode.getArg2();
                 String arg3 = bytecode.getArg3();
@@ -166,26 +164,20 @@ public class SVM {
                             regStore(arg1, (regRead(arg2)>0 && regRead(arg3)>0) ?1:0);
                             break;
                         case SVMParser.PRINT:
-                            //this.printStack();
-                            if (arg1==null)
-                                System.out.println((sp < MEMORY_SIZE) ? memory.read(sp) : "Empty stack!");
-                            else{
-                                System.out.println( "Print: "+ regRead(arg1));
-                            }
+                            System.out.println( "Print: "+ regRead(arg1));
                             break;
                         case SVMParser.TRANSFER:
                             wallet += regRead(arg1);
                             break;
                         case SVMParser.HALT:
-                            System.out.println("Return value of initcall is: " + a[0]);
                             System.out.println("Wallet: +" + wallet);
-                            System.out.println("\nHalting program...");
+                            System.out.println("Halting program...");
                             return;
                     }
                 } catch (Exception e) {
                     System.out.println("Program stopped at program counter: "+ip);
 
-                    String toPrint = "";
+                    StringBuilder toPrint = new StringBuilder();
                     int cont = 0;
                     for (Instruction ins:code){
                         if(ins == null)
@@ -193,13 +185,13 @@ public class SVM {
                         if(cont > ip -10){
                             String literalName = SVMParser._LITERAL_NAMES[ins.getCode()];
                             String str = literalName +" "+(ins.getArg1()!=null?ins.getArg1():"") +" "+(ins.getArg2()!=null?ins.getArg2():"")+" "+(ins.getArg3()!=null?ins.getArg3():"");
-                            toPrint += cont+": "+ str +"\n";
+                            toPrint.append(cont).append(": ").append(str).append("\n");
                             //break;
                         }
                         else if(cont == ip){
                             String literalName = SVMParser._LITERAL_NAMES[ins.getCode()];
                             String str = literalName +" "+(ins.getArg1()!=null?ins.getArg1():"") +" "+(ins.getArg2()!=null?ins.getArg2():"")+" "+(ins.getArg3()!=null?ins.getArg3():"");
-                            toPrint += cont+": "+ str +"\n";
+                            toPrint.append(cont).append(": ").append(str).append("\n");
                             break;
                         }
                         cont++;
@@ -213,7 +205,7 @@ public class SVM {
         }
     }
     private boolean isRegister(String str) {
-        Pattern p = Pattern.compile("\\$(([ar][0-9])|(sp)|(fp)|(hp)|(al)|(ra)|(bsp))");
+        Pattern p = Pattern.compile("\\$(([ar]\\d)|(sp)|(fp)|(hp)|(al)|(ra)|(bsp))");
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -261,12 +253,8 @@ public class SVM {
                 return ra;
 
             default:
-                switch (reg.charAt(1)) {
-                    case 'r':
-                        // return r[Integer.parseInt(reg.substring(2))];
-                    case 'a':
-                        return a[Integer.parseInt(reg.substring(2))];
-
+                if (reg.charAt(1) == 'a') {
+                    return a[Integer.parseInt(reg.substring(2))];
                 }
                 break;
         }
@@ -288,7 +276,7 @@ public class SVM {
                     memory.cleanMemory(sp, v);
                 }
                 sp = v;
-                if (sp <= hp) {
+                if (sp <= 0) {
                     throw new Exception("Stack overflow!");
                 }
                 break;
@@ -296,21 +284,16 @@ public class SVM {
                 ra = v;
                 break;
             default:
-                switch (reg.charAt(1)) {
-                    case 'r':
-                        // r[Integer.parseInt(reg.substring(2))] = v;
-                        break;
-                    case 'a':
-                        a[Integer.parseInt(reg.substring(2))] = v;
-
-                        break;
+                if (reg.charAt(1) == 'a') {
+                    a[Integer.parseInt(reg.substring(2))] = v;
                 }
                 break;
         }
     }
 
     private void printStack(){
-        System.out.println("\n\n STACK:");
+        System.out.println("\nFP: " + fp);
+        System.out.println("STACK:");
         for(int i = MEMORY_SIZE-1; i > sp ; i--){
             int cellValue;
 
@@ -319,7 +302,7 @@ public class SVM {
             } catch (Exception e) {
                 cellValue = -0;
             }
-            System.out.println("Cell " + i + " : "+ memory.read(i));
+            System.out.println("\tCell " + i + " : "+ cellValue);
         }
         System.out.println("ENDSTACK\n");
     }

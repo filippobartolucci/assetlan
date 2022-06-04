@@ -18,7 +18,7 @@ public class AssignmentNode implements Node {
     private int currentNL;
 
     /**
-     * Construtor
+     * Constructor
      */
     public AssignmentNode(String id, Node exp) {
         this.id = id;
@@ -54,7 +54,7 @@ public class AssignmentNode implements Node {
 
         Node varType = var.typeCheck();
 
-        if(varType.equals(TypeValue.ASSET)){
+        if(varType.equals(new TypeNode(TypeValue.ASSET))){
             throw new RuntimeException("Asset " + id + " cannot be used lhs");
         }
 
@@ -87,13 +87,11 @@ public class AssignmentNode implements Node {
         * */
         StringBuilder out = new StringBuilder();
 
-        out.append("// Assignment ").append(id).append("\n");
+        out.append("\n// Asg ").append(id).append("\n");
         out.append(exp.codeGeneration());
-        out.append("lw $al 0($fp) //loads in $al value of $fp");
-        out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL - this.entry.getNestinglevel())));
-
-        int offsetWithAL = entry.getOffset();
-        out.append("sw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(id).append("\n");
+        out.append("mv $fp $al //put in $al actual fp\n");
+        out.append("lw $al 0($al) //go up to chain\n".repeat(Math.max(0, this.currentNL - entry.getNestinglevel())));
+        out.append("sw $a0 ").append(entry.getOffset()).append("($al) //put %a0 in Id ").append(id).append("\n");
 
         return out.toString();
     }

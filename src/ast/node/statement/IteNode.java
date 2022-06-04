@@ -50,7 +50,7 @@ public class IteNode implements Node {
     public Node typeCheck() {
 
         // \Gamma |- (e) : Bool
-        if (!exp.typeCheck().equals(TypeValue.BOOL)) {
+        if (!exp.typeCheck().equals(new TypeNode(TypeValue.BOOL))) {
             throw new RuntimeException("Type mismatch -> Condition of If statement must be of type bool");
         }
 
@@ -62,14 +62,14 @@ public class IteNode implements Node {
             // Looking for return statement
             if (n instanceof RetNode) {
                 // return statement is found, checking its type
-                if (thenb_type.equals(TypeValue.VOID)) { // if true -> then branch type never updated
+                if (thenb_type.equals(new TypeNode(TypeValue.VOID))) { // if true -> then branch type never updated
                     thenb_type = n.typeCheck(); // updating then branch type
                 }else if (!thenb_type.equals(n.typeCheck())) { // if another return is found, checking if types are the same
                     throw new RuntimeException("Type mismatch -> Return type of If statement must be the same");
                 }
             } else if (n instanceof IteNode) {
                 // another if is found, if it has a type, it must be equal to this node type
-                if (thenb_type.equals(TypeValue.VOID)) {
+                if (thenb_type.equals(new TypeNode(TypeValue.VOID))) {
                     thenb_type = n.typeCheck();
                 } else if (!thenb_type.equals(n.typeCheck())) {
                     throw new RuntimeException("Type mismatch -> If statement must have the same type");
@@ -84,13 +84,13 @@ public class IteNode implements Node {
         for (Node s : elseb) {
             Node n = ((StatementNode) s).getChild();
             if (n instanceof RetNode) {
-                if (elseb_type.equals(TypeValue.VOID)) {
+                if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
                     elseb_type = n.typeCheck();
                 } else if (!elseb_type.equals(n.typeCheck())) {
                     throw new RuntimeException("Type mismatch -> Return type of If statement must be the same");
                 }
             } else if (n instanceof IteNode) {
-                if (elseb_type.equals(TypeValue.VOID)) {
+                if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
                     elseb_type = n.typeCheck();
                 } else if (!elseb_type.equals(n.typeCheck())) {
                     throw new RuntimeException("Type mismatch -> If statement must have the same type");
@@ -147,10 +147,13 @@ public class IteNode implements Node {
             thenEnv = new SigmaEnv(n.checkEffects(thenEnv));
         }
 
-        for (Node n: elseb){
-            elseEnv = new SigmaEnv(n.checkEffects(elseEnv));
+        if (elseb.size() > 0) {
+            for (Node n: elseb){
+                elseEnv = new SigmaEnv(n.checkEffects(elseEnv));
+            }
+            thenEnv.max(elseEnv);
         }
-        thenEnv.max(elseEnv);
+
 
         return thenEnv;
     }
@@ -158,10 +161,10 @@ public class IteNode implements Node {
     public String toPrint(String indent){
         String s = indent + "IteNode\n";
         s += indent + "\tCONDITION:" + exp.toPrint(indent + "\t\t");
-        //s += "\n" + indent + "\tIF:\n" + thenb.toPrint(indent + "\t");
+        /*//s += "\n" + indent + "\tIF:\n" + thenb.toPrint(indent + "\t");
         if (elseb!=null){
            // s +=  indent + "\tELSE:\n" + elseb.toPrint(indent + "\t");
-        }
+        }*/
         return s;
     }
 

@@ -84,8 +84,7 @@ public class InitCallNode implements Node{
             for (int i=0; i<aparams.size(); i++){
                 Node actual_parType = aexp.get(i).typeCheck(); // this also checks type correctness in exp
 
-
-                if (!(actual_parType.equals(TypeValue.INT))  ){
+                if (!(actual_parType.equals(new TypeNode(TypeValue.INT)))){
                     throw new RuntimeException("Type mismatch -> type of " + (i+1) + "-th asset parameter in function " + id + " is not a valid expression");
                 }
             }
@@ -146,7 +145,8 @@ public class InitCallNode implements Node{
 
         // Push for body params
         for (int i = bodyParams.size()-1; i>=0; i--){
-            out.append(bodyParams.get(i).codeGeneration());
+            //out.append(bodyParams.get(i).codeGeneration());
+            out.append("li $a0 0 \n");
             out.append("push $a0 \n");
         }
 

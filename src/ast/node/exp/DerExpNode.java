@@ -55,7 +55,7 @@ public class DerExpNode extends ExpNode implements Node{
 
     public Node typeCheck(){
         Node type = entry.getEntry().typeCheck();
-        if (type.equals(TypeValue.ASSET)){
+        if (type.equals(new TypeNode(TypeValue.ASSET))){
             type = new TypeNode("int");
         }
         return type;

@@ -8,6 +8,8 @@ public class FieldNode implements Node{
 	private final String id;
 	private final Node type;
 	private final Node exp;
+	private STentry entry;
+	private int currentNL;
 
 	/**
 	 * Constructor
@@ -36,7 +38,7 @@ public class FieldNode implements Node{
 		}
 
 		// Check if type == null
-		if(type.equals(TypeValue.VOID)){
+		if(type.equals(new TypeNode(TypeValue.VOID))){
 			errors.add(new SemanticError("Variable " + id + " can't have void type"));
 		}
 
@@ -45,6 +47,9 @@ public class FieldNode implements Node{
 		if(error!=null) {
 			errors.add(error);
 		}
+
+		this.entry = entry;
+		this.currentNL = env.getNestingLevel();
 
 		return errors;
 	}
@@ -82,14 +87,18 @@ public class FieldNode implements Node{
 	 * Generate code for this node
 	 */
 	public String codeGeneration(){
+		if (exp == null) {
+			return "";
+		}
+
 		StringBuilder out = new StringBuilder();
 
-		if (exp!=null){
-			out.append(exp.codeGeneration());
-		}else{
-			out.append("li $a0 0\n");
-		}
-		out.append("push $a0 \n");
+		System.out.println("FieldNode: " + id + " " + this.currentNL + " " + this.entry.getOffset());
+		out.append("\n// Field ").append(id).append("\n");
+		out.append(exp.codeGeneration());
+		out.append("mv $fp $al //put in $al actual fp\n");
+		out.append("lw $al 0($al) //go up to chain\n".repeat(Math.max(0, this.currentNL - entry.getNestinglevel())));
+		out.append("sw $a0 ").append(entry.getOffset()).append("($al)").append("\n");
 
 		return out.toString();
 	}

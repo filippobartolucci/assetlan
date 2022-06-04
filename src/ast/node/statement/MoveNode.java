@@ -57,11 +57,11 @@ public class MoveNode implements Node {
      * Generate code for this node
      */
     public Node typeCheck(){
-        if (!entry1.getEntry().typeCheck().equals(TypeValue.ASSET)) {
+        if (!entry1.getEntry().typeCheck().equals(new TypeNode(TypeValue.ASSET))) {
             throw new RuntimeException("Type mismatch: " + id1 + " is not an asset");
         }
 
-        if (!entry2.getEntry().typeCheck().equals(TypeValue.ASSET)){
+        if (!entry2.getEntry().typeCheck().equals(new TypeNode(TypeValue.ASSET))) {
             throw new RuntimeException("Type mismatch: " + id2 + " is not an asset");
         }
 
@@ -83,7 +83,7 @@ public class MoveNode implements Node {
         // a -o b
 
         // Loading in stack the asset a
-        out.append("//move "+id1+" to "+id2+" \n");
+        out.append("//move ").append(id1).append(" to ").append(id2).append(" \n");
         out.append("mv $fp $al \n");
         out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry1.getNestinglevel()));
         int offsetWithAL = entry1.getOffset();
@@ -91,7 +91,7 @@ public class MoveNode implements Node {
         out.append("push $a0");
 
         // Emptying the asset...
-        out.append("//emptying asset " + id1 + " \n");
+        out.append("//emptying asset ").append(id1).append(" \n");
         out.append("li $a0 0 \n");
         out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
 
