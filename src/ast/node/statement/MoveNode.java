@@ -83,18 +83,21 @@ public class MoveNode implements Node {
         // a -o b
 
         // Loading in stack the asset a
-        out.append("mv $fp $al //loading asset\n");
+        out.append("//move "+id1+" to "+id2+" \n");
+        out.append("mv $fp $al \n");
         out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry1.getNestinglevel()));
         int offsetWithAL = entry1.getOffset();
         out.append("lw $a0 ").append(offsetWithAL).append("($al)").append("\n");
         out.append("push $a0");
 
         // Emptying the asset...
-        out.append("li $a0 0 //emptying the asset\n");
+        out.append("//emptying asset " + id1 + " \n");
+        out.append("li $a0 0 \n");
         out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
 
         // Moving the asset...
-        out.append("mv $fp $al //moving the asset\n");
+        out.append("//updating value\n");
+        out.append("mv $fp $al \n");
         out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry2.getNestinglevel()));
         offsetWithAL = entry2.getOffset();
         out.append("lw $a0 ").append(offsetWithAL).append("($al)").append("\n");

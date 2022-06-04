@@ -179,11 +179,11 @@ public class FunctionNode implements Node {
 
 		out.append("subi $sp $fp 1 //Restore stack pointer as before block creation in a void function without return \n");
 		out.append("lw $fp 0($fp) //Load old $fp pushed \n");
-
 		out.append("lw $ra 0($sp)\n");
 		out.append("pop\n");
 
-		int parameter_size = params.size() + assets.size();
+		int parameter_size = params.size() + assets.size() + body_params.size();
+		out.append("addi $sp $sp 0").append("\n");
 		out.append("addi $sp $sp ").append(parameter_size).append("\n");
 		out.append("pop\n");
 		out.append("lw $fp 0($sp)\n");

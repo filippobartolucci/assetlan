@@ -1,5 +1,9 @@
-int x = 3;
-void f()[]{
-    print x;
+int f(int x)[]{
+    return 1;
 }
-f()[]
+
+void g()[]{
+    int x ;
+    x = f(x)[];
+}
+g()[];

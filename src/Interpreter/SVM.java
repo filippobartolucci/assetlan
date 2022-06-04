@@ -166,6 +166,7 @@ public class SVM {
                             regStore(arg1, (regRead(arg2)>0 && regRead(arg3)>0) ?1:0);
                             break;
                         case SVMParser.PRINT:
+                            //this.printStack();
                             if (arg1==null)
                                 System.out.println((sp < MEMORY_SIZE) ? memory.read(sp) : "Empty stack!");
                             else{
@@ -176,8 +177,9 @@ public class SVM {
                             wallet += regRead(arg1);
                             break;
                         case SVMParser.HALT:
-                            System.out.println("\nWallet: +" + wallet);
-                            System.out.println("Halting program...");
+                            System.out.println("Return value of initcall is: " + a[0]);
+                            System.out.println("Wallet: +" + wallet);
+                            System.out.println("\nHalting program...");
                             return;
                     }
                 } catch (Exception e) {
@@ -305,5 +307,20 @@ public class SVM {
                 }
                 break;
         }
+    }
+
+    private void printStack(){
+        System.out.println("\n\n STACK:");
+        for(int i = MEMORY_SIZE-1; i > sp ; i--){
+            int cellValue;
+
+            try {
+                cellValue = memory.read(i);
+            } catch (Exception e) {
+                cellValue = -0;
+            }
+            System.out.println("Cell " + i + " : "+ memory.read(i));
+        }
+        System.out.println("ENDSTACK\n");
     }
 }
