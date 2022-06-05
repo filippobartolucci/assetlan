@@ -1,0 +1,1390 @@
+\documentclass[12pt,twoside,openright,a4paper]{report}
+
+% Packages
+
+% Supporto italiano 
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}  
+\usepackage[utf8]{inputenc}
+\usepackage{proof}
+\usepackage{amsmath}
+\usepackage{soul}
+\usepackage[parfill]{parskip}
+
+\usepackage{color}
+
+\DeclareRobustCommand{\hlred}[1]{{\sethlcolor{red}\hl{#1}}}
+% Figure
+\usepackage{graphicx}
+
+% aspetto
+\usepackage{geometry}
+
+% Snippet codice
+\usepackage{listings}
+
+% Box codice
+\usepackage{tcolorbox}
+\usepackage{verbatim}
+
+\usepackage{listings}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4,
+  escapeinside={(*@}{@*)}
+}
+% Varie
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage[scaled=.95]{inconsolata}
+\usepackage{indentfirst}
+\usepackage{csquotes}
+
+\title{\textsc{Report Compilatori e Interpreti} \\ A.A. 2021/2022 \\ } % Title
+
+\author{
+  Filippo Bartolucci\\
+  \texttt{filippo.bartolucci2@studio.unibo.it}
+  \and
+  Alfonso Esposito\\
+  \texttt{alfonso.esposito5@studio.unibo.it}
+  \and
+  Isabella Marasco\\
+  \texttt{isabella.marasco3@studio.unibo.it}
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Introduzione}
+
+Questo progetto è parte della prova d'esame per il corso "Compilatori e Interpreti A.A. 2021/2022" il cui scopo è implementare un compilatore e interprete per un linguaggio di programmazione inventato, AssetLan. \newline
+AssetLan è un semplice linguaggio imperativo con asset, in cui i parametri possono 
+essere sia standard che asset, con ricorsione e senza mutua ricorsione. \\
+
+Il compilatore di AssetLan svolge le seguenti operazioni:
+\begin{itemize}
+    \item \textit{Analisi lessicale} con generazione dei token
+    \item \textit{Analisi sintattica} con generazione dell' Abstract Syntax Tree
+    \item \textit{Analisi semantica} sull'utilizzo delle variabili nel codice
+    \item \textit{Type checking} per espressioni e operazioni
+    \item Controllo di \textit{effetti} e \textit{liquidity} del codice.
+\end{itemize}
+
+Successivamente si passa alla generazione del codice intermedio in un linguaggio bytecode che viene poi eseguito da un interprete.
+
+Il progetto è stato sviluppato in \textit{Java} utilizzando le librerie di \textit{ANTLR}.
+
+\chapter{Sintassi}
+
+La grammatica di AssetLan ha come simbolo iniziale \textbf{init} che produce un blocco \textbf{program}, il quale è composto da una sequenza di dichiarazioni di variabili, di asset e di funzioni. L'entry point del programma è rappresentata dal blocco \textbf{initcall}.
+
+\begin{lstlisting}
+    init        : program ;
+    program	    : field* asset* function* initcall ;
+\end{lstlisting}
+
+Nel caso delle dichiarazioni le possibili istruzioni sono tre:
+\begin{itemize}
+    \item Variabili di tipo \textit{intero} o \textit{booleano} 
+    \item Asset
+    \item Funzioni di tipo \textit{void}, \textit{intero} o \textit{booleano}
+\end{itemize}
+
+\begin{lstlisting}
+    field       : type ID ('=' exp)? ';' ;
+
+    asset       : 'asset' ID ';' ;
+
+    function    : type ID
+              '(' (param (',' param)* )? ')'
+              '[' (aparam (',' aparam)* )? ']'
+	          '{' field* statement* '}' ;
+\end{lstlisting}
+
+Gli statement possibili in AssetLan sono:
+\begin{itemize}
+    \item assignment \(\rightarrow\) operazione di assegnamento per le variabili
+    \item move \(\rightarrow\) sposta un asset da una parte ad un'altra
+    \item print \(\rightarrow\) stampa a schermo il valore della exp associata
+
+    \item transfer \(\rightarrow\) trasferisce l'asset all' utente ovvero chi esegue il codice
+    \item ret \(\rightarrow\) restituisce al chiamante il valore di exp
+    \item ite \(\rightarrow\) istruzione condizionale
+    \item call \(\rightarrow\) chiamata di funzione
+\end{itemize}
+\begin{lstlisting}
+statement   : assignment ';'
+            | move ';'     
+            | print ';'
+            | transfer ';' 
+            | ret ';'
+            | ite 
+            | call ';' ;
+
+\end{lstlisting}
+
+
+Le espressioni in questo linguaggio possono essere scritte nel seguente modo:
+
+\begin{lstlisting}
+exp	        : '(' exp ')'				                        #baseExp
+            | '-' exp					                        #negExp
+            | '!' exp                                           #notExp
+            | ID						                        #derExp
+            | left=exp op=('*' | '/')               right=exp   #binExp
+            | left=exp op=('+' | '-')               right=exp   #binExp
+            | left=exp op=('<' | '<=' | '>' | '>=') right=exp   #binExp
+            | left=exp op=('=='| '!=')              right=exp   #binExp
+            | left=exp op='&&'                      right=exp   #binExp
+            | left=exp op='||'                      right=exp   #binExp
+            | call                                              #callExp
+            | BOOL                                              #boolExp
+            | NUMBER					                        #valExp;
+\end{lstlisting}
+La libreria di \textit{ANTLR} si è occupata della generaziona del lexer e del parser del linguaggio a partire dal file della grammatica.
+
+\chapter{Analisi Semantica}
+L'analisi semantica è suddivisa in tre fasi: 
+\begin{itemize}
+    \item Analisi degli scope e identificatori
+    \item Type checking
+    \item Analisi di effetti e liquidity
+\end{itemize}
+   
+\section{Environment e STEntry}
+La Symbol Table è fondamentale per l'analisi di scope e identificatori, in quanto ci permette di tenere traccia delle variabili e dei loro livelli di annidamento. Si tratta di una funzione \(\Gamma\) che prende in input un ID e restituisce la sua STentry, composta da Tipo, NestingLevel, Offset.
+\begin{equation}
+    \hspace{2.5cm} \Gamma : (Id) \rightarrow (Type, NestingLevel, Offset)
+\end{equation}
+A livello di implementazione la SymbolTable è stata realizzata come una lista di hashmap, in cui l'indice della lista corrisponde al livello di annidamento e la hashmap allo scope al livello dell'indice.
+
+La Symbol Table è rappresentata dalla classe java GammaEnv che fornisce i seguenti metodi:
+
+\begin{description}
+    \item[newEmptyScope(\hspace{0.3cm})] : $ \Gamma \to \Gamma \bullet \bigl[\hspace{0.35cm}\bigr ]$
+    \item[addDecl(x)] :  $ \Gamma \rightarrow \Gamma _{[x \to Stentry(Type,NestingLevel,Offset)]} $
+    \item[lookup(x)] : $ \Gamma (x) \rightarrow Stentry(Type,NestingLevel,Offset) $
+    \item[exitScope(\hspace{0.3cm})] : $ \Gamma \bullet \Gamma^{'} \to \Gamma $
+    
+\end{description}
+
+\section{Analisi di scope e identificatori}
+In questa fase viene visitato per la prima volta l'Abstract Syntax Tree e ogni volta che si attraversa un nodo si fanno le seguenti operazioni:
+\begin{itemize}
+    \item Per i nodi function vengono eseguite le operazioni di newEmptyScope() e exitScope(). 
+    \item Per ogni dichiarazione viene aggiunta all'environment una nuova entry, con chiave l'id della variabile, e come valore una STentry inizializzata con i valori corrispondenti.
+    \item per ogni statement o espressione viene controllato se le variabili utilizzate sono state già dichiarate in un punto precedente del codice
+\end{itemize}
+
+Di seguito vengono riportate le regole di inferenza utilizzate in questa prima visita:
+    
+
+\begin{align*}
+\infer[\mathrm{[VarDec]}]
+{\Gamma  \hspace{0.2cm} \vdash \hspace{0.2cm} T \hspace{0.2cm} X \hspace{0.2cm} : \hspace{0.2cm} \Gamma _{[x \to T]}} 
+{  X \notin dom(Top(\Gamma)) }
+\end{align*}
+
+\vspace{1cm}
+
+
+\begin{align*}
+\hspace{-0.5cm} 
+\infer[\mathrm{[FunDec]}]
+{\Gamma  \hspace{0.1cm} \vdash \hspace{0.1cm} T \hspace{0.1cm} f(T_{1} x_{1}, ..., T_{n} x_{n})[T^{a} a_{1}, ..., T^{a} a_{m}] \hspace{0.1cm} = \hspace{0.1cm} e; \hspace{0.1cm} : \hspace{0.1cm}  \Gamma _{[f \to (T_{1},...,T_{n}, Asset_{1}, ..., Asset_{m}) \to T]}} 
+{\deduce[]{\Gamma _{[f \to (T_{1},...,T_{n}, Asset_{1}, ..., Asset_{m}) \to T, x_{1} \to T_{1}, ..., x_{n} \to T_{n}, a_{1} \to T_{a}, ..., a_{m} \to T_{a}]}\vdash e : T }{T^{a} = Asset & \hspace{4cm}f \notin dom(Top(\Gamma)) } }
+\end{align*}
+
+\vspace{1.5cm}
+
+\begin{align*}
+\infer[\mathrm{[DecSeq]}]
+{\Gamma  \hspace{0.2cm} \vdash \hspace{0.2cm} d \hspace{0.2cm} D \hspace{0.2cm} : \hspace{0.2cm} \Gamma ^{''}_{}} 
+{  \Gamma \vdash d : \Gamma^{'} & \Gamma^{'} \vdash D : \Gamma^{''} }
+\end{align*}
+
+\newpage
+\section{Type Checking}
+AssetLan ammette 4 tipi: intero, booleano, asset e void (quest'ultimo utilizzabile solo dalle funzioni). Di seguito verranno discusse le regole formali per il tipaggio di tutti i costrutti del linaguaggio e le loro implementazioni.
+
+\begin{itemize}
+    \item \textit{Program} è il nodo iniziale del programma, include una serie di dichiarazioni ordinate di variabili, asset e funzioni seguite dalla entry point. Il tipo dell'entry point corrisponde al tipo del programma.
+    
+    \begin{align*}
+    \infer[\mathrm{[Program]}]
+    {[\hspace{0.3cm}] \hspace{0.1cm} \vdash  D\hspace{0.2cm} InitCall : T \hspace{0.1cm} } 
+    {  [\hspace{0.3cm}] \vdash D : \Gamma & \Gamma \vdash Initcall: T }
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Field]}]
+    {\Gamma  \hspace{0.2cm} \vdash \hspace{0.2cm} T \hspace{0.2cm} X \hspace{0.2cm} = Exp\hspace{0.2cm}: \hspace{0.2cm} T} 
+    { \Gamma(X) : T & \Gamma\vdash Exp:T }
+    \end{align*}
+    
+    \begin{align*}
+    \hspace{-1cm}
+    \infer[\mathrm{[InitCall]}]
+    {\Gamma  \hspace{0.2cm} \vdash \hspace{0.2cm} f(x_{1}, ...x_{n})[a_{1}, ..., a_{m}] \hspace{0.2cm} : \hspace{0.2cm} T} 
+    {  \Gamma (f) = (T_{1},...T_{n},Asset_{1},...,Asset_{m}) \to T  & (\Gamma \vdash x_{i} : T_{i})_{\forall{i \hspace{0.1cm}in \hspace{0.1cm} 1..n}} & (\Gamma \vdash a_{i} : Int)_{\forall{i \hspace{0.1cm} in  \hspace{0.1cm}1..m}}}
+    \end{align*}
+\end{itemize}
+
+
+
+\begin{itemize}
+    \item In AssetLan gli statement possibili sono:
+    
+    \begin{align*}
+    \infer[\mathrm{[Asg]}]
+    {\Gamma  \hspace{0.2cm} \vdash \hspace{0.2cm} X \hspace{0.2cm} = \hspace{0.2cm}  e : \hspace{0.1cm} Void} 
+    {  \Gamma (X) = T & \Gamma \vdash E : T^{'} & T= T^{'} }
+    \end{align*}
+
+    \begin{align*}
+    \hspace{-1cm}
+    \infer[\mathrm{[Call]}]
+    {   
+    \Gamma  \hspace{0.2cm} \vdash \hspace{0.2cm} f(x_{1}, ...x_{n})[a_{1}, ..., a_{m}] \hspace{0.2cm} : \hspace{0.2cm} T} 
+    {  \Gamma (f) = (T_{1},...T_{n},Asset_{1},...,Asset_{m}) \to T  & (\Gamma \vdash x_{i} : T_{i})_{\forall{i \hspace{0.1cm}in \hspace{0.1cm} 1..n}} & (\Gamma \vdash a_{i} : Asset)_{\forall{i \hspace{0.1cm} in  \hspace{0.1cm}1..m}}}
+    \end{align*}
+  
+    \begin{align*}
+    \infer[\mathrm{[Ite]}]
+    {\Gamma \hspace{0.2cm} \vdash  \hspace{0.2cm}if\hspace{0.2cm} (exp)\hspace{0.2cm} \{Stm_{1}\}\hspace{0.2cm} else \hspace{0.2cm}\{Stm_{2}\} : \hspace{0.2cm}Void } 
+    {  \Gamma \vdash exp : Bool & \Gamma \vdash Stm_{1} : Void & \Gamma \vdash Stm_{2} : Void }
+    \end{align*}
+
+    \begin{align*}
+    \infer[\mathrm{[Move]}]
+    {\Gamma \hspace{0.2cm} \vdash  \hspace{0.2cm}a_{1}\hspace{0.2cm} -o\hspace{0.2cm} a_{2} \hspace{0.2cm}: \hspace{0.2cm}Void } 
+    {  \Gamma(a_{1}) = Asset & \Gamma(a_{2}) = Asset  }
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Print]}]
+    {\Gamma \hspace{0.1cm} \vdash  \hspace{0.1cm}print\hspace{0.1cm} \hspace{0.1cm}Exp: \hspace{0.1cm}Void } 
+    {  \Gamma \vdash Exp: T  }
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Ret]}]
+    {\Gamma \hspace{0.1cm} \vdash  \hspace{0.1cm}return\hspace{0.1cm} \hspace{0.1cm}Exp: \hspace{0.1cm}T } 
+    {  \Gamma \vdash Exp: T  }
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Transfer]}]
+    {\Gamma \hspace{0.1cm} \vdash  transfer\hspace{0.1cm} a \hspace{0.1cm}: \hspace{0.1cm}Void } 
+    {  \Gamma(a) = Asset  }
+    \end{align*}
+
+\end{itemize}
+
+\begin{itemize}
+    \item Di seguito vengono riportate le regole di inferenze per tipaggio delle espressioni:
+    
+    
+    
+    \begin{align*}
+    \infer[\mathrm{[Int]}]
+    {\Gamma \vdash  N\hspace{0.2cm} : Int  } 
+    {   }
+    \end{align*}
+    
+    
+    \begin{align*}
+    \infer[\mathrm{[Bool]}]
+    {\Gamma \vdash  B\hspace{0.2cm} : Bool  } 
+    {   }
+    \end{align*}
+
+    
+    \begin{align*}
+    \infer[\mathrm{[ID]}]
+    {\Gamma \vdash  ID\hspace{0.2cm} : T  } 
+    { \Gamma(ID):T  }
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Neg]}]
+    {\Gamma \vdash  -Exp\hspace{0.2cm} : T  } 
+    { \Gamma \vdash Exp : T & T!=Bool  }
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Not]}]
+    {\Gamma \vdash  !Exp\hspace{0.2cm} : T  } 
+    { \Gamma \vdash Exp : Bool }
+    \end{align*}
+    
+    
+    
+\end{itemize}
+
+
+\begin{itemize}
+    \item \textit{BinExpNode} può esprimere diverse funzioni binarie con parametri e tipi diversi.
+
+    \begin{align*}
+    \infer[\mathrm{[BinExp]}]
+    { \Gamma \hspace{0.1cm} \vdash \hspace{0.1cm} Exp \hspace{0.1cm} op \hspace{0.1cm} Exp \hspace{0.1cm} : \hspace{0.1cm} T   } 
+    { \Gamma \vdash op: (T1 x T2) \to T & \Gamma \vdash Exp1: T1 & \Gamma \vdash Exp2:T2}
+    \end{align*}
+    \newpage
+     I tipi che può assumere \textbf{op} sono i seguenti:
+    \begin{itemize}
+        \item[+] : (int x int) -> int
+        \item[-] : (int x int) -> int 
+        \item[*] : (int x int) -> int 
+        \item[/] : (int x int) -> int 
+        \item[<] : (int x int) -> bool
+        \item[<=]: (int x int) -> bool
+        \item[>] : (int x int) -> bool
+        \item[>=]: (int x int) -> bool
+        \item[==]: (T x T) -> bool
+        \item[!=]: (T x T) -> bool
+        \item[\&\&]: (bool x bool) -> bool
+        \item[||]: (bool x bool) -> bool
+    \end{itemize}
+    
+    In \textit{BinExpNode} è ammesso l'uso del tipo asset insieme a int, ovvero è possibile fare operazioni aritmetiche tra asset e interi
+\end{itemize}
+
+
+\section{Analisi di effetti e liquidity}
+AssetLan è un linguaggio semplice che non permette la cancellazione di variabili. Le variabili quando dichiarate possono essere non inizializzate, quindi è necessario fare attenzione al loro utilizzo negli statement. 
+
+Oltre ai tipi Int e Bool, AssetLan introduce gli Asset, risorse con valore intero e maggiore o uguale a zero. Il loro valore può essere spostato con un'operazione move o passato al chiamante con una transfer.
+
+Un programma in AssetLan risulta corretto quando  rispetta la Liquidity, ovvero:  
+\begin{itemize}
+    \item per ogni funzione, i parametri formali asset devono essere 0 alla fine della sua esecuzione
+	\item alla fine del programma i campi asset sono 0.
+\end{itemize}
+
+Per verificare la liquidity è necessario operare un'analisi degli effetti del codice di un programma.
+
+Per la gestione degli effetti è stata creata una nuova SymbolTable SigmaEnv (da qui in poi ci riferiremo a questo ambiente come $\Sigma$). Una lookup di un ID in $\Sigma$ restituisce un valore booleano che rappresenta:
+
+\begin{itemize}
+    \item per le variabili se è dichiarata (false $\bot$) o inizializzata (true RW)
+    \item per gli asset se è vuoto (false) o pieno (true)
+\end{itemize}
+
+Di seguito vengono riportate le alcune delle regole di inferenza del linguaggio:
+
+
+    \begin{align*}
+    \infer[\mathrm{[Exp]}]
+    {\Sigma \vdash \hspace{0.2cm}  Exp :\hspace{0.2cm} \Sigma^{'}_{[x_{1} \to RW, ..., x_{n} \to RW]} }
+    { IDs(exp) = {x_{1}, ..., x_{n},a_{1}, ..., a_{m}} & (\Sigma(x) = RW)_{\forall{x \hspace{0.1cm}in \hspace{0.1cm} IDs(Exp)}} }
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Asg]}]
+    {\Sigma  \hspace{0.2cm} \vdash \hspace{0.2cm} X \hspace{0.2cm} = \hspace{0.2cm}  e : \hspace{0.1cm} \Sigma^{'}_{[X \to RW]} }
+    { \Sigma \vdash e :\Sigma^{'} & \Sigma(X) \leq RW }
+    \end{align*}
+
+    \begin{align*}
+    \infer[\mathrm{[Move]}]
+    {\Sigma \hspace{0.2cm} \vdash  \hspace{0.1cm}a_{1}\hspace{0.2cm} -o\hspace{0.2cm} a_{2} \hspace{0.2cm}: \hspace{0.2cm}\Sigma_{[a1 \to 0, a2 \to 1]} } 
+    {}
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Transfer]}]
+    {\Sigma \hspace{0.2cm} \vdash  \hspace{0.2cm}transfer\hspace{0.1cm} \hspace{0.1cm} a \hspace{0.2cm}: \hspace{0.2cm}\Sigma_{[a \to 0]} } 
+    {}
+    \end{align*}
+    
+    \begin{align*}
+    \infer[\mathrm{[Ite]}]
+    {\Sigma \hspace{0.2cm} \vdash  \hspace{0.2cm}if\hspace{0.2cm} (exp)\hspace{0.2cm} \{Stm_{1}\}\hspace{0.2cm} else \hspace{0.2cm}\{Stm_{2}\} : \hspace{0.2cm}Max(\Sigma_{1},\Sigma_{2}) } 
+    {  \Sigma \vdash exp : \Sigma^{'} &  \Sigma^{'} \vdash Stm_{1} :  \Sigma_{1} & \Sigma^{'} \vdash Stm_{2} : \Sigma_{2} }
+    \end{align*}
+    
+    L'operazione Max(Env1, Env2) restituisce un nuovo ambiente $\Sigma$ in cui gli effetti risultanti sono il massimo per ogni ID $\in$ $\Sigma$ 
+    
+    
+\subsection{Punto fisso per l'analisi degli effetti di funzioni}
+L'analisi degli effetti delle chiamate richiede più attenzione rispetto agli altri statement. Il corpo di una funzione viene analizzato al momento della chiamata ed è necessario seguire altre possibili chiamate presenti nel corpo, facendo attenzione a quelle ricorsive.
+
+Le funzioni permettono passaggio di variabili solo per valore, quindi vengono valutati gli effetti per ogni espressione usata come parametro nella chiamata.
+
+\begin{align*}
+    f(exp_{1}, ..., exp_{n})[a_{1}, ...,a_{m}] & : (\Sigma \vdash exp_{i})_{\forall{i \in 1..n}}
+\end{align*}
+
+Il passaggio di parametri asset funziona diversamente da quello di variabili. L'asset parametro attuale si svuota e il suo valore viene passato all'asset parametro formale. Alla fine della chiamata di funzione viene controllato l'effetto per ogni asset locale e se uno di questi risulta pieno allora la liquidity non è rispettata.
+
+Gli asset vengono valutati da destra verso sinistra per rispettare la codeGeneneration dei parametri in una chiamata di funzione.
+
+Quando viene trovata una chiamata di funzione in uno statement si controllano gli effetti per ogni espressione e si salvano gli effetti attuali degli asset che verranno svuotati. A questo punto si assegnano agli asset formali gli effetti salvati in chiamata e vengono controllati gli effetti degli statement nel corpo della funzione. Al termine del corpo, se gli asset locali non sono stati svuotati con move e transfer la funzione non è liquida.
+
+Codice per gestione del punto fisso nella chiamata.
+\begin{lstlisting}
+if (env.isRecursive(this.id)){ // Checking recursive call
+    Boolean fixedPoint = env.fixedPoint(actualEffects,ids);
+    if (!fixedPoint){
+        // Fixed point not reached...
+        env = called_function.checkFunctionEffects(env,actualEffects);
+        // After fixed point, updating effects after function call...
+        actualEffects = env.getFixedPointResult();
+        for(int i = 0; i < assets.size(); i++) {
+            Node a = assets.get(i).getEntry();
+            if(actualEffects.get(i)) {
+                env.lookup(a).setTrue();
+            }else{
+                env.lookup(a).setFalse();
+            }
+        }
+    }else{
+        // Fixed Point!
+        env.addFixedPointResult(env.getEffects(ids)); // Updating effects...
+    }
+}else{
+    env.addFunctionCall(this.id);
+    env = called_function.checkFunctionEffects(env,actualEffects);
+}
+\end{lstlisting}
+
+In caso di chiamate ricorsive viene utilizzato il metodo del punto fisso per evitare di eseguire un loop infinito di analisi degli effetti delle chiamate.
+
+Prima di una chiamata ricorsiva vengono confrontati gli effetti attuali degli asset e il loro valore ad inizio funzione. Se almeno uno degli effetti è diverso significa che il punto fisso non è stato ancora raggiunto ed è quindi necessario continuare a seguire la chiamata di funzione.
+\newline Invece, se gli effetti combaciano, il punto fisso è stato raggiunto e quindi non è necessario seguire la chiamata perché non ci saranno più variazioni.
+\newline Raggiunto il punto fisso si aggiornano gli effetti con i valori trovati che vengono poi passati alle chiamate precedenti.
+
+Codice usato per controllare se il punto fisso è stato raggiunto 
+\begin{lstlisting}
+Boolean fixedPoint = true;
+for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
+    String id = ids.get(i);
+    boolean status = this.lookup(id).getStatus();
+    
+    if (!status == actualEffects.get(i)){               
+        fixedPoint = false; // fixed point not reached
+    }
+}
+return fixedPoint;
+\end{lstlisting}
+
+\chapter{Generazione codice intermedio per AVM}
+Dopo aver effettuato l'analisi semantica e l'analisi degli effetti, il passo successivo è stato quello di generare il bytecode ovvero, un set di istruzioni progettato per essere eseguito da un interprete. \newline
+L’interprete di base è una classe Java che cicla su tutte le istruzioni prodotte dal compilatore e le esegue. Questa lettura avviene in un ciclo che si interrompe nel momento in cui viene letta l’istruzione halt o nel momento in cui viene esaurita la memoria della pila disponibile.  \newline
+AssetLan Virtual Machine è una macchina a pila e a registri astratta che si occuperà di eseguire il bytecode generato dal compilatore.
+\newline
+Le istruzioni dell'interprete sono le seguenti:
+\begin{lstlisting}
+instruction:
+(
+    PUSH n=NUMBER
+	  | PUSH r1=REGISTER
+	  | POP
+	  | ADD r1=REGISTER r2=REGISTER r3=REGISTER
+	  | ADDI r1=REGISTER r2=REGISTER n=NUMBER
+	  | SUB r1=REGISTER r2=REGISTER r3=REGISTER
+	  | SUBI r1=REGISTER r2=REGISTER n=NUMBER
+	  | MULT r1=REGISTER r2=REGISTER r3=REGISTER
+	  | MULTI r1=REGISTER r2=REGISTER n=NUMBER
+	  | DIV r1=REGISTER r2=REGISTER r3=REGISTER
+	  | DIVI r1=REGISTER r2=REGISTER n=NUMBER
+	  | OR r1=REGISTER r2=REGISTER r3=REGISTER
+	  | AND r1=REGISTER r2=REGISTER r3=REGISTER
+	  | NOT r1=REGISTER r2=REGISTER
+	  | STOREW r1=REGISTER o=NUMBER LPAR r2=REGISTER RPAR
+	  | LOADW r1=REGISTER o=NUMBER LPAR r2=REGISTER RPAR
+	  | LOAD r1=REGISTER n=NUMBER
+	  | MOVE r1=REGISTER r2=REGISTER
+	  | BRANCH l=LABEL
+	  | BCOND r1=REGISTER l=LABEL
+	  | EQ r1=REGISTER r2=REGISTER r3=REGISTER
+	  | LE r1=REGISTER r2=REGISTER r3=REGISTER
+	  | LT r1=REGISTER r2=REGISTER r3=REGISTER
+	  | GT r1=REGISTER r2=REGISTER r3=REGISTER
+      | GE r1=REGISTER r2=REGISTER r3=REGISTER
+      | JAL l=LABEL
+      | JR r1=REGISTER
+	  | PRINT r1=REGISTER
+	  | TRANSFER r1=REGISTER
+	  | HALT
+);
+\end{lstlisting}
+
+Di seguito una breve descrizione delle diverse funzionalità delle istruzioni:
+\begin{itemize} 
+
+   \item\textbf{Push}: memorizza il valore sulla pila e decrementa lo stack pointer.
+    \item\textbf{Pop}: rimuove l'ultimo elemento dalla pila e incrementa lo stack pointer.
+    \item\textbf{Add}: effettua la somma di due registri e inserisce il risultato nel primo registro.
+    \item\textbf{Addi}: effettua la somma di un registro con una costante intera e inserisce il risultato nel primo registro.
+    \item\textbf{Sub}: effettua la differenza di due registri e inserisce il risultato nel primo registro.
+    \item\textbf{Subi}: effettua la differenza di un registro con una costante intera e inserisce il risultato nel primo registro.
+    \item\textbf{Mult}: effettua il prodotto di due registri e inserisce il risultato nel primo registro.
+    \item\textbf{Multi}: effettua il prodotto di un registro con una costante intera e inserisce il risultato nel primo registro.
+   \item\textbf{Div}: effettua la divisione di due registri e inserisce il risultato nel primo registro.
+   \item\textbf{Divi}: effettua la divisione di un registro con una costante intera e inserisce il risultato nel primo registro.
+    \item\textbf{Or}: restituisce true se uno dei due registri valgono true, false nel caso in cui entrambi i registri valgono false.
+    \item\textbf{And}: restituisce true se entrambi i registri valgono true, false altrimenti.
+    \item\textbf{Not}: restituisce true se il registro vale false, altrimenti restituisce false.
+    \item\textbf{StoreW}: salva il valore di r1 all'indirizzo di memoria calcolato sommando l'offset con r2.
+    \item\textbf{LoadW}: carica il valore salvato all'indirizzo di memoria calcolato sommando l'offeset con r2 all'interno del registro r1.
+    \item\textbf{Load}: carica un intero all'interno del registro r1.
+    \item\textbf{Move}: salva il valore di r1 in r2.
+    \item\textbf{Branch}: effettua un salto incondizionato alla label specificata.
+    \item\textbf{BCond}: effettua un salto condizionato alla label specificata. Il salto avviene solo se il registro r1 è uguale a false.
+    \item\textbf{Eq}: carica true in r1 se r2 e r3 sono uguali, altrimenti viene caricato false.
+    \item\textbf{Le}: carica true in r1 se r2 è minore o uguale di r3, altrimenti viene caricato false.
+    \item\textbf{Lt}: carica true in r1 se r2 è minore di r3, altrimenti viene caricato false.
+    \item\textbf{Gt}: carica true in r1 se r2 è maggiore di r3, altrimenti viene caricato false.
+    \item\textbf{Ge}: carica true in r1 se r2 è maggiore o uguale di r3, altrimenti viene caricato false.
+    \item\textbf{Jal}: salta alla label specificata e salva l'istruzione successiva nel return address.
+    \item\textbf{Jr}: salta all'istruzione specificata nel return address.
+    \item\textbf{Print}: stampa il valore salvato nel registro r1.
+    \item\textbf{Transfer}: carica il valore di r1 nel campo wallet della Asset Virtual Machine.
+    \item\textbf{Halt}: ferma l'esecuzione del programma e stampa il valore del wallet.
+\end{itemize}
+
+\section{Generazione del codice intermedio}
+Per generare il codice è stata utilizzata la funzione codeGeneration implementata per ogni costrutto del linguaggio, mostrate di seguito.
+\subsection{Program}
+AssetLan non prevede blocchi se non quello creato dal nodo iniziale program in cui sono contenuti una serie di dichiarazioni globali.
+
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append("//BEGIN PROGRAM\n\n");
+out.append("//BLOCK \n");
+
+out.append("push 0\n".repeat(fields.size() + assets.size()));
+
+out.append("mv $sp $fp //Load $fp for initial block\n");
+out.append("// GLOBAL FIELDS ASG\n");
+for (Node f : fields){
+	out.append(f.codeGeneration());
+}
+out.append("\n//INITCALL\n");
+out.append(initcallnode.codeGeneration());
+out.append("\nhalt //exit program...\n\n");
+out.append("//FUNCTIONS\n\n");
+for (Node f : functions) out.append(f.codeGeneration());
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}: 
+\begin{lstlisting}
+    program: field* asset* function* initcall ;
+\end{lstlisting}
+La grammatica di \textit{program} richiama i nodi field, asset, function e initcall.
+Viene allocato spazio sulla pila per variabili e asset globali, una volta impostato il frame pointer del blocco iniziale viene chiamata la codeGeneration di \textit{field} per assegnarli i valori. 
+La codeGeneration viene chiamata sul nodo \textit{Initcall} e sui nodi \textit{Function}.
+
+\newpage
+\subsection{Field}
+\begin{lstlisting}
+if (exp == null) {
+	return "";
+}
+StringBuilder out = new StringBuilder();
+out.append("\n// Field ").append(id).append("\n");
+out.append(exp.codeGeneration());
+out.append("sw $a0 ").append(entry.getOffset()).append("($fp)").append("\n");
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}: 
+\begin{lstlisting} 
+    field : type ID ('=' exp)? ';' ;
+\end{lstlisting}
+Nella codegeneration di \textit{Field} viene chiamata la codegen su exp e il suo valore viene caricato all'indirizzo della variabile. Se non c'è inizializazzione viene restituita la stringa vuota.
+
+\subsection{Asset}
+\begin{lstlisting}
+return "push 0\n";
+\end{lstlisting}
+\textbf{Grammatica}: 
+\begin{lstlisting}
+    asset : 'asset' ID ';' ;
+\end{lstlisting}
+Nel nodo \textit{Asset} viene allocato spazio sulla pila per le variabili.
+
+\newpage
+\subsection{Function}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append(f_label).append(": //").append(this.id).append("\n");
+out.append("mv $sp $fp\n");
+out.append("push $ra\n");
+for (Node n : body_params)  out.append(n.codeGeneration()); 
+for (Node s:statements)  out.append(s.codeGeneration()); 
+out.append("\n").append(end_label).append(":\n");
+out.append("subi $sp $fp 1 \n");
+out.append("lw $fp 0($fp) \n");
+out.append("lw $ra 0($sp)\n");
+out.append("pop\n");
+int parameter_size = params.size() + assets.size() + body_params.size();
+out.append("addi $sp $sp ").append(parameter_size).append("\n");
+out.append("pop\n");
+out.append("lw $fp 0($sp)\n");	
+out.append("pop\n");
+out.append("jr $ra\n");
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}: 
+\begin{lstlisting}
+function : type ID 
+            '(' (param (',' param)* )? ')'
+            '[' (aparam (',' aparam)* )? ']'
+	        '{' field* statement* '}' ; 
+\end{lstlisting}
+Nel nodo \textit{Function} la codeGeneration inizia con una label che rappresenta la entry point della funzione, in seguito viene fatta la move per caricare il frame pointer per il record di attivazione per poi farne il push.
+Dopo aver impostato il frame pointer, per ogni variabile locale della funzione ne viene assegnato il valore attraverso la codeGeneration di \textit{field}.
+\newline Per ogni nodo di \textit{Statement} viene chiamata la codeGeneration. Nel caso in cui ci sia un return per poter saltare alla fine della funzione è stata creata la label \textit{endLabel}. \newline
+Alla fine del corpo della funzione vengono effettuate le operazioni per il ripristino del frame pointer e vengono poi eseguite le pop per tutti i parametri di cui è stato fatto push durante la chiamata di funzione.
+
+\newpage
+\subsection{Initcall}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append("push $fp\n");
+ArrayList<Node> bodyParams = this.getBodyParams();
+out.append("push 0 \n".repeat(bodyParams.size()));
+
+for (int i = aexp.size()-1; i>=0; i--){
+    out.append(aexp.get(i).codeGeneration());
+    out.append("push $a0 \n");
+}
+
+for (int i = exp.size()-1; i>=0; i--){
+    out.append(exp.get(i).codeGeneration());
+    out.append("push $a0 \n");
+}
+out.append("mv $fp $al //put in $al actual fp\n");
+out.append("push $al\n");
+out.append("jal ").append(this.getLabel()).append(" //Initcall: jump to start of ").append(id).append("\n");
+return out.toString();
+\end{lstlisting}
+
+\textbf{Grammatica}:
+\begin{lstlisting}
+initcall: ID '(' (exp (',' exp)* )? ')' '[' (aexp (',' aexp)* )? ']' ;
+\end{lstlisting}
+Il nodo \textit{Initcall} è un caso particolare del nodo \textit{call} essendo l'entry point del programma.
+Nella sua codeGeneration vengono valutati i parametri nel seguente ordine: bodyParam, aexp ed exp. Questo con lo scopo di rispettare l'ordine degli offset nelle dichiarazioni.
+
+\newpage
+\subsection{Statement}
+\textbf{Grammatica}:
+\begin{lstlisting}
+statement   : assignment ';'
+            | move ';'     
+            | print ';'
+            | transfer ';' 
+            | ret ';'
+            | ite 
+            | call ';' ;
+\end{lstlisting}
+\textit{Statement} è un nodo di passaggio e viene chiamata la codeGeneration sul suo figlio.
+\subsubsection{Assignment }
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append("\n// Asg ").append(id).append("\n");
+out.append(exp.codeGeneration());
+out.append("mv $fp $al //put in $al actual fp\n");
+out.append("lw $al 0($al) //go up to chain\n".repeat(Math.max(0, this.currentNL - entry.getNestinglevel())));
+out.append("sw $a0 ").append(entry.getOffset()).append("($al) //put $a0 in Id ").append(id).append("\n");
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}:
+\begin{lstlisting}
+assignment  : ID '=' exp ;
+\end{lstlisting}
+La codeGeneration di \textit{Assignment} inizia con la valutazione dell'espressione di destra andando a richiamare la codeGeneration sul nodo \textit{exp}.
+Il risultato della chiamata viene memorizzato all'interno della memoria all'indirizzo determinato dalla somma dell'offset della variabile con il valore dell'access link.
+
+\subsubsection{Move}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append("mv $fp $al");
+out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry1.getNestinglevel()));
+int offsetWithAL = entry1.getOffset();
+out.append("lw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+out.append("push $a0");
+
+out.append("li $a0 0 //emptying the asset\n");
+out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+
+out.append("mv $fp $al //moving the asset\n");
+out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry2.getNestinglevel()));
+offsetWithAL = entry2.getOffset();
+out.append("lw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+out.append("lw $a2 0($sp)");
+out.append("add $a0 $a2 $a0 \n");
+out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}:
+\begin{lstlisting}
+move: ID '-o' ID ;
+\end{lstlisting}
+La codeGeneration dell'istruzione \textit{Move} può essere divisa concettualmente in due passaggi principali:
+\begin{enumerate}
+    \item Viene caricato all'interno del registro \$a0 il valore del primo asset, che successivamente viene memorizzato sulla pila attraverso l'istruzione push. In seguito, viene svuotato l'asset salvando 0 all'interno dell'area di memoria riservata ad esso.
+    \item Successivamente viene caricato il valore del secondo asset nel registro \$a0, al quale viene sommato il top della pila che contiene il valore del primo asset. Infine, viene caricato il nuovo valore nell'area di memoria riservata al secondo asset.
+\end{enumerate}
+\newpage
+\subsubsection{Print}
+\begin{lstlisting}
+return this.exp.codeGeneration() + "print $a0\n";
+\end{lstlisting}
+\textbf{Grammatica}:
+\begin{lstlisting}
+print: 'print' exp ;
+\end{lstlisting}
+L'unica istruzione eseguita nella codeGeneration del nodo \textit{Print} è la stampa del valore del registro e nel caso in cui sia presente un'espressione si valuta prima quest'ultima.
+
+\subsubsection{Transfer}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append("mv $fp $al //put in $al actual fp\n");
+out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry.getNestinglevel()));
+int offsetWithAL = entry.getOffset();
+out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(id).append("\n");
+
+out.append("transfer $a0\n");
+
+out.append("li $a0 0 // Emptying the asset...\n");
+out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}:
+\begin{lstlisting}
+transfer: 'transfer' ID ;
+\end{lstlisting}
+L'esecuzione della codeGeneration per \textit{Transfer} si occupa di caricare all'interno del registro \$a0 il valore dell'asset per poi, andarlo a trasferire nel wallet dell'Asset Virtual Machine ed infine svuotarlo.
+\newpage
+\subsubsection{Return}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+if( exp != null){
+    out.append(exp.codeGeneration()).append("\n");
+}
+out.append("b ").append(parent_f.getEndLabel()).append("\n");
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}:
+\begin{lstlisting}
+ret	: 'return' (exp)? ;
+\end{lstlisting}
+Il nodo \textit{Return} nella codeGeneration salta alla fine della funzione e in caso sia presente un'espressione si chiama la sua codeGeneration.
+
+\subsubsection{Ite}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+String lFalse = LabelManager.getFreshLabel("false");
+String lEnd = LabelManager.getFreshLabel("end");
+out.append("//ite\n");
+out.append(exp.codeGeneration());
+out.append("bc $a0 ").append(lFalse).append("\n");
+        // True
+for (Node s : thenb) {
+    out.append(s.codeGeneration());
+}
+out.append("b").append(" ").append(lEnd).append("\n");
+out.append(lFalse).append(":\n");
+// Else Branch
+for (Node s : elseb) {
+    out.append(s.codeGeneration());
+}
+// End
+out.append(lEnd).append(":\n");
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}:
+\begin{lstlisting}
+ite : 'if' '(' exp ')' '{' thenb = statementseq '}' ('else' '{' elseb = statementseq '}')?;
+\end{lstlisting}
+
+La codeGeneration di \textit{Ite} comincia con l'esecuzione della codeGeneration dell'espressione la quale può restituire due valori: 
+\begin{itemize}
+    \item[0]: si salta alla label lFalse per poi eseguire la codeGneration del nodo else
+    \item[1]: si chiama la codeGeneration del ramo then
+\end{itemize}
+
+
+\subsubsection{Call}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append("//Call ").append(id).append(" call\n");
+out.append("push $fp\n");
+ArrayList<Node> bodyParams = this.getBodyParams();
+
+out.append("push 0 \n".repeat(bodyParams.size()));
+
+for (int i = assets.size()-1; i>=0; i--){
+    STentry entry = assets.get(i);
+    out.append("mv $fp $al\n");
+    out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - entry.getNestinglevel()));
+    int offsetWithAL = entry.getOffset();
+    out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(ids.get(i)).append("\n");
+    out.append("push $a0 \n");
+    
+    out.append("li $a0 0\n");
+    out.append("sw $a0 ").append(offsetWithAL).append("($al)").append("\n");
+}
+
+for (int i = expressions.size()-1; i>=0; i--){
+    out.append(expressions.get(i).codeGeneration());
+    out.append("push $a0 \n");
+}
+
+out.append("mv $fp $al // calling function...\n");
+out.append("lw $al 0($al) //go up to chain\n".repeat(Math.max(0, currentNL - entry.getNestinglevel())));
+out.append("push $al\n");
+out.append("jal ").append(this.getLabel()).append("//jump to start of function and put in $ra next instruction\n");
+
+return out.toString();
+\end{lstlisting}
+\textbf{Grammatica}:
+\begin{lstlisting}
+call : ID '(' (exp (',' exp)* )? ')' '[' (ID (',' ID)* )? ']' ;
+\end{lstlisting}
+Con il nodo \textit{Call} viene gestita la chiamata di una funzione. In prima istanza viene riservato lo spazio in memoria per tutte i parametri dichiarati nel body, per tutti gli asset e i parametri attuali. Infine viene gestita la chiamata della funzione caricando in \$al l'access link corretto, che viene successivamente salvato sulla pila, e poi viene effettuata l' effettiva chiamata utilizzando l'istruzione jal, che effettua un salto incondizionato alla funzione identificata dalla label, e che salva in \$ra l'indirizzo di ritorno dell'istruzione successiva.
+
+\subsection{Exp}
+\textbf{Grammatica}
+\begin{lstlisting}
+exp	        : '(' exp ')'				                        #baseExp
+            | '-' exp					                        #negExp
+            | '!' exp                                           #notExp
+            | ID						                        #derExp
+            | left=exp op=('*' | '/')               right=exp   #binExp
+            | left=exp op=('+' | '-')               right=exp   #binExp
+            | left=exp op=('<' | '<=' | '>' | '>=') right=exp   #binExp
+            | left=exp op=('=='| '!=')              right=exp   #binExp
+            | left=exp op='&&'                      right=exp   #binExp
+            | left=exp op='||'                      right=exp   #binExp
+            | call                                              #callExp
+            | BOOL                                              #boolExp
+            | NUMBER					                        #valExp;
+
+\end{lstlisting}
+
+Attraverso il nodo \textit{Exp} viene gestita la generazione del codice intermedio di tutte le espressioni del linguaggio. In particolare, meritano una menzione i nodi: 
+\begin{itemize}
+    \item DerExp
+    \item BinExp
+    \item NegExp
+    \item NotExp
+\end{itemize}
+Il nodo \textit{CallExpNode} richiama ricorsivamente la funzione codeGeneration sul nodo Call, che abbiamo già precedentemente discusso, mentre per il nodo BaseExpNode analogamente chiamiamo ricorsivamente codeGeneration, ma in questo caso sul nodo Exp.
+
+\subsubsection{BinExp}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+String left_generated = left.codeGeneration(); 
+out.append(left_generated);
+out.append("push $a0\n");
+String right_generated = right.codeGeneration(); 
+out.append(right_generated);
+out.append("lw $a2 0($sp)\n"); 
+out.append("pop\n"); 
+switch (op) {
+	case "+":{
+	out.append("add $a0 $a2 $a0 // a0 = t1+a0\n");
+	break;
+}
+case "-": {
+	out.append("sub $a0 $a2 $a0 // a0 = t1-a0\n");
+	break;
+}
+case "*": {
+    out.append("mult $a0 $a2 $a0 // a0 = t1+a0\n");
+	break;
+}
+case "/": {
+	out.append("div $a0 $a2 $a0 // a0 = t1/a0\n");
+	break;
+}
+case "<=":{
+	out.append("le $a0 $a2 $a0 // $a0 = $a2 <= $a0\n");
+	break;
+}
+case "<":{
+	out.append("lt $a0 $a2 $a0 // $a0 = $a2 < $a0\n");
+	break;
+}
+case ">":{
+	out.append("gt $a0 $a2 $a0 // $a0 = $a2 > $a0\n");
+	break;
+}
+case ">=":{
+	out.append("ge $a0 $a2 $a0 // $a0 = $a2 >= $a0\n");
+	break;
+}
+case "==":{
+	out.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
+	break;
+}
+case "!=":{
+	out.append("eq $a0 $a2 $a0 // $a0 = $a2 == $a0\n");
+	out.append("not $a0 $a0 // $a0 = !$a0\n");
+	break;
+}
+case "&&":{
+	out.append("and $a0 $a2 $a0 // $a0 = $a2 && $a0\n");
+	break;
+}
+case "||":{
+	out.append("or $a0 $a2 $a0 // $a0 = $a2 || $a0\n");
+	break;
+}
+\end{lstlisting}
+Il nodo \textit{BinExp} rappresenta tutte le operazioni che sono possibili tra due registri. Possiamo suddividere la funzione che genera codice intermedio in due parti:
+\begin{enumerate}
+    \item La prima parte si occupa richiamare ricorsivamente la codeGeneration sull'espressione di sinistra e sull'espressione di destra. \newline Dopo aver valutato l'espressione di sinistra, il risultato viene caricato nel registro \$a0 e successivamente memorizzato sullo stack attraverso l'istruzione push. In seguito viene valutata quindi l'espressione di destra, caricato il risultato sul registro \$a0. Viene poi caricato nel registro \$a2 il valore dell'espressione sinistra che è caricata sul top della pila, che viene poi eliminato con l'istruzione pop.
+    \item Da questo punto in poi la parte successiva della generazione di codice dipende esclusivamente dal tipo di operazione. 
+\end{enumerate}
+
+\newpage
+\subsubsection{DerExp}
+\begin{lstlisting}
+StringBuilder out = new StringBuilder();
+out.append("mv $fp $al // DerExpNode ").append(id).append("\n");
+out.append("lw $al 0($al)\n".repeat(Math.max(0, this.currentNL) - this.entry.getNestinglevel()));
+int offsetWithAL = entry.getOffset();
+out.append("lw $a0 ").append(offsetWithAL).append("($al) //loads in $a0 the value in ").append(id).append("\n");
+return out.toString();
+\end{lstlisting}
+Viene caricato il valore della variabile all'interno del registro \$a0. Il valore è memorizzato all'indirizzo di memoria determinato dalla somma dell'offset della variabile con il valore dell'access link. Quest'ultimo in particolare viene determinato dalla posizione della variabile nello scope, e risalendo la catena statica fino al raggiungimento del nesting level corretto.
+
+
+\subsubsection{NegExp}
+\begin{lstlisting}
+return exp.codeGeneration() + "multi $a0 $a0 -1 //negate\n";
+\end{lstlisting}
+Il nodo \textit{NegExp} chiama prima la codeGenaration di exp ed infine, moltiplica il valore ottenuto e caricato all'interno del registro \$a0 con -1 e inserisce il risultato nel registro \$a0.
+
+\subsubsection{NotExp}
+\begin{lstlisting}
+return exp.codeGeneration() + "not $a0 $a0 //not\n";
+\end{lstlisting}
+Il nodo \textit{NotExp} chiama la codeGenaration di exp e restituisce il valore opposto a quello contenuto nel registro \$a0.
+
+\subsubsection{ValExp}
+\begin{lstlisting}
+return "li $a0 " + this.val + "\n";
+\end{lstlisting}
+La codeGenaration di \textit{ValExp} carica nel registro \$a0 la costante intera this.val
+
+
+\subsubsection{BoolExp}
+\begin{lstlisting}
+return "li $a0 "+(this.bool?1:0)+"\n";
+\end{lstlisting}
+La codeGeneration di \textit{BoolExpNode} carica nel registro \$a0 0 se this.bool vale 0 (ossia false), altrimenti carica 1.
+
+\chapter{Test}
+In questa sezione viene discussa la parte relativa ai test creati per la valutazione del progetto AssetLan. In particolare gli esercizi da 1 a 4 sono stati utilizzati per valutare il corretto funzionamento dell'analisi semantica e dell'analisi degli effetti. L'esercizio 5,la modifica dell'esercizio 4 (che chiameremo d'ora in poi esercizio 4.1), e gli esercizi da 1 a 4 sono stati utilizzati per la valutazione della generazione di codice intermedio. Di seguito saranno presentate nelle sotto sezioni successive le discussioni relative ai test effettuati.
+
+\section{Test esempio 1}
+
+\begin{lstlisting}
+asset x;
+asset y;
+void f()[asset u,asset v]{
+    u -o y ;
+    v -o x ;
+}
+void main()[asset u, asset v]{
+
+}
+main()[2,3]	// scambia i valori di x e y; il contratto non e` liquido
+\end{lstlisting}
+\newpage
+Esecuzione Esempio 1
+\begin{lstlisting}
+AssetLan Compiler
+File: "./Test/test1" found.
+
+Parsing...
+Parsing successful!
+
+(*@\hl{Semantic analysis...} @*)
+(*@\hl{Semantic analysis successful!} @*)
+
+(*@\hl{Type checking...} @*)
+(*@\hl{Type checking successful!} @*)
+
+Program type is: void
+
+(*@\hlred{Checking effects...} @*)
+(*@\hlred{Liquidity not respected -> x is not empty} @*)
+(*@\hlred{Liquidity not respected -> y is not empty} @*)
+
+(*@\hlred{2 Effect errors found -> Compilation failed.} @*)
+\end{lstlisting}
+
+
+
+\subsubsection{Analisi semantica e analisi dei tipi}
+In figura possiamo osservare il risultato derivato dalla compilazione dell'Esempio 1. Per quanto riguarda l'analisi semantica e dei tipi, come evidenziato, non risulta nessun errore e il compilatore procede correttamente poi all'analisi degli effetti.
+
+\subsubsection{Analisi degli effetti}
+Per quanto riguarda l'analisi degli effetti viene controllata la liquidity e l'utilizzo di variabili non utilizzate. Ricordiamo che per rispettare la liquidity bisogna rispettare due condizioni:
+\begin{enumerate}
+    \item per ogni funzione, i parametri formali asset devono essere 0 alla fine della sua esecuzione (i valori sono stati spostati nei campi asset oppure trasferiti con una transfer).
+    \item  alla fine del programma i campi asset sono 0.
+\end{enumerate}
+In questo esempio la liquidity non è rispettata perché gli asset x e y non sono stati svuotati prima della fine del programma.
+
+\section{Test esempio 2}
+\begin{lstlisting}
+int a;
+int b = 0 ;
+asset z ;
+void g()[]{
+    transfer z ;
+}
+void f(int x)[asset y]{
+    a = y ;
+    b = b+x ;
+    y -o z ;
+	g()[] ;
+}
+f(1)[2] 		// il contratto e` liquido
+\end{lstlisting}
+Esecuzione Esempio 2
+\begin{lstlisting}
+AssetLan Compiler
+File: "./Test/test2" found.
+
+Parsing...
+Parsing successful!
+
+(*@\hl{Semantic analysis...} @*)
+(*@\hl{Semantic analysis successful!} @*)
+
+(*@\hl{Type checking...} @*)
+(*@\hl{Type checking successful!} @*)
+
+Program type is: void
+
+(*@\hl{Checking effects...} @*)
+(*@\hl{Effects analysis successful! -> Liquidity is respected.} @*)
+
+(*@\hl{Code generation...} @*)
+(*@\hl{Code generation successful!} @*)
+
+Launching interpreter...
+
+Wallet: +2
+Halting program...
+\end{lstlisting}
+
+\subsubsection{Analisi semantica e analisi dei tipi}
+Per quanto riguarda l'analisi semantica e dei tipi non risulta nessun errore e il compilatore procede correttamente all'analisi degli effetti.
+
+\subsubsection{Analisi degli effetti}
+Non ci sono utilizzi di variabili non inizializzate e il programma è liquido perché per ogni funzione gli asset vengono svuotati.
+
+\subsubsection{Esecuzione programma}
+Il programma viene eseguito correttamente e restituisce al wallet dell'utente il valore 2.
+
+
+
+\section{Test esempio 3}
+\begin{lstlisting}
+int a ;
+asset x ;
+void f()[asset u, asset v, asset w]{
+     u -o x ;
+     f()[v,w,u];
+}
+void main()[asset a, asset b, asset c]{
+     f()[a,b,c] ;
+     transfer x ;
+}
+main()[1,2,3] ;	// il contratto e` liquido
+\end{lstlisting}
+
+Esecuzione Esempio 3
+\begin{lstlisting}
+AssetLan Compiler
+File: "./Test/test3" found.
+
+Parsing...
+Parsing successful!
+
+(*@\hl{Semantic analysis...} @*)
+(*@\hl{Semantic analysis successful!} @*)
+
+(*@\hl{Type checking...} @*)
+(*@\hl{Type checking successful!} @*)
+
+Program type is: void
+
+(*@\hl{Checking effects...} @*)
+(*@\hl{Effects analysis successful! -> Liquidity is respected.} @*)
+
+(*@\hl{Code generation...} @*)
+(*@\hl{Code generation successful!} @*)
+
+Launching interpreter...
+
+(*@\hlred{AVM Error -> Stack out of memory} @*)
+Halting...
+\end{lstlisting}
+
+\subsubsection{Analisi semantica e analisi dei tipi}
+Per quanto riguarda l'analisi semantica e dei tipi non risulta nessun errore e il compilatore procede correttamente all'analisi degli effetti.
+
+\subsubsection{Analisi degli effetti}
+Non ci sono utilizzi di variabili non inizializzate e il programma viene valutato come liquido attraverso il metodo del punto fisso.
+
+\subsubsection{Esecuzione programma}
+Il programma viene eseguito correttamente, ma non arriva mai al termine ed esaurisce così la memoria dell'interprete.
+
+
+
+\section{Test esempio 4}
+\begin{lstlisting}
+asset x ;
+void f(int n)[asset v, asset u]{
+   if (n == 0){
+        u -o x ;
+   }else{
+        u -o x ;
+        v -o x ;
+   }
+}
+void main()[asset a]{
+    f(0)[a,a] ;	 // semantica di f()[a,a] -> la a di destra viene 
+    transfer x;  // svuotata prima di quella di sinistra
+	             // gli asset vengono valutati da destra per gli effetti
+}
+main()[1] ;	// il contratto e' liquido
+\end{lstlisting}
+Esecuzione Esempio 4
+\begin{lstlisting}
+AssetLan Compiler
+File: "./Test/test4" found.
+
+Parsing...
+Parsing successful!
+
+(*@\hl{Semantic analysis...} @*)
+(*@\hl{Semantic analysis successful!} @*)
+
+(*@\hl{Type checking...} @*)
+(*@\hl{Type checking successful!} @*)
+
+Program type is: void
+
+(*@\hl{Checking effects...} @*)
+(*@\hl{Effects analysis successful! -> Liquidity is respected.} @*)
+
+(*@\hl{Code generation...} @*)
+(*@\hl{Code generation successful!} @*)
+
+Launching interpreter...
+
+Wallet: +1
+Halting program...
+
+\end{lstlisting}
+\subsubsection{Analisi semantica e analisi dei tipi}
+Per quanto riguarda l'analisi semantica e dei tipi non risulta nessun errore e il compilatore procede correttamente all'analisi degli effetti.
+
+\subsubsection{Analisi degli effetti}
+Non ci sono utilizzi di variabili non inizializzate e il programma è liquido perché per ogni funzione gli asset vengono svuotati.
+
+\subsubsection{Esecuzione programma}
+Il programma viene eseguito correttamente e restituisce al wallet dell'utente il valore 1.
+
+\section{Test esempio 5}
+\begin{lstlisting}
+int x = 1;
+void f(int n)[]{
+	if (n == 0) {
+	    print x ;
+	}else{
+	    x = x * n ;
+	    f(n-1)[] ;
+	}
+}
+f(10)[];
+\end{lstlisting}
+Esecuzione Esempio 5
+\begin{lstlisting}
+AssetLan Compiler
+File: "./Test/test5" found.
+
+Parsing...
+Parsing successful!
+
+(*@\hl{Semantic analysis...} @*)
+(*@\hl{Semantic analysis successful!} @*)
+
+(*@\hl{Type checking...} @*)
+(*@\hl{Type checking successful!} @*)
+
+Program type is: void
+
+
+(*@\hl{Checking effects...} @*)
+(*@\hl{Effects analysis successful! -> Liquidity is respected.} @*)
+
+(*@\hl{Code generation...} @*)
+(*@\hl{Code generation successful!} @*)
+
+Launching interpreter...
+
+Print: 3628800
+Wallet: +0
+Halting program...
+\end{lstlisting}
+
+\subsubsection{Analisi semantica e analisi dei tipi}
+Per quanto riguarda l'analisi semantica e dei tipi non risulta nessun errore e il compilatore procede correttamente all'analisi degli effetti.
+
+\subsubsection{Analisi degli effetti}
+Non ci sono utilizzi di variabili non inizializzate e non ci sono asset da svuotare
+
+\subsubsection{Esecuzione programma}
+Il programma viene eseguito correttamente e stampa il fattoriale di 10.
+
+\section{Test esempio 4.1}
+Il seguente codice è quello dell'esecizio 4 con il main modificato.
+\begin{lstlisting}
+asset x ;
+void f(int n)[asset u, asset v]{
+   if (n == 0){
+        u -o x;
+   }else{
+        u -o x;
+        v -o x;
+   }
+}
+void main()[asset a, asset b]{
+	f(0)[a,b];
+	print x;
+	transfer x;
+}
+main()[1,2];
+\end{lstlisting}
+
+Esecuzione Esempio 4.1
+\begin{lstlisting}
+AssetLan Compiler
+File: "./Test/test1" found.
+
+Parsing...
+Parsing successful!
+
+Semantic analysis...
+Semantic analysis successful!
+
+Type checking...
+Type checking successful!
+
+Program type is: void
+
+Checking effects...
+Liquidity in f not respected -> v is not empty 
+
+1 Effect errors found -> Compilation failed.
+\end{lstlisting}
+
+\subsubsection{Analisi semantica e analisi dei tipi}
+Per quanto riguarda l'analisi semantica e dei tipi non risulta nessun errore e il compilatore procede correttamente all'analisi degli effetti.
+
+\subsubsection{Analisi degli effetti}
+Il contratto non è liquido perche in f l'asset v viene caricato pieno e non viene mai svuotato.
+
+
+\newpage
+\section{Killer Application}
+Questa breve sezione ha lo scopo di mostrare l'esecuzione del codice fornito in sede di ricevimento come test finale per la valutazione del compilatore
+
+\section{Test killer application}
+
+\begin{lstlisting}
+int a ;
+asset x ;
+void f1()[asset a, asset b, asset c, asset d, asset e, asset f, asset g, asset h, asset i, asset j]{
+     a -o x ;
+     f1()[b,c,d,e,f,g,h,i,j,a];
+}
+void main()[asset a, asset b, asset c, asset d, asset e, asset f, asset g, asset h, asset i, asset j]{
+     f1()[a,b,c,d,e,f,g,h,i,j];
+     transfer x ;
+}
+main()[1,2,3,4,5,6,7,8,9,10]
+\end{lstlisting}
+
+Esecuzione killer application
+\begin{lstlisting}
+AssetLan Compiler
+File: "./Test/test3" found.
+
+Parsing...
+Parsing successful!
+
+(*@\hl{Semantic analysis...} @*)
+(*@\hl{Semantic analysis successful!} @*)
+
+(*@\hl{Type checking...} @*)
+(*@\hl{Type checking successful!} @*)
+
+Program type is: void
+
+(*@\hl{Checking effects...} @*)
+(*@\hl{Effects analysis successful! -> Liquidity is respected.} @*)
+
+(*@\hl{Code generation...} @*)
+(*@\hl{Code generation successful!} @*)
+
+Launching interpreter...
+
+(*@\hlred{AVM Error -> Stack out of memory} @*)
+Halting...
+\end{lstlisting}
+
+\subsubsection{Analisi semantica e analisi dei tipi}
+Per quanto riguarda l'analisi semantica e dei tipi non risulta nessun errore e il compilatore procede correttamente all'analisi degli effetti.
+
+\subsubsection{Analisi degli effetti}
+Non ci sono utilizzi di variabili non inizializzate e il programma viene valutato come liquido attraverso il metodo del punto fisso.
+
+\subsubsection{Esecuzione programma}
+Il programma viene eseguito correttamente, ma non arriva mai al termine ed esaurisce così la memoria dell'interprete.
+
+\end{document}
+
+

@@ -11,6 +11,7 @@ import ast.node.TypeNode;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CallNode implements Node {
     private final String  id; // Called Function
@@ -173,11 +174,12 @@ public class CallNode implements Node {
         //      call :f()[b];
         //      -> value of b is moved to a
         ArrayList<Boolean> actualEffects = new ArrayList<>();
-        for (int i=0; i<assets.size(); i++){
+        for (int i=assets.size()-1; i>=0; i--){
             Node actual = assets.get(i).getEntry(); // Actual asset parameter
             actualEffects.add(env.lookup(actual).getStatus());
             env.lookup(actual).setFalse();
         }
+        Collections.reverse(actualEffects);
 
         if (env.isRecursive(this.id)){
             Boolean fixedPoint = env.fixedPoint(actualEffects,ids);

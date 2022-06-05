@@ -1,5 +1,5 @@
 asset x ;
-void f(int n)[asset u, asset v]{
+void f(int n)[asset v, asset u]{
    if (n == 0){
         u -o x ;
    }else{

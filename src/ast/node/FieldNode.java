@@ -95,9 +95,7 @@ public class FieldNode implements Node{
 
 		out.append("\n// Field ").append(id).append("\n");
 		out.append(exp.codeGeneration());
-		out.append("mv $fp $al //put in $al actual fp\n");
-		out.append("lw $al 0($al) //go up to chain\n".repeat(Math.max(0, this.currentNL - entry.getNestinglevel())));
-		out.append("sw $a0 ").append(entry.getOffset()).append("($al)").append("\n");
+		out.append("sw $a0 ").append(entry.getOffset()).append("($fp)").append("\n");
 
 		return out.toString();
 	}
