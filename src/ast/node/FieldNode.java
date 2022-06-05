@@ -93,7 +93,6 @@ public class FieldNode implements Node{
 
 		StringBuilder out = new StringBuilder();
 
-		System.out.println("FieldNode: " + id + " " + this.currentNL + " " + this.entry.getOffset());
 		out.append("\n// Field ").append(id).append("\n");
 		out.append(exp.codeGeneration());
 		out.append("mv $fp $al //put in $al actual fp\n");

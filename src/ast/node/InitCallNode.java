@@ -144,11 +144,7 @@ public class InitCallNode implements Node{
         ArrayList<Node> bodyParams = this.getBodyParams();
 
         // Push for body params
-        for (int i = bodyParams.size()-1; i>=0; i--){
-            //out.append(bodyParams.get(i).codeGeneration());
-            out.append("li $a0 0 \n");
-            out.append("push $a0 \n");
-        }
+        out.append("li $a0 0 \n push $a0 \n".repeat(bodyParams.size()));
 
         // Push for assets
         for (int i = aexp.size()-1; i>=0; i--){

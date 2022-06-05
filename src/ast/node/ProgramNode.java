@@ -102,14 +102,7 @@ public class ProgramNode implements Node {
 		out.append("//BEGIN PROGRAM\n\n");
 		out.append("//BLOCK \n");
 
-		for (int i = assets.size()-1; i>=0; i--){
-			out.append(assets.get(i).codeGeneration());
-		}
-
-		for (int i = fields.size()-1; i>=0; i--){
-			out.append("li $a0 0\n");
-			out.append("push 0\n");
-		}
+		out.append("push 0\n".repeat(fields.size() + assets.size()));
 
 		out.append("mv $sp $fp //Load $fp for initial block\n");
 		out.append("// GLOBAL FIELDS ASG\n");
@@ -117,7 +110,8 @@ public class ProgramNode implements Node {
 		for (Node f : fields){
 			out.append(f.codeGeneration());
 		}
-		out.append("push 0\n");
+
+
 		out.append("\n//INITCALL\n");
 		out.append(initcallnode.codeGeneration());
 		out.append("\nhalt //exit program...\n\n");

@@ -102,6 +102,7 @@ public class SVM {
                             offset = Integer.parseInt(arg2);
                             int addressStoreWord = offset + regRead(arg3);
                             memory.write(addressStoreWord, regRead(arg1));
+                            //printStack();
                             break;
 
                         case SVMParser.LOAD:
@@ -205,7 +206,7 @@ public class SVM {
         }
     }
     private boolean isRegister(String str) {
-        Pattern p = Pattern.compile("\\$(([ar]\\d)|(sp)|(fp)|(hp)|(al)|(ra)|(bsp))");
+        Pattern p = Pattern.compile("\\$(([ar]\\d)|(sp)|(fp)|(al)|(ra)|(bsp))");
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -306,4 +307,5 @@ public class SVM {
         }
         System.out.println("ENDSTACK\n");
     }
+
 }
