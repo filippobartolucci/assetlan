@@ -3,8 +3,8 @@ package Semantic;
 import ast.node.Node;
 
 public class STentry {
-	private int nestingLevel;
-	private int offset;
+	private final int nestingLevel;
+	private final int offset;
 	private final Node type;
 
 	public STentry(){
@@ -38,17 +38,19 @@ public class STentry {
 	}
 
 	public String toPrint(String s) { //
-		return s+"STentry: nestlev " + Integer.toString(this.nestingLevel) +"\n"+
+		assert type != null;
+		return s+"STentry: nestlev " + this.nestingLevel +"\n"+
 				s+"STentry: type\n" +
 				type.toPrint(s+"  ") +
-				s+"STentry: offset " + Integer.toString(this.offset) + "\n";
+				s+"STentry: offset " + this.offset + "\n";
 	}
 
 	@Override
 	public String toString() {
-		return "STentry: nestlev " + Integer.toString(this.nestingLevel) +"\n"+
+		assert type != null;
+		return "STentry: nestlev " + this.nestingLevel +"\n"+
 				"STentry: type " +
 				type.toPrint("") +
-				"\nSTentry: offset " + Integer.toString(this.offset) + "\n";
+				"\nSTentry: offset " + this.offset + "\n";
 	}
 }

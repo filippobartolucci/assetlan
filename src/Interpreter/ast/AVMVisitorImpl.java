@@ -7,9 +7,6 @@ import Interpreter.Lexer.AVMLexer;
 import Interpreter.Parser.AVMParser;
 
 public class AVMVisitorImpl extends AVMBaseVisitor<Void> {
-
-
-
     private Instruction[] code = new Instruction[AVM.CODE_SIZE];
     private int i = 0;
     private HashMap<String,Integer> labelAdd = new HashMap<>();
@@ -127,15 +124,11 @@ public class AVMVisitorImpl extends AVMBaseVisitor<Void> {
                 code[i++] = new Instruction(AVMParser.JR, ctx.r1.getText());
                 break;
             case AVMLexer.PRINT:
-                if (ctx.r1 == null)
-                    code[i++] = new Instruction(AVMParser.PRINT);
-                else
-                    code[i++] = new Instruction(AVMParser.PRINT, ctx.r1.getText());
+                code[i++] = new Instruction(AVMParser.PRINT, ctx.r1.getText());
                 break;
             case AVMLexer.TRANSFER:
                 code[i++] = new Instruction(AVMParser.TRANSFER, ctx.r1.getText());
                 break;
-
             case AVMLexer.HALT:
                 code[i++] = new Instruction(AVMParser.HALT);
                 break;

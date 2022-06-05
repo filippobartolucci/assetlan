@@ -1,4 +1,3 @@
-// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/Interpreter/Lexer/AVM.g4 by ANTLR 4.10.1
 package Interpreter.Lexer;
 
 

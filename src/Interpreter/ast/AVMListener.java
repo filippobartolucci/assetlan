@@ -1,6 +1,4 @@
-// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/Interpreter/Lexer/AVM.g4 by ANTLR 4.10.1
 package Interpreter.ast;
-
 import Interpreter.Parser.AVMParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 

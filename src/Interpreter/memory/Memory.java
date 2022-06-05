@@ -9,16 +9,12 @@ public class Memory {
             mem[i]= new Cell();
         }
     }
-
     public int read(int n){
         return mem[n].read();
     }
-
     public void write(int add, int val){
         mem[add].write(val);
     }
-
-
     public void cleanMemory(int start, int end) {
         for (int indexStack = start;indexStack < end; indexStack++){
             mem[indexStack] = new Cell();

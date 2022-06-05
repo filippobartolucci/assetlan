@@ -8,7 +8,7 @@ public enum TypeValue {
 
 	private final String str_type;
 
-	private TypeValue(String s) {
+	TypeValue(String s) {
 		str_type = s;
 	}
 

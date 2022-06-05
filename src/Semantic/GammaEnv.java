@@ -13,8 +13,8 @@ import java.util.HashMap;
 		4. SymTable exitScope(SymTable st) exits the current scope
  */
 
-public class GammaEnv implements Cloneable {
-	private ArrayList<HashMap<String,STentry>>  symTable;
+public class GammaEnv {
+	private final ArrayList<HashMap<String,STentry>>  symTable;
 	private int nestingLevel;
 	private int offset;
 
@@ -26,7 +26,7 @@ public class GammaEnv implements Cloneable {
 	 * Creates an empty environment
 	 */
 	public GammaEnv() {
-		this(new ArrayList<HashMap<String,STentry>>(), -1, 0);
+		this(new ArrayList<>(), -1, 0);
 	}
 
 	/**
@@ -45,40 +45,22 @@ public class GammaEnv implements Cloneable {
 		this(new ArrayList<>(), e.nestingLevel, e.offset);
 
 		for (var scope : e.symTable) {
-			final HashMap<String,STentry> copiedScope = new HashMap<String,STentry>();
+			final HashMap<String,STentry> copiedScope = new HashMap<>();
 			for (var id : scope.keySet()) {
 				copiedScope.put(id, new STentry(scope.get(id)));
 			}
 			this.symTable.add(copiedScope);
 		}
+		this.lastFunction = e.lastFunction;
 	}
 
 	// GETTER
-
-	/**
-	 * return symbol table
-	 */
-	public ArrayList<HashMap<String, STentry>> getSymTable() {
-		return symTable;
-	}
 
 	/**
 	 * return the current nesting level.
 	 */
 	public int getNestingLevel() {
 		return nestingLevel;
-	}
-
-	/**
-	 * return the current offset level.
-	 * @return offset
-	 */
-	public int getOffset() {
-		return offset;
-	}
-
-	public void setOffset(int offset) {
-		this.offset = offset;
 	}
 
 	/**
@@ -96,7 +78,7 @@ public class GammaEnv implements Cloneable {
 	 * void newEmptyScope(SymTable st) extends the st with a new empty scope
 	 */
 	public void newEmptyScope(){
-		HashMap<String,STentry> st = new HashMap<String,STentry>();
+		HashMap<String,STentry> st = new HashMap<>();
 		this.nestingLevel++;
 		this.offset = 0;
 		this.symTable.add(st);
@@ -115,12 +97,12 @@ public class GammaEnv implements Cloneable {
 
 	/**
 	 * Type lookup(SymTable st, String id) looks for the type of id in st, if any
-	 * @return stentry of id
+	 * @return STentry of id
 	 */
 	public STentry lookup(String id){
 		int nl = this.getNestingLevel();
 		STentry tmp;
-		for(tmp = null; nl >= 0 && tmp == null; tmp = (STentry)((HashMap)this.symTable.get(nl--)).get(id)) {
+		for(tmp = null; nl >= 0 && tmp == null; tmp = (STentry)((HashMap<?, ?>)this.symTable.get(nl--)).get(id)) {
 			// lookup
 		}
 		return tmp;
@@ -140,7 +122,7 @@ public class GammaEnv implements Cloneable {
 		for (int i = 0; i < this.symTable.size(); i++) {
 			sb.append("Scope ").append(i).append(":");
 			for (var entry : this.symTable.get(i).entrySet()) {
-				sb.append(entry.getKey() + " -> " + entry.getValue());
+				sb.append(entry.getKey()).append(" -> ").append(entry.getValue());
 			}
 		}
 		return sb.toString();

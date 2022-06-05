@@ -1,5 +1,4 @@
 package Interpreter.ast;
-
 public class Instruction {
     private int code;
     private final String arg1;

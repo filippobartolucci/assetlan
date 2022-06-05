@@ -8,11 +8,9 @@ import java.util.ArrayList;
 
 public  class StatementNode implements Node {
     private final Node statement;
-
     public  StatementNode(Node statement) {
         this.statement = statement;
     }
-
 
     @Override
     public String toPrint(String indent) {
@@ -52,7 +50,6 @@ public  class StatementNode implements Node {
         }
         return errors;
     }
-
     public Node getChild() {
         return statement;
     }

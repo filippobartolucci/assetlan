@@ -1,4 +1,4 @@
-grammar SVM;
+grammar AVM;
 
 @header {
 import java.util.HashMap;
@@ -55,7 +55,7 @@ instruction:
  * LEXER RULES
  *------------------------------------------------------------------*/
 
-REGISTER    : '$'((('a'|'r')('0'..'9'))|('sp'|'fp'|'hp'|'bsp'|'al'|'ra'));
+REGISTER    : '$'((('a'|'r')('0'..'9'))|('sp'|'fp'|'al'|'ra'));
 
 PUSH     : 'push' ;
 ADDRESS  : 'address' ;

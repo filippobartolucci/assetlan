@@ -9,7 +9,6 @@ public class FieldNode implements Node{
 	private final Node type;
 	private final Node exp;
 	private STentry entry;
-	private int currentNL;
 
 	/**
 	 * Constructor
@@ -49,7 +48,6 @@ public class FieldNode implements Node{
 		}
 
 		this.entry = entry;
-		this.currentNL = env.getNestingLevel();
 
 		return errors;
 	}

@@ -1,4 +1,3 @@
-// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/AssetLan.g4 by ANTLR 4.10.1
 package Parser;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

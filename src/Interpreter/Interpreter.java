@@ -32,7 +32,6 @@ public class Interpreter{
             System.out.println("You had: "+parserASM.getNumberOfSyntaxErrors()+" syntax errors in AVM.");
             System.exit(ExitCode.PARSER_ERROR.ordinal());
         }
-
         Instruction[] generatedCode = visitorSVM.getCode();
         AVM vm = new AVM(generatedCode);
         vm.cpu();

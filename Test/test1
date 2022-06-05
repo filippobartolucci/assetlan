@@ -1,14 +1,11 @@
+int a ;
 asset x ;
-void f(int n)[asset v, asset u]{
-   if (n == 0){
-        u -o x ;
-   }else{
-        u -o x ;
-        v -o x ;
-   }
+void f()[asset u, asset v, asset w]{
+     u -o x ;
+     f()[v,w,u];
 }
-void main()[asset a]{
-     f(0)[a,a] ;	// semantica di f()[a,a] ?
-	transfer x ;
+void main()[asset a, asset b, asset c]{
+     f()[a,b,c] ;
+     transfer x ;
 }
-main()[1] ;	// il contratto e` liquido
+main()[1,2,3] ;	// il contratto e` liquido

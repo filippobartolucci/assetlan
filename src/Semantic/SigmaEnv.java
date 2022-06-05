@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SigmaEnv {
-    private ArrayList<HashMap<String, EffectEntry>> symTable;
+    private final ArrayList<HashMap<String, EffectEntry>> symTable;
     private int nestingLevel;
-    private ArrayList<SemanticError> errors;
-    private ArrayList<Boolean> fixedPointResult = new ArrayList<>();
+    private final ArrayList<SemanticError> errors;
+    private ArrayList<Boolean> fixedPointResult;
     private String lastFunctionCall;
 
 
     public SigmaEnv() {
-        this.symTable = new ArrayList<HashMap<String, EffectEntry>>();
+        this.symTable = new ArrayList<>();
         this.nestingLevel = -1;
-        this.errors = new ArrayList<SemanticError>();
+        this.errors = new ArrayList<>();
         this.fixedPointResult = new ArrayList<>();
         this.lastFunctionCall = "";
     }
@@ -86,7 +86,7 @@ public class SigmaEnv {
     public EffectEntry lookup(String id){
         int nl = this.getNestingLevel();
         EffectEntry tmp;
-        for(tmp = null; nl >= 0 && tmp == null; tmp = (EffectEntry) ((HashMap)this.symTable.get(nl--)).get(id)) {}
+        for(tmp = null; nl >= 0 && tmp == null; tmp = (EffectEntry) ((HashMap<?, ?>)this.symTable.get(nl--)).get(id)) {}
         return tmp;
     }
 
@@ -95,7 +95,7 @@ public class SigmaEnv {
         if (! (id instanceof AssetNode) ) throw new RuntimeException("lookup(Node id) called on non-AssetNode");
         int nl = this.getNestingLevel();
         EffectEntry tmp;
-        for(tmp = null; nl >= 0 && tmp == null; tmp = (EffectEntry) ((HashMap)this.symTable.get(nl--)).get(id.toString())) {}
+        for(tmp = null; nl >= 0 && tmp == null; tmp = (EffectEntry) ((HashMap<?, ?>)this.symTable.get(nl--)).get(id.toString())) {}
         return tmp;
     }
 
@@ -132,7 +132,7 @@ public class SigmaEnv {
 
 
     public Boolean fixedPoint(ArrayList<Boolean> actualEffects, ArrayList<String> ids){
-        Boolean fixedPoint = true;
+        boolean fixedPoint = true;
 
         for(int i = 0; i < actualEffects.size() && fixedPoint; i++) {
             String id = ids.get(i);

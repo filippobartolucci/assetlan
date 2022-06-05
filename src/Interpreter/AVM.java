@@ -13,18 +13,13 @@ public class AVM {
 
     private final Instruction[] code; // array of instructions
     private final Memory memory = new Memory(MEMORY_SIZE);  // stack of memory
-
     private int ip = 0;                 // instruction pointer, internal register, no write nor read
     private int sp = MEMORY_SIZE;       // stack pointer
     private int fp = MEMORY_SIZE -1;    // frame pointer
     private int ra;
     private int al;
-    private int bsp = MEMORY_SIZE;
-
     private int wallet = 0;
-
     private final int[] a = new int[10];
-
 
     public AVM(Instruction[] code) {
         this.code = code;
@@ -102,7 +97,6 @@ public class AVM {
                             offset = Integer.parseInt(arg2);
                             int addressStoreWord = offset + regRead(arg3);
                             memory.write(addressStoreWord, regRead(arg1));
-                            //printStack();
                             break;
 
                         case AVMParser.LOAD:
@@ -176,7 +170,7 @@ public class AVM {
                             return;
                     }
                 } catch (Exception e) {
-                    System.out.println("Program stopped at program counter: "+ip);
+                    System.out.println("Program stopped at program counter: " + ip);
 
                     StringBuilder toPrint = new StringBuilder();
                     int cont = 0;
@@ -206,7 +200,7 @@ public class AVM {
         }
     }
     private boolean isRegister(String str) {
-        Pattern p = Pattern.compile("\\$(([ar]\\d)|(sp)|(fp)|(al)|(ra)|(bsp))");
+        Pattern p = Pattern.compile("\\$(([ar]\\d)|(sp)|(fp)|(al)|(ra))");
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -244,8 +238,6 @@ public class AVM {
         switch (reg) {
             case "$fp":
                 return fp;
-            case "$bsp":
-                return bsp;
             case "$al":
                 return al;
             case "$sp":
@@ -265,9 +257,6 @@ public class AVM {
         switch (reg) {
             case "$fp":
                 fp = v;
-                break;
-            case "$bsp":
-                bsp = v;
                 break;
             case "$al":
                 al = v;
@@ -292,6 +281,7 @@ public class AVM {
         }
     }
 
+    /* Debug for stack */
     private void printStack(){
         System.out.println("\nFP: " + fp);
         System.out.println("STACK:");
