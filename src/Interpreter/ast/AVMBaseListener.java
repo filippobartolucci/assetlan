@@ -1,42 +1,42 @@
-// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/Interpreter/Lexer/SVM.g4 by ANTLR 4.10.1
+// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/Interpreter/Lexer/AVM.g4 by ANTLR 4.10.1
 package Interpreter.ast;
 
 
-import Interpreter.Parser.SVMParser;
+import Interpreter.Parser.AVMParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link SVMListener},
+ * This class provides an empty implementation of {@link AVMListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public class SVMBaseListener implements SVMListener {
+public class AVMBaseListener implements AVMListener {
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssembly(SVMParser.AssemblyContext ctx) { }
+	@Override public void enterAssembly(AVMParser.AssemblyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssembly(SVMParser.AssemblyContext ctx) { }
+	@Override public void exitAssembly(AVMParser.AssemblyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInstruction(SVMParser.InstructionContext ctx) { }
+	@Override public void enterInstruction(AVMParser.InstructionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInstruction(SVMParser.InstructionContext ctx) { }
+	@Override public void exitInstruction(AVMParser.InstructionContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

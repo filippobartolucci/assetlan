@@ -2,17 +2,17 @@ package Interpreter;
 
 import Interpreter.ast.Instruction;
 import Interpreter.memory.Memory;
-import Interpreter.Parser.SVMParser;
+import Interpreter.Parser.AVMParser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SVM {
+public class AVM {
 
     public static final int CODE_SIZE = 10000;
     public static final int MEMORY_SIZE = 10000;
 
     private final Instruction[] code; // array of instructions
-    private final Memory memory = new Memory(MEMORY_SIZE); // stack of memory
+    private final Memory memory = new Memory(MEMORY_SIZE);  // stack of memory
 
     private int ip = 0;                 // instruction pointer, internal register, no write nor read
     private int sp = MEMORY_SIZE;       // stack pointer
@@ -26,14 +26,14 @@ public class SVM {
     private final int[] a = new int[10];
 
 
-    public SVM(Instruction[] code) {
+    public AVM(Instruction[] code) {
         this.code = code;
     }
 
     public void cpu() {
         while (true) {
             if (1 >= sp) {
-                System.out.println("\nSVM Error -> Stack out of memory\nHalting...");
+                System.out.println("\nAVM Error -> Stack out of memory\nHalting...");
                 return;
             } else {
                 Instruction bytecode = code[ip++]; // fetch instruction
@@ -47,130 +47,130 @@ public class SVM {
                 try {
                     switch (bytecode.getCode()) {
 
-                        case SVMParser.PUSH:
+                        case AVMParser.PUSH:
                             if (isRegister(arg1))
                                 push(regRead(arg1));
                             else
                                 push(Integer.parseInt(arg1));
                             break;
 
-                        case SVMParser.POP:
+                        case AVMParser.POP:
                             if (arg1 != null && isRegister(arg1))
                                 regStore(arg1, pop());
                             else
                                 pop();
                             break;
 
-                        case SVMParser.ADD:
+                        case AVMParser.ADD:
                             sum(arg1, regRead(arg2), regRead(arg3));
                             break;
 
-                        case SVMParser.ADDI:
+                        case AVMParser.ADDI:
                             value = Integer.parseInt(arg3);
                             sum(arg1, regRead(arg2), value);
                             break;
 
-                        case SVMParser.SUB:
+                        case AVMParser.SUB:
                             sub(arg1, regRead(arg2), regRead(arg3));
                             break;
 
-                        case SVMParser.SUBI:
+                        case AVMParser.SUBI:
                             value = Integer.parseInt(arg3);
                             sub(arg1, regRead(arg2), value);
                             break;
 
-                        case SVMParser.MULT:
+                        case AVMParser.MULT:
                             multiplication(arg1, regRead(arg2), regRead(arg3));
                             break;
 
-                        case SVMParser.MULTI:
+                        case AVMParser.MULTI:
                             value = Integer.parseInt(arg3);
                             multiplication(arg1, regRead(arg2), value);
                             break;
 
-                        case SVMParser.DIV:
+                        case AVMParser.DIV:
                             value = regRead(arg3);
                             division(arg1,regRead(arg2),value);
                             break;
 
-                        case SVMParser.DIVI:
+                        case AVMParser.DIVI:
                             value = Integer.parseInt(arg3);
                             division(arg1,regRead(arg2),value);
                             break;
 
-                        case SVMParser.STOREW:
+                        case AVMParser.STOREW:
                             offset = Integer.parseInt(arg2);
                             int addressStoreWord = offset + regRead(arg3);
                             memory.write(addressStoreWord, regRead(arg1));
                             //printStack();
                             break;
 
-                        case SVMParser.LOAD:
+                        case AVMParser.LOAD:
                             value = Integer.parseInt(arg2);
                             regStore(arg1,value);
                             break;
 
-                        case SVMParser.LOADW:
+                        case AVMParser.LOADW:
                             offset = Integer.parseInt(arg2);
                             address = offset + regRead(arg3);
                             regStore(arg1, memory.read(address));
                             break;
 
-                        case SVMParser.MOVE:
+                        case AVMParser.MOVE:
                             value = regRead(arg1);
                             regStore(arg2, value);
                             break;
 
-                        case SVMParser.BRANCH:
+                        case AVMParser.BRANCH:
                             address = Integer.parseInt(code[ip].getArg1());
                             ip = address;
                             break;
 
-                        case SVMParser.BCOND:
+                        case AVMParser.BCOND:
                             address = Integer.parseInt(code[ip].getArg1());
                             ip++;
                             value = regRead(bytecode.getArg1());
                             if (value == 0) ip = address;
                             break;
-                        case SVMParser.JAL:
+                        case AVMParser.JAL:
                             regStore("$ra", ip);
                             address = Integer.parseInt(code[ip].getArg1());
                             ip = address;
                             break;
-                        case SVMParser.JR:
+                        case AVMParser.JR:
                             ip = regRead(arg1);
                             break;
-                        case SVMParser.EQ:
+                        case AVMParser.EQ:
                             regStore(arg1, regRead(arg2)==regRead(arg3)?1:0);
                             break;
-                        case SVMParser.LE:
+                        case AVMParser.LE:
                             regStore(arg1, regRead(arg2)<=regRead(arg3)?1:0);
                             break;
-                        case SVMParser.LT:
+                        case AVMParser.LT:
                             regStore(arg1, regRead(arg2)<regRead(arg3)?1:0);
                             break;
-                        case SVMParser.GE:
+                        case AVMParser.GE:
                             regStore(arg1, regRead(arg2)>=regRead(arg3)?1:0);
                             break;
-                        case SVMParser.GT:
+                        case AVMParser.GT:
                             regStore(arg1, regRead(arg2)>regRead(arg3)?1:0);
                             break;
-                        case SVMParser.NOT:
+                        case AVMParser.NOT:
                             regStore(arg1, regRead(arg2) != 0 ? 0 : 1);
                             break;
-                        case SVMParser.OR:
+                        case AVMParser.OR:
                             regStore(arg1, (regRead(arg2)>0 || regRead(arg3)>0) ?1:0);
                             break;
-                        case SVMParser.AND:
+                        case AVMParser.AND:
                             regStore(arg1, (regRead(arg2)>0 && regRead(arg3)>0) ?1:0);
                             break;
-                        case SVMParser.PRINT:
+                        case AVMParser.PRINT:
                             System.out.println( "Print: "+ regRead(arg1));
                             break;
-                        case SVMParser.TRANSFER:
+                        case AVMParser.TRANSFER:
                             wallet += regRead(arg1);
                             break;
-                        case SVMParser.HALT:
+                        case AVMParser.HALT:
                             System.out.println("Wallet: +" + wallet);
                             System.out.println("Halting program...");
                             return;
@@ -184,13 +184,13 @@ public class SVM {
                         if(ins == null)
                             break;
                         if(cont > ip -10){
-                            String literalName = SVMParser._LITERAL_NAMES[ins.getCode()];
+                            String literalName = AVMParser._LITERAL_NAMES[ins.getCode()];
                             String str = literalName +" "+(ins.getArg1()!=null?ins.getArg1():"") +" "+(ins.getArg2()!=null?ins.getArg2():"")+" "+(ins.getArg3()!=null?ins.getArg3():"");
                             toPrint.append(cont).append(": ").append(str).append("\n");
                             //break;
                         }
                         else if(cont == ip){
-                            String literalName = SVMParser._LITERAL_NAMES[ins.getCode()];
+                            String literalName = AVMParser._LITERAL_NAMES[ins.getCode()];
                             String str = literalName +" "+(ins.getArg1()!=null?ins.getArg1():"") +" "+(ins.getArg2()!=null?ins.getArg2():"")+" "+(ins.getArg3()!=null?ins.getArg3():"");
                             toPrint.append(cont).append(": ").append(str).append("\n");
                             break;

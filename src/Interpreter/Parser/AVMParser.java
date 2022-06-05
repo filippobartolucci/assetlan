@@ -1,7 +1,7 @@
 package Interpreter.Parser;
 
-import Interpreter.ast.SVMListener;
-import Interpreter.ast.SVMVisitor;
+import Interpreter.ast.AVMListener;
+import Interpreter.ast.AVMVisitor;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.*;
 import java.util.List;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class SVMParser extends Parser {
+public class AVMParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.10.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -84,7 +84,7 @@ public class SVMParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "SVM.g4"; }
+	public String getGrammarFileName() { return "AVM.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -95,7 +95,7 @@ public class SVMParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public SVMParser(TokenStream input) {
+	public AVMParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
@@ -113,15 +113,15 @@ public class SVMParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_assembly; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SVMListener) ((SVMListener)listener).enterAssembly(this);
+			if ( listener instanceof AVMListener) ((AVMListener)listener).enterAssembly(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SVMListener ) ((SVMListener)listener).exitAssembly(this);
+			if ( listener instanceof AVMListener) ((AVMListener)listener).exitAssembly(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SVMVisitor) return ((SVMVisitor<? extends T>)visitor).visitAssembly(this);
+			if ( visitor instanceof AVMVisitor) return ((AVMVisitor<? extends T>)visitor).visitAssembly(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -167,60 +167,60 @@ public class SVMParser extends Parser {
 		public Token r3;
 		public Token o;
 		public Token l;
-		public TerminalNode PUSH() { return getToken(SVMParser.PUSH, 0); }
-		public TerminalNode POP() { return getToken(SVMParser.POP, 0); }
-		public TerminalNode ADD() { return getToken(SVMParser.ADD, 0); }
-		public TerminalNode ADDI() { return getToken(SVMParser.ADDI, 0); }
-		public TerminalNode SUB() { return getToken(SVMParser.SUB, 0); }
-		public TerminalNode SUBI() { return getToken(SVMParser.SUBI, 0); }
-		public TerminalNode MULT() { return getToken(SVMParser.MULT, 0); }
-		public TerminalNode MULTI() { return getToken(SVMParser.MULTI, 0); }
-		public TerminalNode DIV() { return getToken(SVMParser.DIV, 0); }
-		public TerminalNode DIVI() { return getToken(SVMParser.DIVI, 0); }
-		public TerminalNode OR() { return getToken(SVMParser.OR, 0); }
-		public TerminalNode AND() { return getToken(SVMParser.AND, 0); }
-		public TerminalNode NOT() { return getToken(SVMParser.NOT, 0); }
-		public TerminalNode STOREW() { return getToken(SVMParser.STOREW, 0); }
-		public TerminalNode LPAR() { return getToken(SVMParser.LPAR, 0); }
-		public TerminalNode RPAR() { return getToken(SVMParser.RPAR, 0); }
-		public TerminalNode LOADW() { return getToken(SVMParser.LOADW, 0); }
-		public TerminalNode LOAD() { return getToken(SVMParser.LOAD, 0); }
-		public TerminalNode MOVE() { return getToken(SVMParser.MOVE, 0); }
-		public TerminalNode BRANCH() { return getToken(SVMParser.BRANCH, 0); }
-		public TerminalNode BCOND() { return getToken(SVMParser.BCOND, 0); }
-		public TerminalNode EQ() { return getToken(SVMParser.EQ, 0); }
-		public TerminalNode LE() { return getToken(SVMParser.LE, 0); }
-		public TerminalNode LT() { return getToken(SVMParser.LT, 0); }
-		public TerminalNode GT() { return getToken(SVMParser.GT, 0); }
-		public TerminalNode GE() { return getToken(SVMParser.GE, 0); }
-		public TerminalNode JAL() { return getToken(SVMParser.JAL, 0); }
-		public TerminalNode JR() { return getToken(SVMParser.JR, 0); }
-		public TerminalNode PRINT() { return getToken(SVMParser.PRINT, 0); }
-		public TerminalNode TRANSFER() { return getToken(SVMParser.TRANSFER, 0); }
-		public TerminalNode HALT() { return getToken(SVMParser.HALT, 0); }
-		public TerminalNode ADDRESS() { return getToken(SVMParser.ADDRESS, 0); }
-		public TerminalNode COL() { return getToken(SVMParser.COL, 0); }
-		public TerminalNode NUMBER() { return getToken(SVMParser.NUMBER, 0); }
-		public List<TerminalNode> REGISTER() { return getTokens(SVMParser.REGISTER); }
+		public TerminalNode PUSH() { return getToken(AVMParser.PUSH, 0); }
+		public TerminalNode POP() { return getToken(AVMParser.POP, 0); }
+		public TerminalNode ADD() { return getToken(AVMParser.ADD, 0); }
+		public TerminalNode ADDI() { return getToken(AVMParser.ADDI, 0); }
+		public TerminalNode SUB() { return getToken(AVMParser.SUB, 0); }
+		public TerminalNode SUBI() { return getToken(AVMParser.SUBI, 0); }
+		public TerminalNode MULT() { return getToken(AVMParser.MULT, 0); }
+		public TerminalNode MULTI() { return getToken(AVMParser.MULTI, 0); }
+		public TerminalNode DIV() { return getToken(AVMParser.DIV, 0); }
+		public TerminalNode DIVI() { return getToken(AVMParser.DIVI, 0); }
+		public TerminalNode OR() { return getToken(AVMParser.OR, 0); }
+		public TerminalNode AND() { return getToken(AVMParser.AND, 0); }
+		public TerminalNode NOT() { return getToken(AVMParser.NOT, 0); }
+		public TerminalNode STOREW() { return getToken(AVMParser.STOREW, 0); }
+		public TerminalNode LPAR() { return getToken(AVMParser.LPAR, 0); }
+		public TerminalNode RPAR() { return getToken(AVMParser.RPAR, 0); }
+		public TerminalNode LOADW() { return getToken(AVMParser.LOADW, 0); }
+		public TerminalNode LOAD() { return getToken(AVMParser.LOAD, 0); }
+		public TerminalNode MOVE() { return getToken(AVMParser.MOVE, 0); }
+		public TerminalNode BRANCH() { return getToken(AVMParser.BRANCH, 0); }
+		public TerminalNode BCOND() { return getToken(AVMParser.BCOND, 0); }
+		public TerminalNode EQ() { return getToken(AVMParser.EQ, 0); }
+		public TerminalNode LE() { return getToken(AVMParser.LE, 0); }
+		public TerminalNode LT() { return getToken(AVMParser.LT, 0); }
+		public TerminalNode GT() { return getToken(AVMParser.GT, 0); }
+		public TerminalNode GE() { return getToken(AVMParser.GE, 0); }
+		public TerminalNode JAL() { return getToken(AVMParser.JAL, 0); }
+		public TerminalNode JR() { return getToken(AVMParser.JR, 0); }
+		public TerminalNode PRINT() { return getToken(AVMParser.PRINT, 0); }
+		public TerminalNode TRANSFER() { return getToken(AVMParser.TRANSFER, 0); }
+		public TerminalNode HALT() { return getToken(AVMParser.HALT, 0); }
+		public TerminalNode ADDRESS() { return getToken(AVMParser.ADDRESS, 0); }
+		public TerminalNode COL() { return getToken(AVMParser.COL, 0); }
+		public TerminalNode NUMBER() { return getToken(AVMParser.NUMBER, 0); }
+		public List<TerminalNode> REGISTER() { return getTokens(AVMParser.REGISTER); }
 		public TerminalNode REGISTER(int i) {
-			return getToken(SVMParser.REGISTER, i);
+			return getToken(AVMParser.REGISTER, i);
 		}
-		public TerminalNode LABEL() { return getToken(SVMParser.LABEL, 0); }
+		public TerminalNode LABEL() { return getToken(AVMParser.LABEL, 0); }
 		public InstructionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_instruction; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof SVMListener ) ((SVMListener)listener).enterInstruction(this);
+			if ( listener instanceof AVMListener) ((AVMListener)listener).enterInstruction(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof SVMListener ) ((SVMListener)listener).exitInstruction(this);
+			if ( listener instanceof AVMListener) ((AVMListener)listener).exitInstruction(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof SVMVisitor ) return ((SVMVisitor<? extends T>)visitor).visitInstruction(this);
+			if ( visitor instanceof AVMVisitor) return ((AVMVisitor<? extends T>)visitor).visitInstruction(this);
 			else return visitor.visitChildren(this);
 		}
 	}

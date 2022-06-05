@@ -186,7 +186,6 @@ public class FunctionNode implements Node {
 		out.append("pop\n");
 
 		int parameter_size = params.size() + assets.size() + body_params.size();
-		out.append("addi $sp $sp 0").append("\n");
 		out.append("addi $sp $sp ").append(parameter_size).append("\n");
 		out.append("pop\n");
 		out.append("lw $fp 0($sp)\n");

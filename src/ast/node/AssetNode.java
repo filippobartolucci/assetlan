@@ -18,8 +18,7 @@ public class AssetNode implements Node{
 	}
 
 	public String codeGeneration(){
-
-		return "push 0\s";
+		return "push 0\n";
 	}
 
 	/**

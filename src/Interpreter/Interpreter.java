@@ -1,9 +1,9 @@
 package Interpreter;
 
-import Interpreter.Lexer.SVMLexer;
-import Interpreter.Parser.SVMParser;
+import Interpreter.Lexer.AVMLexer;
+import Interpreter.Parser.AVMParser;
 import Interpreter.ast.Instruction;
-import Interpreter.ast.SVMVisitorImpl;
+import Interpreter.ast.AVMVisitorImpl;
 import Utils.ExitCode;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -16,25 +16,25 @@ public class Interpreter{
 
         saveCode(bytecode);
 
-        SVMLexer lexerASM = new SVMLexer(CharStreams.fromString(bytecode));
+        AVMLexer lexerASM = new AVMLexer(CharStreams.fromString(bytecode));
         CommonTokenStream tokensASM = new CommonTokenStream(lexerASM);
 
         if (lexerASM.lexicalErrors>0 ){
-            System.out.println("You had: "+lexerASM.lexicalErrors+" lexical errors in SVM.");
+            System.out.println("You had: "+lexerASM.lexicalErrors+" lexical errors in AVM.");
             System.exit(ExitCode.LEXER_ERROR.ordinal());
         }
-        SVMParser parserASM = new SVMParser(tokensASM);
+        AVMParser parserASM = new AVMParser(tokensASM);
 
-        SVMVisitorImpl visitorSVM = new SVMVisitorImpl();
+        AVMVisitorImpl visitorSVM = new AVMVisitorImpl();
         visitorSVM.visit(parserASM.assembly());
 
         if (parserASM.getNumberOfSyntaxErrors()>0) {
-            System.out.println("You had: "+parserASM.getNumberOfSyntaxErrors()+" syntax errors in SVM.");
+            System.out.println("You had: "+parserASM.getNumberOfSyntaxErrors()+" syntax errors in AVM.");
             System.exit(ExitCode.PARSER_ERROR.ordinal());
         }
 
         Instruction[] generatedCode = visitorSVM.getCode();
-        SVM vm = new SVM(generatedCode);
+        AVM vm = new AVM(generatedCode);
         vm.cpu();
     }
 

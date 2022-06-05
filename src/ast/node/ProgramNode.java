@@ -110,8 +110,6 @@ public class ProgramNode implements Node {
 		for (Node f : fields){
 			out.append(f.codeGeneration());
 		}
-
-
 		out.append("\n//INITCALL\n");
 		out.append(initcallnode.codeGeneration());
 		out.append("\nhalt //exit program...\n\n");

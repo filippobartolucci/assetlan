@@ -1,4 +1,4 @@
-// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/Interpreter/Lexer/SVM.g4 by ANTLR 4.10.1
+// Generated from /Users/fbartolucci/Documents/Git/assetlan/src/Interpreter/Lexer/AVM.g4 by ANTLR 4.10.1
 package Interpreter.Lexer;
 
 
@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class SVMLexer extends Lexer {
+public class AVMLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.10.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -97,13 +97,13 @@ public class SVMLexer extends Lexer {
 	public int lexicalErrors=0;
 
 
-	public SVMLexer(CharStream input) {
+	public AVMLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "SVM.g4"; }
+	public String getGrammarFileName() { return "AVM.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
