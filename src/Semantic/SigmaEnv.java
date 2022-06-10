@@ -99,6 +99,12 @@ public class SigmaEnv {
         return tmp;
     }
 
+    public EffectEntry lookup(Node id, int nl){
+        String id_str = id.toString();
+        HashMap<String, EffectEntry> st = this.symTable.get(nl);
+        return st.get(id_str);
+    }
+
 
     public void exitScope(){
         this.symTable.remove(this.nestingLevel);
@@ -162,7 +168,6 @@ public class SigmaEnv {
             for (var entry : this.symTable.get(i).entrySet()) {
                 System.out.println("\t" + entry.getKey() + " -> " + entry.getValue().getStatus());
             }
-
         }
         System.out.println("");
     }

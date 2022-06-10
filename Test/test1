@@ -1,22 +1,29 @@
-int a = 1; // a -> int, 1
-asset b; // b -> asset, 2
+asset z;
 
-// g -> int
-int g(int a)[]{  // a -> int, 1
-    if (a == 0) {
-
+int fibonacci(int n)[asset a]{
+    if (n == 0) {
+        transfer a;
+        return 0;
     }
+    if (n == 1){
+        a -o z;
+        return 1;
+    }
+    a -o z;
+    return fibonacci(n - 1)[z] + fibonacci(n - 2)[z];
 }
 
-// f -> void
-void f(int pippetta)[]{ // pippetta -> int, 1
-    print g(pippetta)[];
-}
 
-void main(int x)[asset z]{ // x -> int, 1 z -> asset, 2
-    print z;
-    f(10)[];
-    transfer z;
-}
+void main ()[asset a]{
+    int n;
+    a -o z;
 
-main(1)[10];
+    n = fibonacci(3)[z];
+
+}
+main()[10];
+
+
+
+
+

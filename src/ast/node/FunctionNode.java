@@ -119,6 +119,7 @@ public class FunctionNode implements Node {
 	public SigmaEnv checkFunctionEffects(SigmaEnv env,ArrayList<Boolean> actualEffects){
 		// Entering new scope...
 		env.newEmptyScope();
+		int nl = env.getNestingLevel();
 
 		// Saving last function called name
 		// Used to check recursive calls
@@ -151,9 +152,11 @@ public class FunctionNode implements Node {
 			env = n.checkEffects(env);
 		}
 
+		System.out.println("Function " + id );
+
 		// Every asset parameter must have status == false (empty)
 		for (Node a : assets) {
-			if(env.lookup(a).getStatus()){
+			if(env.lookup(a,nl).getStatus()){
 				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a +" is not empty "));
 			}
 		}
