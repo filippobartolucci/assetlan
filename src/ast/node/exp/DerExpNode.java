@@ -14,7 +14,6 @@ public class DerExpNode extends ExpNode implements Node{
     // | ID						                        #derExp
     private final String id;
     private STentry entry;
-
     private int currentNL;
 
     /*Constructor

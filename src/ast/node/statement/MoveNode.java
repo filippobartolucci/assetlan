@@ -17,7 +17,6 @@ public class MoveNode implements Node {
     private STentry entry2;
     private int currentNL;
 
-
     /**
      * Constructor
      */
@@ -69,9 +68,10 @@ public class MoveNode implements Node {
     }
 
     public SigmaEnv checkEffects(SigmaEnv env){
+        if (env.lookup(this.id1).getStatus()){
+            env.lookup(this.id2).setTrue(); // Asset2 -> not empty (1)
+        }
         env.lookup(this.id1).setFalse(); // Asset1 -> empty (0)
-        env.lookup(this.id2).setTrue(); // Asset2 -> not empty (1)
-
         return env;
     }
 

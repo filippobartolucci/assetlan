@@ -41,12 +41,11 @@ public class FieldNode implements Node{
 			errors.add(new SemanticError("Variable " + id + " can't have void type"));
 		}
 
-		SemanticError error=env.addDecl(id, entry);
+		SemanticError error = env.addDecl(id, entry);
 
 		if(error!=null) {
 			errors.add(error);
 		}
-
 		this.entry = entry;
 
 		return errors;
@@ -60,12 +59,10 @@ public class FieldNode implements Node{
 
 		if(exp != null){
 			Node expType = exp.typeCheck();
-
 			if(!varType.equals(expType)){
 				throw new RuntimeException("Type mismatch -> var " + id + " has type " + varType.toPrint("") + " and exp has type " + expType.toPrint(""));
 			}
 		}
-
 		return type;
 	}
 

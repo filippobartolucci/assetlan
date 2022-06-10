@@ -39,8 +39,10 @@ public class IteNode implements Node {
             errors.addAll(n.checkSemantics(env));
         }
 
-        for (Node n: elseb) {
-            errors.addAll(n.checkSemantics(env));
+        if (elseb != null) {
+            for (Node n: elseb) {
+                errors.addAll(n.checkSemantics(env));
+            }
         }
 
         return errors;
@@ -79,34 +81,48 @@ public class IteNode implements Node {
 
         // same as above for else branch
         // \Gamma |- else : T2
-        Node elseb_type = new TypeNode(TypeValue.VOID);
+        Node elseb_type = null;
 
-        for (Node s : elseb) {
-            Node n = ((StatementNode) s).getChild();
-            if (n instanceof RetNode) {
-                if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
-                    elseb_type = n.typeCheck();
-                } else if (!elseb_type.equals(n.typeCheck())) {
-                    throw new RuntimeException("Type mismatch -> Return type of If statement must be the same");
-                }
-            } else if (n instanceof IteNode) {
-                if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
-                    elseb_type = n.typeCheck();
-                } else if (!elseb_type.equals(n.typeCheck())) {
-                    throw new RuntimeException("Type mismatch -> If statement must have the same type");
+        if (elseb != null) {
+            elseb_type = new TypeNode(TypeValue.VOID);
+            for (Node s : elseb) {
+                Node n = ((StatementNode) s).getChild();
+                if (n instanceof RetNode) {
+                    if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
+                        elseb_type = n.typeCheck();
+                    } else if (!elseb_type.equals(n.typeCheck())) {
+                        throw new RuntimeException("Type mismatch -> Return type of If statement must be the same");
+                    }
+                } else if (n instanceof IteNode) {
+                    if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
+                        elseb_type = n.typeCheck();
+                    } else if (!elseb_type.equals(n.typeCheck())) {
+                        throw new RuntimeException("Type mismatch -> If statement must have the same type");
+                    }
                 }
             }
         }
 
+
         // Checking if there is an else branch
-        if (elseb.size() == 0) {
+        if (elseb == null) {
             // then branch might be empty too
             return thenb_type == null ? new TypeNode(TypeValue.VOID) : thenb_type;
         }
 
+        // Checking if the else branch is empty
+        if (elseb.size()==0){
+            // if empty else then then must be void
+            if (thenb_type.equals(new TypeNode(TypeValue.VOID))){
+                return new TypeNode(TypeValue.VOID);
+            }else
+                throw new RuntimeException("Type mismatch -> Else statement must have the same type");
+        }
+
+
         // T1 == T2
         if (!thenb_type.equals(elseb_type)) {
-            throw new RuntimeException("Type mismatch -> If statement must have the same type");
+            throw new RuntimeException("Type mismatch -> If-Else statements must have the same type");
         }
         return thenb_type;
     }
@@ -127,10 +143,14 @@ public class IteNode implements Node {
         }
         out.append("b").append(" ").append(lEnd).append("\n");
         out.append(lFalse).append(":\n");
+
         // Else Branch
-        for (Node s : elseb) {
-            out.append(s.codeGeneration());
+        if (elseb != null) {
+            for (Node s : elseb) {
+                out.append(s.codeGeneration());
+            }
         }
+
         // End
         out.append(lEnd).append(":\n");
 
@@ -147,7 +167,7 @@ public class IteNode implements Node {
             thenEnv = new SigmaEnv(n.checkEffects(thenEnv));
         }
 
-        if (elseb.size() > 0) {
+        if (elseb != null && elseb.size() > 0) {
             for (Node n: elseb){
                 elseEnv = new SigmaEnv(n.checkEffects(elseEnv));
             }

@@ -88,7 +88,7 @@ public class ProgramNode implements Node {
 		// Checking liquidity, every global asset must be equal to 0;
 		for (Node a : assets) { // lookup for each asset
 			if (env.lookup(a.toString()).getStatus()) {
-				env.addError(new SemanticError("Liquidity not respected -> "+ a+" is not empty"));
+				env.addError(new SemanticError("Liquidity not respected -> "+a+" is not empty"));
 			}
 		}
 		env.exitScope(); //  [ ]
@@ -110,6 +110,7 @@ public class ProgramNode implements Node {
 		for (Node f : fields){
 			out.append(f.codeGeneration());
 		}
+
 		out.append("\n//INITCALL\n");
 		out.append(initcallnode.codeGeneration());
 		out.append("\nhalt //exit program...\n\n");

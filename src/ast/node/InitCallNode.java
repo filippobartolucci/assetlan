@@ -105,10 +105,11 @@ public class InitCallNode implements Node{
             e.checkEffects(env);
         }
 
+        // pre evalution of aexp to get the value of the asset parameters
         ArrayList<Boolean> actualEffects = new ArrayList<>();
         for (Node e: aexp) {
             try{
-                ExpNode exp = (ExpNode) e;
+                ExpNode exp = ((ExpNode) e);
                 int preEval = exp.preEvaluation();
                 if (preEval<0){
                     throw new RuntimeException("asset expression cannot be less than 0");

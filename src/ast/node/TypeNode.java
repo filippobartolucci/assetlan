@@ -74,7 +74,6 @@ public class TypeNode implements Node{
         if (obj instanceof TypeNode other){
             return this.type.equals(other.type);
         }
-
         return false;
     }
 

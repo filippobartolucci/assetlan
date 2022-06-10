@@ -43,7 +43,6 @@ public class AssetNode implements Node{
 	public SigmaEnv checkEffects(SigmaEnv env) {
 		EffectEntry entry = new EffectEntry();
 		env.addDecl(id, entry);
-
 		return env;
 	}
 

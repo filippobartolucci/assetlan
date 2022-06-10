@@ -1,11 +1,22 @@
-int a ;
-asset x ;
-void f()[asset u, asset v, asset w]{
-     u -o x ;
-     f()[v,w,u];
+int a = 1; // a -> int, 1
+asset b; // b -> asset, 2
+
+// g -> int
+int g(int a)[]{  // a -> int, 1
+    if (a == 0) {
+
+    }
 }
-void main()[asset a, asset b, asset c]{
-     f()[a,b,c] ;
-     transfer x ;
+
+// f -> void
+void f(int pippetta)[]{ // pippetta -> int, 1
+    print g(pippetta)[];
 }
-main()[1,2,3] ;	// il contratto e` liquido
+
+void main(int x)[asset z]{ // x -> int, 1 z -> asset, 2
+    print z;
+    f(10)[];
+    transfer z;
+}
+
+main(1)[10];

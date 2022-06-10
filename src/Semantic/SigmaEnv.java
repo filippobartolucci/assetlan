@@ -155,4 +155,15 @@ public class SigmaEnv {
 
         return effects;
     }
+
+    public void printEnv(){
+        for (int i = 0; i < this.symTable.size(); i++) {
+            System.out.println("\nScope " + i + ":");
+            for (var entry : this.symTable.get(i).entrySet()) {
+                System.out.println("\t" + entry.getKey() + " -> " + entry.getValue().getStatus());
+            }
+
+        }
+        System.out.println("");
+    }
 }

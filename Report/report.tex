@@ -277,9 +277,11 @@ AssetLan ammette 4 tipi: intero, booleano, asset e void (quest'ultimo utilizzabi
   
     \begin{align*}
     \infer[\mathrm{[Ite]}]
-    {\Gamma \hspace{0.2cm} \vdash  \hspace{0.2cm}if\hspace{0.2cm} (exp)\hspace{0.2cm} \{Stm_{1}\}\hspace{0.2cm} else \hspace{0.2cm}\{Stm_{2}\} : \hspace{0.2cm}Void } 
-    {  \Gamma \vdash exp : Bool & \Gamma \vdash Stm_{1} : Void & \Gamma \vdash Stm_{2} : Void }
+    {\Gamma \hspace{0.2cm} \vdash  \hspace{0.2cm}if\hspace{0.2cm} (exp)\hspace{0.2cm} \{Stm_{1}\}\hspace{0.2cm} else \hspace{0.2cm}\{Stm_{2}\} : \hspace{0.2cm}T_1 } 
+    {  \Gamma \vdash exp : Bool & \Gamma \vdash Stm_{1} : T_1 & \Gamma \vdash Stm_{2} : T_2 & T_1 = T_2}
     \end{align*}
+    
+    L'if restituisce un tipo se è presente un return non void nei due rami.
 
     \begin{align*}
     \infer[\mathrm{[Move]}]
@@ -357,7 +359,6 @@ AssetLan ammette 4 tipi: intero, booleano, asset e void (quest'ultimo utilizzabi
     { \Gamma \hspace{0.1cm} \vdash \hspace{0.1cm} Exp \hspace{0.1cm} op \hspace{0.1cm} Exp \hspace{0.1cm} : \hspace{0.1cm} T   } 
     { \Gamma \vdash op: (T1 x T2) \to T & \Gamma \vdash Exp1: T1 & \Gamma \vdash Exp2:T2}
     \end{align*}
-    \newpage
      I tipi che può assumere \textbf{op} sono i seguenti:
     \begin{itemize}
         \item[+] : (int x int) -> int
@@ -377,7 +378,7 @@ AssetLan ammette 4 tipi: intero, booleano, asset e void (quest'ultimo utilizzabi
     In \textit{BinExpNode} è ammesso l'uso del tipo asset insieme a int, ovvero è possibile fare operazioni aritmetiche tra asset e interi
 \end{itemize}
 
-
+\newpage
 \section{Analisi di effetti e liquidity}
 AssetLan è un linguaggio semplice che non permette la cancellazione di variabili. Le variabili quando dichiarate possono essere non inizializzate, quindi è necessario fare attenzione al loro utilizzo negli statement. 
 
@@ -415,7 +416,8 @@ Di seguito vengono riportate le alcune delle regole di inferenza del linguaggio:
 
     \begin{align*}
     \infer[\mathrm{[Move]}]
-    {\Sigma \hspace{0.2cm} \vdash  \hspace{0.1cm}a_{1}\hspace{0.2cm} -o\hspace{0.2cm} a_{2} \hspace{0.2cm}: \hspace{0.2cm}\Sigma_{[a1 \to 0, a2 \to 1]} } 
+    {\Sigma \hspace{0.2cm} \vdash  \hspace{0.1cm}a_{1}\hspace{0.2cm} -o\hspace{0.2cm} a_{2} \hspace{0.2cm}: \hspace{0.2cm}\Sigma_{[a1 \to 0, a2 \to \sigma]} } 
+    {\sigma = \Sigma(a1)}
     {}
     \end{align*}
     

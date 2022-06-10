@@ -18,7 +18,6 @@ public class FunctionNode implements Node {
 	private final ArrayList<Node> assets; // asset nodes
 	private final ArrayList<Node> body_params; // param inside function
 	private final ArrayList<Node> statements; // function body
-
 	private final String f_label; // f entry point for codegen
 	private final String end_label; // f end for return in codegen
 
@@ -51,7 +50,7 @@ public class FunctionNode implements Node {
 			errors.add(f_error);
 		}
 
-		env.newEmptyScope();
+		env.newEmptyScope(); // offset = 0;
 		env.decOffset(1);
 
 		for(Node n : params) {
@@ -64,10 +63,12 @@ public class FunctionNode implements Node {
 			assets.add(a);
 		}
 
+		// Body
 		for(Node n : body_params) {
 			errors.addAll(n.checkSemantics(env));
 		}
 
+		//
 		env.setLastFunction(this);
 
 		for(Node n : statements) {
@@ -79,7 +80,8 @@ public class FunctionNode implements Node {
 	}
 
 	public Node typeCheck() {
-		for (Node n : body_params) {
+
+		for (Node n : body_params){
 			n.typeCheck();
 		}
 
@@ -151,7 +153,7 @@ public class FunctionNode implements Node {
 
 		// Every asset parameter must have status == false (empty)
 		for (Node a : assets) {
-			if(env.lookup(a.toString()).getStatus()){
+			if(env.lookup(a).getStatus()){
 				env.addError(new SemanticError("Liquidity in " + id + " not respected -> "+ a +" is not empty "));
 			}
 		}

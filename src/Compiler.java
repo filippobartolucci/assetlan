@@ -43,7 +43,6 @@ public class Compiler {
                 System.err.println("\n" + parser.getNumberOfSyntaxErrors() + " Syntax errors found -> Compilation failed.");
                 System.exit(ExitCode.PARSER_ERROR.ordinal());
             }
-
             System.out.println("Parsing successful!\n\nSemantic analysis...");
 
             // Check errors for scope and undeclared variables

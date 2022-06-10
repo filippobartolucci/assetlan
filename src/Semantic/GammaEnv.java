@@ -85,7 +85,7 @@ public class GammaEnv {
 	}
 
 	/**
-	 * SymTable addDecl(SymTable st, String id, Type t) if there is no clash of names, adds id ⟼ t to st
+	 * SymTable addDecl(String id, STentry entry) if there is no clash of names, adds id ⟼ t to st
 	 */
 	public SemanticError addDecl(String id, STentry entry) {
 		if (this.symTable.get(this.nestingLevel).containsKey(id)) {
@@ -96,7 +96,7 @@ public class GammaEnv {
 	}
 
 	/**
-	 * Type lookup(SymTable st, String id) looks for the type of id in st, if any
+	 * Type lookup(String id) looks for the type of id in st, if any
 	 * @return STentry of id
 	 */
 	public STentry lookup(String id){
@@ -109,7 +109,7 @@ public class GammaEnv {
 	}
 
 	/**
-	 * void exitScope(SymTable st) exits the current scope
+	 * void exitScope() exits the current scope
 	 */
 	public void exitScope(){
 		this.symTable.remove(this.nestingLevel);
