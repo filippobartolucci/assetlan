@@ -48,4 +48,18 @@ public class Instruction {
         this.code = code;
     }
 
+    @Override public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(code);
+        if(arg1 != null){
+            sb.append("\t" + arg1);
+        }
+        if(arg2 != null){
+            sb.append("\t" + arg2);
+        }
+        if(arg3 != null){
+            sb.append("\t" + arg3);
+        }
+        return sb.toString();
+    }
 }

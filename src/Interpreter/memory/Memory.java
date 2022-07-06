@@ -9,6 +9,7 @@ public class Memory {
             mem[i]= new Cell();
         }
     }
+
     public int read(int n){
         return mem[n].read();
     }

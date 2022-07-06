@@ -34,6 +34,7 @@ public class Compiler {
             CommonTokenStream cts = new CommonTokenStream(lexer);
             AssetLanParser parser = new AssetLanParser(cts);
 
+
             // Visiting the parse tree...
             AssetLanVisitorImpl visitor = new AssetLanVisitorImpl();
             Node ast = visitor.visitInit(parser.init());
@@ -43,6 +44,7 @@ public class Compiler {
                 System.exit(ExitCode.PARSER_ERROR.ordinal());
             }
             System.out.println("Parsing successful!\n\nSemantic analysis...");
+
 
             // Check errors for scope and undeclared variables
             GammaEnv env = new GammaEnv();

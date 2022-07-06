@@ -9,8 +9,8 @@ import Interpreter.Parser.AVMParser;
 public class AVMVisitorImpl extends AVMBaseVisitor<Void> {
     private Instruction[] code = new Instruction[AVM.CODE_SIZE];
     private int i = 0;
-    private HashMap<String,Integer> labelAdd = new HashMap<>();
-    private HashMap<Integer,String> labelRef = new HashMap<>();
+    private HashMap<String,Integer> labelAdd = new HashMap<>(); // label -> address, this contains all the code address for every label
+    private HashMap<Integer,String> labelRef = new HashMap<>(); // address -> label, all the labels that are referenced in the code in branch instruction
 
     public Instruction[] getCode() {
         return code;
@@ -20,9 +20,12 @@ public class AVMVisitorImpl extends AVMBaseVisitor<Void> {
     public Void visitAssembly(AVMParser.AssemblyContext ctx) {
         visitChildren(ctx);
 
+        // Translating label to code address
         for (Integer refAdd: labelRef.keySet()) {
+            // Adding the corresponding code address to the label reference used in branch instruction
             code[refAdd] = new Instruction(AVMParser.ADDRESS, Integer.toString(labelAdd.get(labelRef.get(refAdd))));
         }
+
         return null;
     }
 

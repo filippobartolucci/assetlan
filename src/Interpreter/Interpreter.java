@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class Interpreter{
     public static void run(String bytecode) throws IOException {
-
         saveCode(bytecode);
 
         AVMLexer lexerASM = new AVMLexer(CharStreams.fromString(bytecode));
@@ -25,14 +24,14 @@ public class Interpreter{
         }
         AVMParser parserASM = new AVMParser(tokensASM);
 
-        AVMVisitorImpl visitorSVM = new AVMVisitorImpl();
-        visitorSVM.visit(parserASM.assembly());
+        AVMVisitorImpl visitorAVM = new AVMVisitorImpl();
+        visitorAVM.visit(parserASM.assembly());
 
         if (parserASM.getNumberOfSyntaxErrors()>0) {
             System.out.println("You had: "+parserASM.getNumberOfSyntaxErrors()+" syntax errors in AVM.");
             System.exit(ExitCode.PARSER_ERROR.ordinal());
         }
-        Instruction[] generatedCode = visitorSVM.getCode();
+        Instruction[] generatedCode = visitorAVM.getCode();
         AVM vm = new AVM(generatedCode);
         vm.cpu();
     }

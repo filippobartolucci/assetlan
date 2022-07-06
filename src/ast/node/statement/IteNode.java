@@ -57,23 +57,29 @@ public class IteNode implements Node {
         }
 
         Node thenb_type = new TypeNode(TypeValue.VOID); // Type for then branch, assuming void as default
+        boolean found_ret_then = false; // flag to check if return statement is found in then branch
 
         // \Gamma |- then : T1
         for (Node s : thenb) {  // for each statement in then branch
+            s.typeCheck();
+
             Node n = ((StatementNode) s).getChild(); // getting the type of the statement
+
             // Looking for return statement
             if (n instanceof RetNode) {
                 // return statement is found, checking its type
-                if (thenb_type.equals(new TypeNode(TypeValue.VOID))) { // if true -> then branch type never updated
+                if (thenb_type.equals(new TypeNode(TypeValue.VOID)) && !found_ret_then) { // if true -> then branch type never updated
                     thenb_type = n.typeCheck(); // updating then branch type
-                }else if (!thenb_type.equals(n.typeCheck())) { // if another return is found, checking if types are the same
+                    found_ret_then = true; // flag set to true
+
+                }else if (!thenb_type.equals(n.typeCheck())){ // if another return is found, checking if types are the same
                     throw new RuntimeException("Type mismatch -> Return type of If statement must be the same");
                 }
             } else if (n instanceof IteNode) {
                 // another if is found, if it has a type, it must be equal to this node type
                 if (thenb_type.equals(new TypeNode(TypeValue.VOID))) {
                     thenb_type = n.typeCheck();
-                } else if (!thenb_type.equals(n.typeCheck())) {
+                }else if (!thenb_type.equals(n.typeCheck())){
                     throw new RuntimeException("Type mismatch -> If statement must have the same type");
                 }
             }
@@ -82,19 +88,22 @@ public class IteNode implements Node {
         // same as above for else branch
         // \Gamma |- else : T2
         Node elseb_type = null;
+        boolean found_ret_else = false;
 
         if (elseb != null) {
             elseb_type = new TypeNode(TypeValue.VOID);
             for (Node s : elseb) {
+                s.typeCheck();
+
                 Node n = ((StatementNode) s).getChild();
                 if (n instanceof RetNode) {
-                    if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
+                    if (elseb_type.equals(new TypeNode(TypeValue.VOID))  && !found_ret_else) {
                         elseb_type = n.typeCheck();
                     } else if (!elseb_type.equals(n.typeCheck())) {
                         throw new RuntimeException("Type mismatch -> Return type of If statement must be the same");
                     }
                 } else if (n instanceof IteNode) {
-                    if (elseb_type.equals(new TypeNode(TypeValue.VOID))) {
+                    if (elseb_type.equals(new TypeNode(TypeValue.VOID)) ) {
                         elseb_type = n.typeCheck();
                     } else if (!elseb_type.equals(n.typeCheck())) {
                         throw new RuntimeException("Type mismatch -> If statement must have the same type");
@@ -112,7 +121,7 @@ public class IteNode implements Node {
 
         // Checking if the else branch is empty
         if (elseb.size()==0){
-            // if empty else then then must be void
+            // if empty else then then_branch must be void
             if (thenb_type.equals(new TypeNode(TypeValue.VOID))){
                 return new TypeNode(TypeValue.VOID);
             }else
@@ -124,6 +133,7 @@ public class IteNode implements Node {
         if (!thenb_type.equals(elseb_type)) {
             throw new RuntimeException("Type mismatch -> If-Else statements must have the same type");
         }
+
         return thenb_type;
     }
 

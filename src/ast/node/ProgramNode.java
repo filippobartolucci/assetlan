@@ -131,6 +131,7 @@ public class ProgramNode implements Node {
 		s.append("------------------------------------\n");
 		for (Node f : functions) s.append(f.toPrint(indent + "\t"));
 		s.append("------------------------------------\n");
+
 		if (initcallnode != null) {
 			s.append(initcallnode.toPrint(indent + "\t"));
 		}

@@ -18,7 +18,7 @@ public class AVM {
     private int fp = MEMORY_SIZE -1;    // frame pointer
     private int ra;
     private int al;
-    private int wallet = 0;
+    private int wallet = 0; // $
     private final int[] a = new int[10];
 
     public AVM(Instruction[] code) {
@@ -41,7 +41,6 @@ public class AVM {
 
                 try {
                     switch (bytecode.getCode()) {
-
                         case AVMParser.PUSH:
                             if (isRegister(arg1))
                                 push(regRead(arg1));
