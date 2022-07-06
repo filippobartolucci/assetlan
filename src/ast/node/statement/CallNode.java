@@ -190,6 +190,7 @@ public class CallNode implements Node {
 
                 // After fixed point, updating effects after function call...
                 actualEffects = env.getFixedPointResult();
+
                 for(int i = 0; i < assets.size(); i++) {
                     Node a = assets.get(i).getEntry();
                     if(actualEffects.get(i)) {

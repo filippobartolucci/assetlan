@@ -83,11 +83,11 @@ public class ProgramNode implements Node {
 		// checkEffects of functions is empty, function effects are evaluated in the function call
 
 		// Init...
-		initcallnode.checkEffects(env);
+		env = initcallnode.checkEffects(env);
 
 		// Checking liquidity, every global asset must be equal to 0;
 		for (Node a : assets) { // lookup for each asset
-			if (env.lookup(a.toString()).getStatus()) {
+			if (env.lookup(a).getStatus()) {
 				env.addError(new SemanticError("Liquidity not respected -> "+a+" is not empty"));
 			}
 		}

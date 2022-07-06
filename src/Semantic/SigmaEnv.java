@@ -145,7 +145,7 @@ public class SigmaEnv {
             boolean status = this.lookup(id).getStatus();
 
             if (!status == actualEffects.get(i)) {
-                fixedPoint = false; // fixed point not reached
+                return false; // fixed point not reached
             }
         }
         return fixedPoint;

@@ -1,29 +1,16 @@
-asset z;
+asset x;
+asset y;
 
-int fibonacci(int n)[asset a]{
-    if (n == 0) {
-        transfer a;
-        return 0;
-    }
-    if (n == 1){
-        a -o z;
-        return 1;
-    }
-    a -o z;
-    return fibonacci(n - 1)[z] + fibonacci(n - 2)[z];
+void main()[asset u, asset v]{
+     u -o x ;
+     v -o x ;
+
+     if (true) {
+        print 1;
+     } else {
+        print 2;
+     }
+     transfer x;
 }
 
-
-void main ()[asset a]{
-    int n;
-    a -o z;
-
-    n = fibonacci(3)[z];
-
-}
-main()[10];
-
-
-
-
-
+main()[2,3]; // Il contratto non è liquido

@@ -174,7 +174,6 @@ public class IteNode implements Node {
             thenEnv.max(elseEnv);
         }
 
-
         return thenEnv;
     }
 

@@ -152,8 +152,6 @@ public class FunctionNode implements Node {
 			env = n.checkEffects(env);
 		}
 
-		System.out.println("Function " + id );
-
 		// Every asset parameter must have status == false (empty)
 		for (Node a : assets) {
 			if(env.lookup(a,nl).getStatus()){
