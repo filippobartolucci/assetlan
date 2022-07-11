@@ -122,19 +122,3 @@ Cosa succede se nel codice 4) di sopra rimpiazzo il main con il seguente
      main()[1,2] ;	// il contratto e` liquido?
 
 =====
-
-## Consegna
-Come ultima consegna, bisogna inviare il pacchetto completo di tutte le fasi della compilazione.
-È possibile anche modificare i file degli assegnamenti precedenti, se necessario.
-Bisogna sempre allegare un pdf di presentazione.
-
-Il pacchetto dovrà essere chiamato Cognome1_CON_#n.zip (dove il Cognome1 è il
-cognome del primo componente del gruppo in ordine alfabetico e #n è il numero di 
-consegna). 
-
-Tempistiche: 
-
-* CONSEGNA PRIMI 2 ESERCIZI: Domenica 24 Aprile ore 24.00
-* CONSEGNA ULTIMI 2 ESERCIZI: Domenica 29 Maggio ore 24.00
-
-A seguire: discussione dell'intero progetto
